@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "548270161231",
+    "project_id": "boride-9d124",
+    "storage_bucket": "boride-9d124.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:548270161231:android:420ad6a24f844df29fd93a",
+        "android_client_info": {
+          "package_name": "com.example.boride"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "548270161231-jlb3b7bu1iclc7o1ia3q4e14jkbm6vct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXIhqZTyGgwLVZ9JjZsLX9J1ApEfbfQh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "548270161231-jlb3b7bu1iclc7o1ia3q4e14jkbm6vct.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:548270161231:android:ef00877bbef12dd39fd93a",
+        "android_client_info": {
+          "package_name": "com.example.boride_driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "548270161231-jlb3b7bu1iclc7o1ia3q4e14jkbm6vct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXIhqZTyGgwLVZ9JjZsLX9J1ApEfbfQh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "548270161231-jlb3b7bu1iclc7o1ia3q4e14jkbm6vct.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
