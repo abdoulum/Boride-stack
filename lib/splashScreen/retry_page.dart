@@ -1,11 +1,9 @@
-import 'package:boride/assistant/assistant_methods.dart';
 import 'package:boride/authentication/login_page.dart';
 import 'package:boride/brand_colors.dart';
 import 'package:boride/global/global.dart';
-import 'package:boride/main.dart';
-import 'package:boride/mainScreens/main_page.dart';
+import 'package:boride/helper/helpermethods.dart';
+import 'package:boride/screens/main_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class RetryPage extends StatefulWidget {
@@ -38,7 +36,7 @@ class _RetryPageState extends State<RetryPage> {
     hasInternet = await InternetConnectionChecker().hasConnection;
 
     if (hasInternet == true) {
-      AssistantMethods.readCurrentOnlineUserInfo();
+      HelperMethod.getCurrentUserInfo();
       _verifyUser();
     } else {
       await Future.delayed(const Duration(milliseconds: 1000), () {});

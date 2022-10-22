@@ -2,13 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:boride/assistant/assistant_methods.dart';
-import 'package:boride/assistant/geofire_assistant.dart';
+import 'package:boride/datamodels/address.dart';
+import 'package:boride/datamodels/directiondetails.dart';
+import 'package:boride/datamodels/nearbydriver.dart';
+import 'package:boride/dataprovider/appdata.dart';
 import 'package:boride/global/global.dart';
-import 'package:boride/infoHandler/app_info.dart';
-import 'package:boride/mainScreens/search_page.dart';
-import 'package:boride/mainScreens/select_nearest_active_driver_screen.dart';
-import 'package:boride/models/active_nearby_available_drivers.dart';
+import 'package:boride/helper/firehelper.dart';
+import 'package:boride/helper/helpermethods.dart';
+import 'package:boride/screens/search_page.dart';
+import 'package:boride/screens/select_nearest_active_driver_screen.dart';
 import 'package:boride/widgets/brand_divider.dart';
 import 'package:boride/widgets/my_drawer.dart';
 import 'package:boride/widgets/progress_dialog.dart';
@@ -30,10 +32,10 @@ class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _screenstate createState() => _screenstate();
 }
 
-class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
+class _screenstate extends State<MainPage> with TickerProviderStateMixin {
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
   GoogleMapController? newGoogleMapController;
 
@@ -49,15 +51,18 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
   var geoLocator = Geolocator();
 
   LocationPermission? _locationPermission;
-  double bottomPaddingOfMap = 0;
 
-  double searchSheetHeight = (Platform.isIOS) ? 300 : 255;
-  double requestingSheetHeight = 0; // (Platform.isAndroid) ? 195 : 220
-  double rideDetailSheetHeight = 0;
+  DirectionDetails? tripDirectionDetails;
+
+  double bottomPaddingOfMap = 0;
+  double searchSheetHeight = (Platform.isIOS) ? 275 : 255;
+  double rideDetailsSheetHeight = 0; // (Platform.isAndroid) ? 195 : 220
+  double requestingSheetHeight = 0; //(Platform.isAndroid) ? 195 : 220;
 
   List<LatLng> pLineCoOrdinatesList = [];
-  Set<Polyline> polyLineSet = {};
+  List<NearbyDriver> onlineNearByAvailableDriversList = [];
 
+  Set<Polyline> polyLineSet = {};
   Set<Marker> markersSet = {};
   Set<Circle> circlesSet = {};
 
@@ -66,13 +71,13 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
   String appState = 'NORMAL';
 
   bool openNavigationDrawer = true;
-
   bool activeNearbyDriverKeysLoaded = false;
+  bool nearbyDriversKeysLoaded = false;
+  bool isRequestingLocationDetails = false;
+
   BitmapDescriptor? activeNearbyIcon;
 
-  List<ActiveNearbyAvailableDrivers> onlineNearByAvailableDriversList = [];
-
-  DatabaseReference? referenceRideRequest;
+  DatabaseReference? rideRef;
 
   blackThemeGoogleMap() {
     newGoogleMapController!.setMapStyle('''
@@ -248,7 +253,7 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
     }
   }
 
-  locateUserPosition() async {
+  setupPositionLocator() async {
     Position cPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     userCurrentPosition = cPosition;
@@ -259,29 +264,29 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
     CameraPosition cameraPosition =
         CameraPosition(target: latLngPosition, zoom: 16);
 
-    initializeGeoFireListener();
+    startGeoFireListener();
 
-    await AssistantMethods.searchAddressForGeographicCoOrdinates(
-        userCurrentPosition!, context);
+    await HelperMethod.findCordinateAddress(userCurrentPosition!, context);
 
     newGoogleMapController!
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
-    userName = userModelCurrentInfo!.name!;
+    userName = userModelCurrentInfo!.fullName!;
     userEmail = userModelCurrentInfo!.email!;
   }
 
   @override
   void initState() {
     super.initState();
-    locateUserPosition();
-    AssistantMethods.readCurrentOnlineUserInfo();
+    setupPositionLocator();
+    HelperMethod.getCurrentUserInfo();
   }
 
   void showDetailsSheet() async {
     setState(() {
-      searchSheetHeight = 0;
-      rideDetailSheetHeight = (Platform.isAndroid) ? 255 : 275;
+      rideDetailsSheetHeight = (Platform.isAndroid) ? 245 : 255;
+      openNavigationDrawer = true;
+
     });
   }
 
@@ -328,7 +333,7 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
                 bottomPaddingOfMap = MediaQuery.of(context).size.height * 0.362;
               });
 
-              locateUserPosition();
+              setupPositionLocator();
             },
           ),
 
@@ -342,12 +347,13 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
                   sKey.currentState!.openDrawer();
                 } else {
                   setState(() {
-                    rideDetailSheetHeight = 0;
+                    rideDetailsSheetHeight = 0;
+                    requestingSheetHeight = 0;
                     searchSheetHeight = (Platform.isAndroid) ? 255 : 275;
                     circlesSet.clear();
                     markersSet.clear();
                     polyLineSet.clear();
-                    locateUserPosition();
+                    setupPositionLocator();
                     openNavigationDrawer = true;
                   });
                   //restart-refresh-minimize app progmatically
@@ -369,7 +375,7 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
             right: 14,
             child: GestureDetector(
               onTap: () async {
-                locateUserPosition();
+                setupPositionLocator();
                 await Geolocator.getCurrentPosition(
                     desiredAccuracy: LocationAccuracy.high);
 
@@ -508,12 +514,12 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
                                 height: 3,
                               ),
                               Text(
-                                Provider.of<AppInfo>(context)
-                                            .userDropOffLocation !=
+                                Provider.of<AppData>(context)
+                                            .destinationAddress !=
                                         null
-                                    ? Provider.of<AppInfo>(context)
-                                        .userDropOffLocation!
-                                        .locationName!
+                                    ? Provider.of<AppData>(context)
+                                        .destinationAddress!
+                                        .placeName!
                                     : "Select a destination",
                                 style: const TextStyle(
                                     fontFamily: "Brand-Bold",
@@ -536,10 +542,9 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
                           "Request a Ride",
                         ),
                         onPressed: () {
-                          if (Provider.of<AppInfo>(context, listen: false)
-                                  .userDropOffLocation !=
+                          if (Provider.of<AppData>(context, listen: false)
+                                  .destinationAddress !=
                               null) {
-                            saveRideRequestInformation();
                           } else {
                             showSnackBer("Please select destination location");
                           }
@@ -566,7 +571,7 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
               duration: const Duration(milliseconds: 150),
               curve: Curves.easeIn,
               child: Container(
-                height: rideDetailSheetHeight,
+                height: rideDetailsSheetHeight,
                 decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -620,7 +625,7 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
                               Expanded(child: Container()),
                               Text(
                                 tripDirectionDetailsInfo != null
-                                    ? '₦ ${AssistantMethods.estimateFares(tripDirectionDetailsInfo!)}'
+                                    ? '₦ ${HelperMethod.estimateFares(tripDirectionDetailsInfo!)}'
                                     : "",
                                 style: const TextStyle(
                                     fontSize: 18, fontFamily: 'Brand-Bold'),
@@ -666,9 +671,15 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
                         onPressed: () {
                           setState(() {
                             appState = 'REQUESTING';
+                            searchSheetHeight = 0;
+                            rideDetailsSheetHeight = 0;
+                            requestingSheetHeight = (Platform.isAndroid) ? 195 : 220;
                           });
-                          showRequestingSheet();
+
+                          createRideRequest();
+
                         },
+
                         style: ElevatedButton.styleFrom(
                             primary: Colors.green,
                             textStyle: const TextStyle(
@@ -721,15 +732,14 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
                       SizedBox(
                         width: double.infinity,
                         child: TextLiquidFill(
-                          waveDuration: const Duration(seconds: 3),
-                          loadDuration: const Duration(seconds: 40),
-                          loadUntil: 1,
+                          waveDuration: const Duration(seconds: 6),
+                          loadDuration: const Duration(minutes: 5),
                           text: 'Requesting a Ride...',
                           waveColor: BrandColors.colorTextDark,
                           boxBackgroundColor: Colors.white,
                           textStyle: const TextStyle(
                               color: BrandColors.colorText,
-                              fontSize: 22.0,
+                              fontSize: 20.0,
                               fontFamily: 'Brand-Bold'),
                           boxHeight: 45.0,
                         ),
@@ -774,48 +784,50 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
               ),
             ),
           ),
+
+          /// Trip Sheet
+
+
         ],
       ),
     );
   }
 
-  saveRideRequestInformation() {
+  createRideRequest() {
     //1. save the RideRequest Information
-    referenceRideRequest =
-        FirebaseDatabase.instance.ref().child("All Ride Request").push();
 
-    var originLocation =
-        Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
-    var destinationLocation =
-        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var pickup =
+        Provider.of<AppData>(context, listen: false).pickupAddress;
+    var destination =
+        Provider.of<AppData>(context, listen: false).destinationAddress;
 
-    Map originLocationMap = {
+    Map pickupMap = {
       //"key" : value,
-      "latitude": originLocation!.locationLatitude.toString(),
-      "longitude": originLocation.locationLongitude.toString(),
+      "latitude": pickup!.latitude.toString(),
+      "longitude": pickup.longitude.toString(),
     };
 
-    Map destinationLocationMap = {
+    Map destinaionMap = {
       //"key" : value,
-      "latitude": destinationLocation!.locationLatitude.toString(),
-      "longitude": destinationLocation.locationLongitude.toString(),
+      "latitude": destination!.latitude.toString(),
+      "longitude": destination.longitude.toString(),
     };
 
-    Map userInformationMap = {
-      "origin": originLocationMap,
-      "destination": destinationLocationMap,
-      "time": DateTime.now().toString(),
-      "userName": userModelCurrentInfo!.name,
-      "userPhone": userModelCurrentInfo!.phone,
-      "originAddress": originLocation.locationName,
-      "destinationAddress": destinationLocation.locationName,
+    Map rideMap = {
+      "create_at": DateTime.now().toString(),
+      "rider_name": userModelCurrentInfo!.fullName,
+      "rider_phone": userModelCurrentInfo!.phone,
+      "pickup_address": pickup.placeName,
+      "destination_Address": destination.placeName,
+      "location": pickupMap,
+      "destination": destinaionMap,
+      "payment_method": "card",
       "driverId": "waiting"
     };
 
-    referenceRideRequest!.set(userInformationMap);
+    databaseReference!.set(rideMap);
 
-    onlineNearByAvailableDriversList =
-        GeoFireAssistant.activeNearbyAvailableDriversList;
+    onlineNearByAvailableDriversList = FireHelper.nearbyDriverList;
     searchNearestOnlineDrivers();
   }
 
@@ -836,7 +848,7 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
 
     if (onlineNearByAvailableDriversList.isEmpty) {
       //cancel/delete the RideRequest Information
-      referenceRideRequest!.remove();
+      rideRef!.remove();
 
       Fluttertoast.showToast(
           msg:
@@ -853,7 +865,7 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
           context,
           MaterialPageRoute(
               builder: (c) => SelectNearestActiveDriversScreen(
-                  referenceRideRequest: referenceRideRequest!)));
+                  referenceRideRequest: rideRef!)));
     }
 
     //active driver available
@@ -874,25 +886,24 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
 
   Future<void> drawPolyLineFromOriginToDestination() async {
     var originPosition =
-        Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
+        Provider.of<AppData>(context, listen: false).pickupAddress;
     var destinationPosition =
-        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+        Provider.of<AppData>(context, listen: false).destinationAddress;
 
-    var originLatLng = LatLng(
-        originPosition!.locationLatitude!, originPosition.locationLongitude!);
-    var destinationLatLng = LatLng(destinationPosition!.locationLatitude!,
-        destinationPosition.locationLongitude!);
+    var originLatLng =
+        LatLng(originPosition!.latitude!, originPosition.longitude!);
+    var destinationLatLng =
+        LatLng(destinationPosition!.latitude!, destinationPosition.longitude!);
 
     showDialog(
       context: context,
       builder: (BuildContext context) => ProgressDialog(
-        message: "Please wait...",
+        message: "Please wait...", status: '',
       ),
     );
 
     var thisDetail =
-        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
-            originLatLng, destinationLatLng);
+        await HelperMethod.getDirectionDetails(originLatLng, destinationLatLng);
 
     Navigator.pop(context);
 
@@ -956,7 +967,7 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
       infoWindow:
-          InfoWindow(title: originPosition.locationName, snippet: "Origin"),
+          InfoWindow(title: originPosition.placeName, snippet: "Origin"),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
     );
@@ -964,7 +975,7 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
       infoWindow: InfoWindow(
-          title: destinationPosition.locationName, snippet: "Destination"),
+          title: destinationPosition.placeName, snippet: "Destination"),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
     );
@@ -998,7 +1009,7 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
     });
   }
 
-  initializeGeoFireListener() {
+  startGeoFireListener() {
     Geofire.initialize("activeDrivers");
 
     Geofire.queryAtLocation(
@@ -1013,13 +1024,11 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
         switch (callBack) {
           //whenever any driver become active/online
           case Geofire.onKeyEntered:
-            ActiveNearbyAvailableDrivers activeNearbyAvailableDriver =
-                ActiveNearbyAvailableDrivers();
+            NearbyDriver activeNearbyAvailableDriver = NearbyDriver();
             activeNearbyAvailableDriver.locationLatitude = map['latitude'];
             activeNearbyAvailableDriver.locationLongitude = map['longitude'];
-            activeNearbyAvailableDriver.driverId = map['key'];
-            GeoFireAssistant.activeNearbyAvailableDriversList
-                .add(activeNearbyAvailableDriver);
+            activeNearbyAvailableDriver.key = map['key'];
+            FireHelper.nearbyDriverList.add(activeNearbyAvailableDriver);
             if (activeNearbyDriverKeysLoaded == true) {
               displayActiveDriversOnUsersMap();
             }
@@ -1027,19 +1036,17 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
 
           //whenever any driver become non-active/offline
           case Geofire.onKeyExited:
-            GeoFireAssistant.deleteOfflineDriverFromList(map['key']);
+            FireHelper.removeFromList(map['key']);
             displayActiveDriversOnUsersMap();
             break;
 
           //whenever driver moves - update driver location
           case Geofire.onKeyMoved:
-            ActiveNearbyAvailableDrivers activeNearbyAvailableDriver =
-                ActiveNearbyAvailableDrivers();
+            NearbyDriver activeNearbyAvailableDriver = NearbyDriver();
             activeNearbyAvailableDriver.locationLatitude = map['latitude'];
             activeNearbyAvailableDriver.locationLongitude = map['longitude'];
-            activeNearbyAvailableDriver.driverId = map['key'];
-            GeoFireAssistant.updateActiveNearbyAvailableDriverLocation(
-                activeNearbyAvailableDriver);
+            activeNearbyAvailableDriver.key = map['key'];
+            FireHelper.updateNearbyLocation(activeNearbyAvailableDriver);
             displayActiveDriversOnUsersMap();
             break;
 
@@ -1059,13 +1066,12 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
     setState(() {
       Set<Marker> driversMarkerSet = <Marker>{};
 
-      for (ActiveNearbyAvailableDrivers eachDriver
-          in GeoFireAssistant.activeNearbyAvailableDriversList) {
+      for (NearbyDriver eachDriver in FireHelper.nearbyDriverList) {
         LatLng eachDriverActivePosition =
             LatLng(eachDriver.locationLatitude!, eachDriver.locationLongitude!);
 
         Marker marker = Marker(
-          markerId: MarkerId("driver" + eachDriver.driverId!),
+          markerId: MarkerId("driver" + eachDriver.key!),
           position: eachDriverActivePosition,
           icon: activeNearbyIcon!,
           rotation: 360,
@@ -1080,23 +1086,19 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
     });
   }
 
+
   resetApp() {
     setState(() {
       pLineCoOrdinatesList.clear();
       polyLineSet.clear();
       markersSet.clear();
       circlesSet.clear();
-      rideDetailSheetHeight = 0;
+      rideDetailsSheetHeight = 0;
       requestingSheetHeight = 0;
-      searchSheetHeight = (Platform.isAndroid) ? 255 : 270;
-    });
-  }
-
-  void showRequestingSheet() {
-    setState(() {
-      rideDetailSheetHeight = 0;
-      requestingSheetHeight = (Platform.isAndroid) ? 210 : 220;
+      searchSheetHeight = (Platform.isAndroid) ? 275 : 300;
       openNavigationDrawer = true;
+
+
     });
   }
 
@@ -1111,7 +1113,4 @@ class _MainScreenState extends State<MainPage> with TickerProviderStateMixin {
       });
     }
   }
-
-
-
 }

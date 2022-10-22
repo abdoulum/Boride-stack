@@ -1,4 +1,3 @@
-import 'package:boride/assistant/assistant_methods.dart';
 import 'package:boride/global/global.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';

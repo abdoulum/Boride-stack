@@ -1,7 +1,7 @@
-import 'package:boride/assistant/request_assistant.dart';
 import 'package:boride/brand_colors.dart';
-import 'package:boride/infoHandler/app_info.dart';
-import 'package:boride/models/predicted_places.dart';
+import 'package:boride/dataprovider/appdata.dart';
+import 'package:boride/datamodels/Prediction.dart';
+import 'package:boride/helper/requesthelper.dart';
 import 'package:boride/widgets/place_prediction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -20,7 +20,7 @@ class _SearchPlacesScreenState extends State<SearchPage> {
   var pickupController = TextEditingController();
   var destinationController = TextEditingController();
 
-  List<PredictedPlaces> placesPredictedList = [];
+  List<Prediction> placesPredictedList = [];
 
   void findPlaceAutoCompleteSearch(String inputText) async {
 
@@ -30,7 +30,7 @@ class _SearchPlacesScreenState extends State<SearchPage> {
           "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputText&key=$mapKey&components=country:NG";
 
       var responseAutoCompleteSearch =
-          await RequestAssistant.receiveRequest(urlAutoCompleteSearch);
+          await RequestHelper.getRequest(urlAutoCompleteSearch);
 
       if (responseAutoCompleteSearch ==
           "Error Occurred, Failed. No Response.") {
@@ -41,7 +41,7 @@ class _SearchPlacesScreenState extends State<SearchPage> {
         var placePredictions = responseAutoCompleteSearch["predictions"];
 
         var placePredictionsList = (placePredictions as List)
-            .map((jsonData) => PredictedPlaces.fromJson(jsonData))
+            .map((jsonData) => Prediction.fromJson(jsonData))
             .toList();
 
         setState(() {
@@ -54,7 +54,7 @@ class _SearchPlacesScreenState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     String address =
-        Provider.of<AppInfo>(context).userPickUpLocation!.locationName ?? " ";
+        Provider.of<AppData>(context).pickupAddress!.placeName ?? " ";
     pickupController.text = address;
 
     return Scaffold(

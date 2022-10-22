@@ -1,12 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../authentication/login_page.dart';
-import '../global/global.dart';
-import '../mainScreens/main_page.dart';
-
 
 class MyDrawer extends StatefulWidget {
   String? name;
@@ -18,9 +14,7 @@ class MyDrawer extends StatefulWidget {
   _MyDrawerState createState() => _MyDrawerState();
 }
 
-
 class _MyDrawerState extends State<MyDrawer> {
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -50,7 +44,7 @@ class _MyDrawerState extends State<MyDrawer> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          name,
+                          widget.name.toString(),
                           style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w500,
@@ -168,16 +162,8 @@ class _MyDrawerState extends State<MyDrawer> {
           GestureDetector(
             onTap: () {
               FirebaseAuth.instance.signOut();
-              _verifyUser() {
-                if (fAuth.currentUser != null) {
-                  currentFirebaseUser = fAuth.currentUser;
-                  Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (c) => const MainPage()));
-                } else {
-                  Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (c) => const LoginPage()));
-                }
-              }
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (c) => const LoginPage()));
             },
             child: const ListTile(
               leading: Icon(

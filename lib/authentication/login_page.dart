@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:boride/authentication/registration.dart';
-import 'package:boride/mainScreens/main_page.dart';
+import 'package:boride/screens/main_page.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

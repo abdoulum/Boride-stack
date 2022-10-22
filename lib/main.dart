@@ -1,5 +1,5 @@
-import 'package:boride/assistant/assistant_methods.dart';
-import 'package:boride/infoHandler/app_info.dart';
+import 'package:boride/dataprovider/appdata.dart';
+import 'package:boride/helper/helpermethods.dart';
 import 'package:boride/splashScreen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +9,13 @@ import 'package:provider/provider.dart';
 void main() async
 {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  AssistantMethods.readCurrentOnlineUserInfo();
+  Firebase.initializeApp();
+  HelperMethod.getCurrentUserInfo();
 
   runApp(
     MyApp(
       child: ChangeNotifierProvider(
-        create: (context)=> AppInfo(),
+        create: (context)=> AppData(),
         child: MaterialApp(
           title: 'Drivers App',
           theme: ThemeData(

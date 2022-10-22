@@ -1,10 +1,10 @@
-class ActiveNearbyAvailableDrivers {
-  String? driverId;
+class NearbyDriver {
+  String? key;
   double? locationLatitude;
   double? locationLongitude;
 
-  ActiveNearbyAvailableDrivers({
-    this.driverId,
+  NearbyDriver({
+    this.key,
     this.locationLatitude,
     this.locationLongitude,
   });

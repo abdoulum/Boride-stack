@@ -1,0 +1,31 @@
+import 'package:flutter/material.dart';
+
+class TaxiButton extends StatelessWidget {
+
+  final String title;
+  final Color color;
+  Function onPressed;
+
+  TaxiButton({Key? key, required this.title, required this.onPressed, required this.color}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      onPressed: onPressed(),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25)
+      ),
+      color: color,
+      textColor: Colors.white,
+      child: SizedBox(
+        height: 50,
+        child: Center(
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontFamily: 'Brand-Bold'),
+          ),
+        ),
+      ),
+    );
+  }
+}

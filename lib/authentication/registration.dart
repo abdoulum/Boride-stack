@@ -1,4 +1,6 @@
 import 'package:boride/brand_colors.dart';
+import 'package:boride/widgets/taxibutton.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +21,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  var nameController = TextEditingController();
+  var fullNameController = TextEditingController();
   var phoneController = TextEditingController();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
 
-  void showSnackBer(String title) {
+  void showSnackBar(String title) {
     final snackBar = SnackBar(
         content: Text(
           title,
@@ -42,7 +44,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
       //check and display error message
       PlatformException thisEx = ex;
-      showSnackBer(thisEx.message!);
+      showSnackBar(thisEx.message!);
     })).user;
 
     // Check if user registration is successful
@@ -52,7 +54,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       //Prepare data to be saved
       Map userMap = {
         "id": user.uid,
-        "name": nameController.text.trim(),
+        "name": fullNameController.text.trim(),
         "email": emailController.text.trim(),
         "phone": phoneController.text.trim(),
       };
@@ -129,99 +131,119 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     children: [
+                      // Fullname
                       TextField(
-                        textCapitalization: TextCapitalization.words,
-                        controller: nameController,
+                        controller: fullNameController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
-                          labelText: 'Name',
-                          labelStyle:
-                          TextStyle(fontSize: 18, fontFamily: 'Brand_Bold'),
-                          hintStyle:
-                          TextStyle(fontSize: 18, fontFamily: 'Brand_Bold'),
+                            labelText: 'Full name',
+                            labelStyle: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                            hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10.0
+                            )
                         ),
                         style: const TextStyle(fontSize: 14),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
+                      // Email Address
                       TextField(
                         controller: emailController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
-                          labelText: 'Email',
-                          labelStyle:
-                          TextStyle(fontSize: 18, fontFamily: 'Brand_Bold'),
-                          hintStyle:
-                          TextStyle(fontSize: 18, fontFamily: 'Brand_Bold'),
+                            labelText: 'Email address',
+                            labelStyle: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                            hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10.0
+                            )
                         ),
                         style: const TextStyle(fontSize: 14),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
+                      // Phone
                       TextField(
                         controller: phoneController,
                         keyboardType: TextInputType.phone,
                         decoration: const InputDecoration(
-                          labelText: 'Phone',
-                          labelStyle:
-                          TextStyle(fontSize: 18, fontFamily: 'Brand_Bold'),
-                          hintStyle:
-                          TextStyle(fontSize: 18, fontFamily: 'Brand_Bold'),
+                            labelText: 'Phone number',
+                            labelStyle: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                            hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10.0
+                            )
                         ),
                         style: const TextStyle(fontSize: 14),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
+
+                      const SizedBox(height: 10,),
+
+                      // Password
                       TextField(
                         controller: passwordController,
                         obscureText: true,
-                        keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
-                          labelText: 'Password',
-                          labelStyle:
-                          TextStyle(fontSize: 18, fontFamily: 'Brand_Bold'),
-                          hintStyle:
-                          TextStyle(fontSize: 18, fontFamily: 'Brand_Bold'),
+                            labelText: 'Password',
+                            labelStyle: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                            hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10.0
+                            )
                         ),
                         style: const TextStyle(fontSize: 14),
                       ),
                       const SizedBox(
                         height: 40,
                       ),
-                      RaisedButton(
+                      TaxiButton(
+                        title: 'REGISTER',
+                        color: BrandColors.colorGreen,
                         onPressed: () async{
 
-                          if (nameController.text.length <= 3) {
-                            showSnackBer("Please enter a valid name");
+                          //check network availability
+
+                          var connectivityResult = await Connectivity().checkConnectivity();
+                          if(connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi){
+                            showSnackBar('No internet connectivity');
+                            return;
                           }
-                          if (phoneController.text.length < 10) {
-                            showSnackBer("Please enter a valid phone number");
+
+                          if(fullNameController.text.length < 3){
+                            showSnackBar('Please provide a valid fullname');
+                            return;
                           }
-                          if (passwordController.text.length < 8) {
-                            showSnackBer("Please enter a valid phone number");
+
+                          if(phoneController.text.length < 10){
+                            showSnackBar('Please provide a valid phone number');
+                            return;
                           }
-                          else {
-                            registerUser();
+
+                          if(!emailController.text.contains('@')){
+                            showSnackBar('Please provide a valid email address');
+                            return;
                           }
+
+                          if(passwordController.text.length < 8){
+                            showSnackBar('password must be at least 8 characters');
+                            return;
+                          }
+
+                          registerUser();
+
                         },
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25)),
-                        color: BrandColors.colorBlue,
-                        textColor: Colors.white,
-                        child: const SizedBox(
-                          height: 50,
-                          child: Center(
-                            child: Text(
-                              "REGISTER",
-                              style: TextStyle(
-                                  fontSize: 18, fontFamily: 'Brand_Bold'),
-                            ),
-                          ),
-                        ),
-                      )
+                      ),
                     ],
                   ),
                 ),

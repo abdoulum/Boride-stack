@@ -1,7 +1,7 @@
-import 'package:boride/assistant/assistant_methods.dart';
 import 'package:boride/authentication/login_page.dart';
 import 'package:boride/global/global.dart';
-import 'package:boride/mainScreens/main_page.dart';
+import 'package:boride/helper/helpermethods.dart';
+import 'package:boride/screens/main_page.dart';
 import 'package:boride/splashScreen/retry_page.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -31,7 +31,7 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    AssistantMethods.readCurrentOnlineUserInfo();
+    HelperMethod.getCurrentUserInfo();
     _navigateToHome();
   }
 
@@ -44,7 +44,7 @@ class _SplashState extends State<Splash> {
     hasInternet = await InternetConnectionChecker().hasConnection;
 
     if (hasInternet == true) {
-      AssistantMethods.readCurrentOnlineUserInfo();
+      HelperMethod.getCurrentUserInfo();
       _verifyUser();
     } else {
       Navigator.pushReplacement(

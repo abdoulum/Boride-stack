@@ -1,8 +1,8 @@
-import 'package:boride/assistant/request_assistant.dart';
+import 'package:boride/dataprovider/appdata.dart';
 import 'package:boride/global/map_key.dart';
-import 'package:boride/infoHandler/app_info.dart';
-import 'package:boride/models/directions.dart';
-import 'package:boride/models/predicted_places.dart';
+import 'package:boride/helper/requesthelper.dart';
+import 'package:boride/datamodels/address.dart';
+import 'package:boride/datamodels/Prediction.dart';
 import 'package:boride/widgets/progress_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 class PlacePredictionTileDesign extends StatelessWidget
 {
-  final PredictedPlaces? predictedPlaces;
+  final Prediction? predictedPlaces;
 
   const PlacePredictionTileDesign({Key? key, this.predictedPlaces}) : super(key: key);
 
@@ -20,13 +20,13 @@ class PlacePredictionTileDesign extends StatelessWidget
     showDialog(
       context: context,
       builder: (BuildContext context) => ProgressDialog(
-        message: "Setting Up Drop-Off, Please wait...",
+        message: "Setting Up Drop-Off, Please wait...", status: '',
       ),
     );
 
     String placeDirectionDetailsUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$mapKey";
 
-    var responseApi = await RequestAssistant.receiveRequest(placeDirectionDetailsUrl);
+    var responseApi = await RequestHelper.getRequest(placeDirectionDetailsUrl);
 
     Navigator.pop(context);
 
@@ -37,13 +37,13 @@ class PlacePredictionTileDesign extends StatelessWidget
 
     if(responseApi["status"] == "OK")
     {
-      Directions directions = Directions();
-      directions.locationName = responseApi["result"]["name"];
+      Address directions = Address();
+      directions.placeName = responseApi["result"]["name"];
       directions.locationId = placeId;
-      directions.locationLatitude = responseApi["result"]["geometry"]["location"]["lat"];
-      directions.locationLongitude = responseApi["result"]["geometry"]["location"]["lng"];
+      directions.latitude = responseApi["result"]["geometry"]["location"]["lat"];
+      directions.longitude = responseApi["result"]["geometry"]["location"]["lng"];
 
-      Provider.of<AppInfo>(context, listen: false).updateDropOffLocationAddress(directions);
+      Provider.of<AppData>(context, listen: false).updateDropOffLocationAddress(directions);
 
       Navigator.pop(context, "obtainedDropoff");
     }
