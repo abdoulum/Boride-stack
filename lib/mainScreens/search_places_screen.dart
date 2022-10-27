@@ -1,48 +1,43 @@
-import 'package:boride/brand_colors.dart';
-import 'package:boride/dataprovider/appdata.dart';
-import 'package:boride/datamodels/Prediction.dart';
-import 'package:boride/helper/requesthelper.dart';
-import 'package:boride/widgets/place_prediction_tile.dart';
+import 'package:boride/global/map_key.dart';
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
-import 'package:provider/provider.dart';
+import '../assistants/request_assistant.dart';
+import '../brand_colors.dart';
+import '../models/predicted_places.dart';
+import '../widgets/place_prediction_tile.dart';
 
-import '../global/map_key.dart';
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
+class SearchPlacesScreen extends StatefulWidget
+{
 
   @override
   _SearchPlacesScreenState createState() => _SearchPlacesScreenState();
 }
 
-class _SearchPlacesScreenState extends State<SearchPage> {
-  var pickupController = TextEditingController();
-  var destinationController = TextEditingController();
 
-  List<Prediction> placesPredictedList = [];
 
-  void findPlaceAutoCompleteSearch(String inputText) async {
 
-    if (inputText.length > 1) //2 or more than 2 input characters
+class _SearchPlacesScreenState extends State<SearchPlacesScreen>
+{
+  List<PredictedPlaces> placesPredictedList = [];
+
+  void findPlaceAutoCompleteSearch(String inputText) async
+  {
+    if(inputText.length > 1) //2 or more than 2 input characters
     {
-      String urlAutoCompleteSearch =
-          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputText&key=$mapKey&components=country:NG";
+      String urlAutoCompleteSearch = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputText&key=$mapKey&components=country:NG";
 
-      var responseAutoCompleteSearch =
-          await RequestHelper.getRequest(urlAutoCompleteSearch);
+      var responseAutoCompleteSearch = await RequestAssistant.receiveRequest(urlAutoCompleteSearch);
 
-      if (responseAutoCompleteSearch ==
-          "Error Occurred, Failed. No Response.") {
+      if(responseAutoCompleteSearch == "Error Occurred, Failed. No Response.")
+      {
         return;
       }
 
-      if (responseAutoCompleteSearch["status"] == "OK") {
+      if(responseAutoCompleteSearch["status"] == "OK")
+      {
         var placePredictions = responseAutoCompleteSearch["predictions"];
 
-        var placePredictionsList = (placePredictions as List)
-            .map((jsonData) => Prediction.fromJson(jsonData))
-            .toList();
+        var placePredictionsList = (placePredictions as List).map((jsonData) => PredictedPlaces.fromJson(jsonData)).toList();
 
         setState(() {
           placesPredictedList = placePredictionsList;
@@ -52,15 +47,13 @@ class _SearchPlacesScreenState extends State<SearchPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    String address =
-        Provider.of<AppData>(context).pickupAddress!.placeName ?? " ";
-    pickupController.text = address;
-
+  Widget build(BuildContext context)
+  {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: Column(
         children: [
+          //search place ui
           Container(
             height: 240,
             decoration: const BoxDecoration(
@@ -190,17 +183,21 @@ class _SearchPlacesScreenState extends State<SearchPage> {
               ),
             ),
           ),
-          (placesPredictedList.isNotEmpty)
+
+          //display place predictions result
+          (placesPredictedList.length > 0)
               ? Expanded(
                   child: ListView.separated(
                     itemCount: placesPredictedList.length,
-                    physics: const ClampingScrollPhysics(),
-                    itemBuilder: (context, index) {
+                    physics: ClampingScrollPhysics(),
+                    itemBuilder: (context, index)
+                    {
                       return PlacePredictionTileDesign(
                         predictedPlaces: placesPredictedList[index],
                       );
                     },
-                    separatorBuilder: (BuildContext context, int index) {
+                    separatorBuilder: (BuildContext context, int index)
+                    {
                       return const Divider(
                         height: 1,
                         color: Colors.white,

@@ -1,4 +1,3 @@
-
 class DirectionDetailsInfo
 {
   int? distance_value;

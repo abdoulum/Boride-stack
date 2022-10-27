@@ -1,10 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:boride/global/global.dart';
+import 'package:boride/mainScreens/about_screen.dart';
+import 'package:boride/mainScreens/profile_screen.dart';
+import 'package:boride/mainScreens/trips_history_screen.dart';
+import 'package:boride/splashScreen/splash_screen.dart';
 
-import '../authentication/login_page.dart';
 
-class MyDrawer extends StatefulWidget {
+class MyDrawer extends StatefulWidget
+{
   String? name;
   String? email;
 
@@ -14,171 +17,126 @@ class MyDrawer extends StatefulWidget {
   _MyDrawerState createState() => _MyDrawerState();
 }
 
-class _MyDrawerState extends State<MyDrawer> {
+
+
+class _MyDrawerState extends State<MyDrawer>
+{
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return Drawer(
       child: ListView(
         children: [
           //drawer header
           Container(
-            height: 120,
-            color: Colors.white,
+            height: 165,
+            color: Colors.grey,
             child: DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.white),
+              decoration: const BoxDecoration(color: Colors.black),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const Icon(
-                    Ionicons.person_circle,
-                    size: 40,
-                    color: Colors.black,
+                    Icons.person,
+                    size: 80,
+                    color: Colors.grey,
                   ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.name.toString(),
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17),
+
+                  const SizedBox(width: 16,),
+
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.name.toString(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(
-                          height: 8,
+                      ),
+                      const SizedBox(height: 10,),
+                      Text(
+                        widget.email.toString(),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
                         ),
-                        Text(
-                          widget.email.toString(),
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
           ),
 
-          const SizedBox(
-            height: 25.0,
-          ),
+          const  SizedBox(height: 12.0,),
 
           //drawer body
           GestureDetector(
-            onTap: () {},
+            onTap: ()
+            {
+              Navigator.push(context, MaterialPageRoute(builder: (c)=> TripsHistoryScreen()));
+            },
             child: const ListTile(
-              leading: Icon(
-                Ionicons.refresh,
-                color: Colors.black87,
-                size: 25,
-              ),
+              leading: Icon(Icons.history, color: Colors.white54,),
               title: Text(
-                "Ride History",
+                "History",
                 style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 17),
+                  color: Colors.white54
+                ),
               ),
             ),
           ),
 
           GestureDetector(
-            onTap: () {},
+            onTap: ()
+            {
+              Navigator.push(context, MaterialPageRoute(builder: (c)=> ProfileScreen()));
+            },
             child: const ListTile(
-              leading: Icon(
-                Ionicons.card_outline,
-                color: Colors.black,
-              ),
+              leading: Icon(Icons.person, color: Colors.white54,),
               title: Text(
-                "Menu",
+                "Visit Profile",
                 style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 17),
+                    color: Colors.white54
+                ),
               ),
             ),
           ),
 
           GestureDetector(
-            onTap: () {},
+            onTap: ()
+            {
+              Navigator.push(context, MaterialPageRoute(builder: (c)=> AboutScreen()));
+            },
             child: const ListTile(
-              leading: Icon(
-                Ionicons.pricetag_outline,
-                color: Colors.black,
-              ),
-              title: Text(
-                "Deals",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 17),
-              ),
-            ),
-          ),
-
-          GestureDetector(
-            onTap: () {},
-            child: const ListTile(
-              leading: Icon(
-                Ionicons.chatbox_ellipses_outline,
-                color: Colors.black,
-              ),
-              title: Text(
-                "Tracker",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 17),
-              ),
-            ),
-          ),
-
-          GestureDetector(
-            onTap: () {},
-            child: const ListTile(
-              leading: Icon(
-                Ionicons.information_circle_outline,
-                color: Colors.black,
-              ),
+              leading: Icon(Icons.info, color: Colors.white54,),
               title: Text(
                 "About",
                 style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 17),
+                    color: Colors.white54
+                ),
               ),
             ),
           ),
 
           GestureDetector(
-            onTap: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (c) => const LoginPage()));
+            onTap: ()
+            {
+              fAuth.signOut();
+              Navigator.push(context, MaterialPageRoute(builder: (c)=> const MySplashScreen()));
             },
             child: const ListTile(
-              leading: Icon(
-                Ionicons.information_circle_outline,
-                color: Colors.black,
-              ),
+              leading: Icon(Icons.logout, color: Colors.white54,),
               title: Text(
-                "Sign out",
+                "Sign Out",
                 style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 17),
+                    color: Colors.white54
+                ),
               ),
             ),
           ),
+
         ],
       ),
     );

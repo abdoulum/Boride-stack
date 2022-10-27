@@ -1,28 +1,39 @@
 import 'package:flutter/material.dart';
 
-class TaxiButton extends StatelessWidget {
 
-  final String title;
-  final Color color;
-  Function onPressed;
+class InfoDesignUIWidget extends StatefulWidget
+{
+  String? textInfo;
+  IconData? iconData;
 
-  TaxiButton({Key? key, required this.title, required this.onPressed, required this.color}) : super(key: key);
+  InfoDesignUIWidget({this.textInfo, this.iconData});
 
   @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-      onPressed: onPressed(),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25)
-      ),
-      color: color,
-      textColor: Colors.white,
-      child: SizedBox(
-        height: 50,
-        child: Center(
-          child: Text(
-            title,
-            style: const TextStyle(fontSize: 18, fontFamily: 'Brand-Bold'),
+  State<InfoDesignUIWidget> createState() => _InfoDesignUIWidgetState();
+}
+
+
+
+
+class _InfoDesignUIWidgetState extends State<InfoDesignUIWidget>
+{
+  @override
+  Widget build(BuildContext context)
+  {
+    return Card(
+      color: Colors.white54,
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      child: ListTile(
+        leading: Icon(
+          widget.iconData,
+          color: Colors.black,
+        ),
+        title: Text(
+          widget.textInfo!,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

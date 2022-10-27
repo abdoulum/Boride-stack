@@ -1,81 +1,74 @@
-import 'package:boride/authentication/login_page.dart';
-import 'package:boride/global/global.dart';
-import 'package:boride/helper/helpermethods.dart';
-import 'package:boride/screens/main_page.dart';
-import 'package:boride/splashScreen/retry_page.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:boride/assistants/assistant_methods.dart';
+import 'package:boride/authentication/login_screen.dart';
+import 'package:boride/global/global.dart';
+import 'package:boride/mainScreens/main_screen.dart';
 
-class Splash extends StatefulWidget {
-  const Splash({Key? key}) : super(key: key);
+
+class MySplashScreen extends StatefulWidget
+{
+  const MySplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<Splash> createState() => _SplashState();
+  _MySplashScreenState createState() => _MySplashScreenState();
 }
 
-class _SplashState extends State<Splash> {
-  bool hasInternet = false;
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
 
-  void showSnackBer(String title) {
-    final snackBar = SnackBar(
-        content: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 15),
-        ));
-    scaffoldKey.currentState!.showSnackBar(snackBar);
+class _MySplashScreenState extends State<MySplashScreen>
+{
+
+  startTimer()
+  {
+    fAuth.currentUser != null ? AssistantMethods.readCurrentOnlineUserInfo() : null;
+
+    Timer(const Duration(seconds: 3), () async
+    {
+      if(fAuth.currentUser != null)
+      {
+        currentFirebaseUser = fAuth.currentUser;
+        Navigator.push(context, MaterialPageRoute(builder: (c)=> MainScreen()));
+      }
+      else
+      {
+        Navigator.push(context, MaterialPageRoute(builder: (c)=> const LoginScreen()));
+      }
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    HelperMethod.getCurrentUserInfo();
-    _navigateToHome();
+    
+    startTimer();
   }
-
-  _navigateToHome() async {
-    await Future.delayed(const Duration(milliseconds: 1000), () {});
-    _checkInternetConnectivity();
-  }
-
-  _checkInternetConnectivity() async {
-    hasInternet = await InternetConnectionChecker().hasConnection;
-
-    if (hasInternet == true) {
-      HelperMethod.getCurrentUserInfo();
-      _verifyUser();
-    } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (c) => const RetryPage()));
-
-    }
-  }
-
-  _verifyUser() {
-    if (fAuth.currentUser != null) {
-      currentFirebaseUser = fAuth.currentUser;
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (c) => const MainPage()));
-    } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (c) => const LoginPage()));
-    }
-  }
-
-
+  
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      body: Container(
-        color: Colors.white,
-        child: const Center(
-          child: Text(
-            "Boride",
-            style: TextStyle(
-                fontSize: 70, color: Colors.black, fontWeight: FontWeight.bold),
+  Widget build(BuildContext context)
+  {
+    return Material(
+      child: Container(
+        color: Colors.black,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+
+              Image.asset("images/logo.png"),
+
+              const SizedBox(height: 10,),
+
+              const Text(
+                "Uber & inDriver Clone App",
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+
+            ],
           ),
         ),
       ),

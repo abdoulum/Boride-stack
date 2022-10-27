@@ -1,21 +1,42 @@
-import 'package:boride/datamodels/address.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:boride/models/directions.dart';
+import 'package:boride/models/trips_history_model.dart';
 
-class AppData extends ChangeNotifier
+class AppInfo extends ChangeNotifier
 {
-  Address? pickupAddress, destinationAddress;
+  Directions? userPickUpLocation, userDropOffLocation;
+  int countTotalTrips = 0;
+  List<String> historyTripsKeysList = [];
+  List<TripsHistoryModel> allTripsHistoryInformationList = [];
 
 
-  void updatePickUpLocationAddress(Address userPickUpAddress)
+  void updatePickUpLocationAddress(Directions userPickUpAddress)
   {
-    pickupAddress = userPickUpAddress;
+    userPickUpLocation = userPickUpAddress;
     notifyListeners();
   }
 
-  void updateDropOffLocationAddress(Address dropOffAddress)
+  void updateDropOffLocationAddress(Directions dropOffAddress)
   {
-    destinationAddress = dropOffAddress;
+    userDropOffLocation = dropOffAddress;
     notifyListeners();
   }
 
+  updateOverAllTripsCounter(int overAllTripsCounter)
+  {
+    countTotalTrips = overAllTripsCounter;
+    notifyListeners();
+  }
+
+  updateOverAllTripsKeys(List<String> tripsKeysList)
+  {
+    historyTripsKeysList = tripsKeysList;
+    notifyListeners();
+  }
+
+  updateOverAllTripsHistoryInformation(TripsHistoryModel eachTripHistory)
+  {
+    allTripsHistoryInformationList.add(eachTripHistory);
+    notifyListeners();
+  }
 }

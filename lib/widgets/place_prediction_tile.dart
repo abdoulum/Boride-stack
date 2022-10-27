@@ -1,32 +1,37 @@
-import 'package:boride/dataprovider/appdata.dart';
-import 'package:boride/global/map_key.dart';
-import 'package:boride/helper/requesthelper.dart';
-import 'package:boride/datamodels/address.dart';
-import 'package:boride/datamodels/Prediction.dart';
-import 'package:boride/widgets/progress_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
+import 'package:boride/assistants/request_assistant.dart';
+import 'package:boride/global/global.dart';
+import 'package:boride/global/map_key.dart';
+import 'package:boride/infoHandler/app_info.dart';
+import 'package:boride/models/directions.dart';
+import 'package:boride/models/predicted_places.dart';
+import 'package:boride/widgets/progress_dialog.dart';
 
-class PlacePredictionTileDesign extends StatelessWidget
+
+class PlacePredictionTileDesign extends StatefulWidget
 {
-  final Prediction? predictedPlaces;
+  final PredictedPlaces? predictedPlaces;
 
-  const PlacePredictionTileDesign({Key? key, this.predictedPlaces}) : super(key: key);
+  PlacePredictionTileDesign({this.predictedPlaces});
 
+  @override
+  State<PlacePredictionTileDesign> createState() => _PlacePredictionTileDesignState();
+}
 
+class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
   getPlaceDirectionDetails(String? placeId, context) async
   {
     showDialog(
-      context: context,
-      builder: (BuildContext context) => ProgressDialog(
-        message: "Setting Up Drop-Off, Please wait...", status: '',
-      ),
+        context: context,
+        builder: (BuildContext context) => ProgressDialog(
+          message: "Setting Up Drof-Off, Please wait...",
+        ),
     );
 
     String placeDirectionDetailsUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$mapKey";
 
-    var responseApi = await RequestHelper.getRequest(placeDirectionDetailsUrl);
+    var responseApi = await RequestAssistant.receiveRequest(placeDirectionDetailsUrl);
 
     Navigator.pop(context);
 
@@ -37,13 +42,17 @@ class PlacePredictionTileDesign extends StatelessWidget
 
     if(responseApi["status"] == "OK")
     {
-      Address directions = Address();
-      directions.placeName = responseApi["result"]["name"];
+      Directions directions = Directions();
+      directions.locationName = responseApi["result"]["name"];
       directions.locationId = placeId;
-      directions.latitude = responseApi["result"]["geometry"]["location"]["lat"];
-      directions.longitude = responseApi["result"]["geometry"]["location"]["lng"];
+      directions.locationLatitude = responseApi["result"]["geometry"]["location"]["lat"];
+      directions.locationLongitude = responseApi["result"]["geometry"]["location"]["lng"];
 
-      Provider.of<AppData>(context, listen: false).updateDropOffLocationAddress(directions);
+      Provider.of<AppInfo>(context, listen: false).updateDropOffLocationAddress(directions);
+
+      setState(() {
+        userDropOffAddress = directions.locationName!;
+      });
 
       Navigator.pop(context, "obtainedDropoff");
     }
@@ -55,18 +64,18 @@ class PlacePredictionTileDesign extends StatelessWidget
     return ElevatedButton(
       onPressed: ()
       {
-        getPlaceDirectionDetails(predictedPlaces!.place_id, context);
+        getPlaceDirectionDetails(widget.predictedPlaces!.place_id, context);
       },
       style: ElevatedButton.styleFrom(
-        primary: Colors.white,
+        primary: Colors.white24,
       ),
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: Row(
           children: [
             const Icon(
-              Ionicons.location_outline,
-              color: Colors.blue,
+              Icons.add_location,
+              color: Colors.grey,
             ),
             const SizedBox(width: 14.0,),
             Expanded(
@@ -75,23 +84,20 @@ class PlacePredictionTileDesign extends StatelessWidget
                 children: [
                   const SizedBox(height: 8.0,),
                   Text(
-                    predictedPlaces!.main_text!,
+                    widget.predictedPlaces!.main_text!,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 16.0,
-                      fontFamily: "Brand-Bold",
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold
+                      color: Colors.white54,
                     ),
                   ),
                   const SizedBox(height: 2.0,),
                   Text(
-                    predictedPlaces!.secondary_text!,
+                    widget.predictedPlaces!.secondary_text!,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 12.0,
-                      fontFamily: "Brand-Bold",
-                      color: Colors.black,
+                      color: Colors.white54,
                     ),
                   ),
                   const SizedBox(height: 8.0,),

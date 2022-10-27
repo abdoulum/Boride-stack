@@ -2,16 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:boride/authentication/login_screen.dart';
-import 'package:boride/global/global.dart';
-import 'package:boride/splashScreen/splash_screen.dart';
-import 'package:boride/widgets/progress_dialog.dart';
+import '../global/global.dart';
+import '../splashScreen/splash_screen.dart';
+import '../widgets/progress_dialog.dart';
+import 'login_screen.dart';
 
 
 class SignUpScreen extends StatefulWidget
 {
-  const SignUpScreen({Key? key}) : super(key: key);
-
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }

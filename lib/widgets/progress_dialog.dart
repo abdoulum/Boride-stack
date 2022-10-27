@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class ProgressDialog extends StatelessWidget
 {
   String? message;
-  ProgressDialog({Key? key, this.message, required String status}) : super(key: key);
+  ProgressDialog({this.message});
 
 
   @override
@@ -19,7 +19,7 @@ class ProgressDialog extends StatelessWidget
           borderRadius: BorderRadius.circular(6),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(16),
           child: Row(
             children: [
 
@@ -29,7 +29,7 @@ class ProgressDialog extends StatelessWidget
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
               ),
 
-              const SizedBox(width: 20.0,),
+              const SizedBox(width: 26.0,),
 
               Text(
                 message!,

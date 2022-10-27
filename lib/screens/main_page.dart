@@ -2,15 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:boride/datamodels/address.dart';
-import 'package:boride/datamodels/directiondetails.dart';
-import 'package:boride/datamodels/nearbydriver.dart';
-import 'package:boride/dataprovider/appdata.dart';
+import 'package:boride/assistants/helpermethods.dart';
+import 'package:boride/assistants/firehelper.dart';
+
 import 'package:boride/global/global.dart';
-import 'package:boride/helper/firehelper.dart';
-import 'package:boride/helper/helpermethods.dart';
-import 'package:boride/screens/search_page.dart';
-import 'package:boride/screens/select_nearest_active_driver_screen.dart';
+import 'package:boride/infoHandler/appdata.dart';
+import 'package:boride/mainScreens/search_places_screen.dart';
+import 'package:boride/mainScreens/select_nearest_active_driver_screen.dart';
+import 'package:boride/models/active_nearby_available_drivers.dart';
+
 import 'package:boride/widgets/brand_divider.dart';
 import 'package:boride/widgets/my_drawer.dart';
 import 'package:boride/widgets/progress_dialog.dart';
@@ -52,7 +52,6 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
 
   LocationPermission? _locationPermission;
 
-  DirectionDetails? tripDirectionDetails;
 
   double bottomPaddingOfMap = 0;
   double searchSheetHeight = (Platform.isIOS) ? 275 : 255;
@@ -60,7 +59,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
   double requestingSheetHeight = 0; //(Platform.isAndroid) ? 195 : 220;
 
   List<LatLng> pLineCoOrdinatesList = [];
-  List<NearbyDriver> onlineNearByAvailableDriversList = [];
+  List<ActiveNearbyAvailableDrivers> onlineNearByAvailableDriversList = [];
 
   Set<Polyline> polyLineSet = {};
   Set<Marker> markersSet = {};
@@ -77,7 +76,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
 
   BitmapDescriptor? activeNearbyIcon;
 
-  DatabaseReference? rideRef;
+  DatabaseReference? databaseReference;
 
   blackThemeGoogleMap() {
     newGoogleMapController!.setMapStyle('''
@@ -259,19 +258,19 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
     userCurrentPosition = cPosition;
 
     LatLng latLngPosition =
-        LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
+    LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
 
     CameraPosition cameraPosition =
-        CameraPosition(target: latLngPosition, zoom: 16);
+    CameraPosition(target: latLngPosition, zoom: 16);
 
     startGeoFireListener();
 
-    await HelperMethod.findCordinateAddress(userCurrentPosition!, context);
+    await AssistantMethods.searchAddressForGeographicCoOrdinates(userCurrentPosition!, context);
 
     newGoogleMapController!
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
-    userName = userModelCurrentInfo!.fullName!;
+    userName = userModelCurrentInfo!.name!;
     userEmail = userModelCurrentInfo!.email!;
   }
 
@@ -279,7 +278,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     setupPositionLocator();
-    HelperMethod.getCurrentUserInfo();
+    AssistantMethods.readCurrentOnlineUserInfo();
   }
 
   void showDetailsSheet() async {
@@ -383,7 +382,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
                     userCurrentPosition!.longitude);
 
                 CameraPosition cameraPosition =
-                    CameraPosition(target: latLngPosition, zoom: 17);
+                CameraPosition(target: latLngPosition, zoom: 17);
 
                 newGoogleMapController!.animateCamera(
                     CameraUpdate.newCameraPosition(cameraPosition));
@@ -446,7 +445,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
                           var responseFromSearchScreen = await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (c) => const SearchPage()));
+                                  builder: (c) =>  SearchPlacesScreen()));
 
                           if (responseFromSearchScreen == "obtainedDropoff") {
                             setState(() {
@@ -514,12 +513,12 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
                                 height: 3,
                               ),
                               Text(
-                                Provider.of<AppData>(context)
-                                            .destinationAddress !=
-                                        null
-                                    ? Provider.of<AppData>(context)
-                                        .destinationAddress!
-                                        .placeName!
+                                Provider.of<AppInfo>(context)
+                                    .userDropOffLocation !=
+                                    null
+                                    ? Provider.of<AppInfo>(context)
+                                    .userDropOffLocation!
+                                    .locationName!
                                     : "Select a destination",
                                 style: const TextStyle(
                                     fontFamily: "Brand-Bold",
@@ -542,8 +541,8 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
                           "Request a Ride",
                         ),
                         onPressed: () {
-                          if (Provider.of<AppData>(context, listen: false)
-                                  .destinationAddress !=
+                          if (Provider.of<AppInfo>(context, listen: false)
+                              .userDropOffLocation !=
                               null) {
                           } else {
                             showSnackBer("Please select destination location");
@@ -614,7 +613,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
                                   Text(
                                     tripDirectionDetailsInfo != null
                                         ? tripDirectionDetailsInfo!
-                                            .duration_text!
+                                        .duration_text!
                                         : "",
                                     style: const TextStyle(
                                         fontSize: 16,
@@ -625,7 +624,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
                               Expanded(child: Container()),
                               Text(
                                 tripDirectionDetailsInfo != null
-                                    ? '₦ ${HelperMethod.estimateFares(tripDirectionDetailsInfo!)}'
+                                    ? '₦ ${AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!)}'
                                     : "",
                                 style: const TextStyle(
                                     fontSize: 18, fontFamily: 'Brand-Bold'),
@@ -722,7 +721,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
                 height: requestingSheetHeight,
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
@@ -797,37 +796,37 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
     //1. save the RideRequest Information
 
     var pickup =
-        Provider.of<AppData>(context, listen: false).pickupAddress;
+        Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
     var destination =
-        Provider.of<AppData>(context, listen: false).destinationAddress;
+        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     Map pickupMap = {
       //"key" : value,
-      "latitude": pickup!.latitude.toString(),
-      "longitude": pickup.longitude.toString(),
+      "latitude": pickup!.locationLatitude.toString(),
+      "longitude": pickup.locationLongitude.toString(),
     };
 
     Map destinaionMap = {
       //"key" : value,
-      "latitude": destination!.latitude.toString(),
-      "longitude": destination.longitude.toString(),
+      "latitude": destination!.locationLatitude.toString(),
+      "longitude": destination.locationLatitude.toString(),
     };
 
     Map rideMap = {
       "create_at": DateTime.now().toString(),
-      "rider_name": userModelCurrentInfo!.fullName,
-      "rider_phone": userModelCurrentInfo!.phone,
-      "pickup_address": pickup.placeName,
-      "destination_Address": destination.placeName,
+      "rider_name": "userModelCurrentInfo!.name",
+      "rider_phone": "userModelCurrentInfo!.phone",
+      "pickup_address": pickup.locationName,
+      "destination_Address": destination.locationName,
       "location": pickupMap,
       "destination": destinaionMap,
       "payment_method": "card",
       "driverId": "waiting"
     };
 
-    databaseReference!.set(rideMap);
+    databaseReference?.set(rideMap);
 
-    onlineNearByAvailableDriversList = FireHelper.nearbyDriverList;
+    onlineNearByAvailableDriversList = GeoFireAssistant.activeNearbyAvailableDriversList;
     searchNearestOnlineDrivers();
   }
 
@@ -848,11 +847,11 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
 
     if (onlineNearByAvailableDriversList.isEmpty) {
       //cancel/delete the RideRequest Information
-      rideRef!.remove();
+      databaseReference!.remove();
 
       Fluttertoast.showToast(
           msg:
-              "No Online Nearest Driver Available. Search Again after some time, Restarting App Now.");
+          "No Online Nearest Driver Available. Search Again after some time, Restarting App Now.");
 
       Future.delayed(const Duration(milliseconds: 4000), () {
         SystemNavigator.pop();
@@ -865,7 +864,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
           context,
           MaterialPageRoute(
               builder: (c) => SelectNearestActiveDriversScreen(
-                  referenceRideRequest: rideRef!)));
+                  referenceRideRequest: databaseReference)));
     }
 
     //active driver available
@@ -886,30 +885,30 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
 
   Future<void> drawPolyLineFromOriginToDestination() async {
     var originPosition =
-        Provider.of<AppData>(context, listen: false).pickupAddress;
+        Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
     var destinationPosition =
-        Provider.of<AppData>(context, listen: false).destinationAddress;
+        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     var originLatLng =
-        LatLng(originPosition!.latitude!, originPosition.longitude!);
+    LatLng(originPosition!.locationLatitude!, originPosition.locationLongitude!);
     var destinationLatLng =
-        LatLng(destinationPosition!.latitude!, destinationPosition.longitude!);
+    LatLng(destinationPosition!.locationLatitude!, destinationPosition.locationLongitude!);
 
     showDialog(
       context: context,
       builder: (BuildContext context) => ProgressDialog(
-        message: "Please wait...", status: '',
+        message: "Please wait...",
       ),
     );
 
     var thisDetail =
-        await HelperMethod.getDirectionDetails(originLatLng, destinationLatLng);
+    await AssistantMethods.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
 
     Navigator.pop(context);
 
     PolylinePoints pPoints = PolylinePoints();
     List<PointLatLng> decodedPolyLinePointsResultList =
-        pPoints.decodePolyline(thisDetail!.e_points!);
+    pPoints.decodePolyline(thisDetail!.e_points!);
 
     setState(() {
       tripDirectionDetailsInfo = thisDetail;
@@ -967,7 +966,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
       infoWindow:
-          InfoWindow(title: originPosition.placeName, snippet: "Origin"),
+      InfoWindow(title: originPosition.locationName, snippet: "Origin"),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
     );
@@ -975,7 +974,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
       infoWindow: InfoWindow(
-          title: destinationPosition.placeName, snippet: "Destination"),
+          title: destinationPosition.locationName, snippet: "Destination"),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
     );
@@ -1013,7 +1012,7 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
     Geofire.initialize("activeDrivers");
 
     Geofire.queryAtLocation(
-            userCurrentPosition!.latitude, userCurrentPosition!.longitude, 10)!
+        userCurrentPosition!.latitude, userCurrentPosition!.longitude, 10)!
         .listen((map) {
       if (map != null) {
         var callBack = map['callBack'];
@@ -1022,35 +1021,35 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
         //longitude will be retrieved from map['longitude']
 
         switch (callBack) {
-          //whenever any driver become active/online
+        //whenever any driver become active/online
           case Geofire.onKeyEntered:
-            NearbyDriver activeNearbyAvailableDriver = NearbyDriver();
+            ActiveNearbyAvailableDrivers activeNearbyAvailableDriver = ActiveNearbyAvailableDrivers();
             activeNearbyAvailableDriver.locationLatitude = map['latitude'];
             activeNearbyAvailableDriver.locationLongitude = map['longitude'];
-            activeNearbyAvailableDriver.key = map['key'];
-            FireHelper.nearbyDriverList.add(activeNearbyAvailableDriver);
+            activeNearbyAvailableDriver.driverId = map['key'];
+            GeoFireAssistant.activeNearbyAvailableDriversList.add(activeNearbyAvailableDriver);
             if (activeNearbyDriverKeysLoaded == true) {
               displayActiveDriversOnUsersMap();
             }
             break;
 
-          //whenever any driver become non-active/offline
+        //whenever any driver become non-active/offline
           case Geofire.onKeyExited:
-            FireHelper.removeFromList(map['key']);
+            GeoFireAssistant.deleteOfflineDriverFromList(map['key']);
             displayActiveDriversOnUsersMap();
             break;
 
-          //whenever driver moves - update driver location
+        //whenever driver moves - update driver location
           case Geofire.onKeyMoved:
-            NearbyDriver activeNearbyAvailableDriver = NearbyDriver();
+            ActiveNearbyAvailableDrivers activeNearbyAvailableDriver = ActiveNearbyAvailableDrivers();
             activeNearbyAvailableDriver.locationLatitude = map['latitude'];
             activeNearbyAvailableDriver.locationLongitude = map['longitude'];
-            activeNearbyAvailableDriver.key = map['key'];
-            FireHelper.updateNearbyLocation(activeNearbyAvailableDriver);
+            activeNearbyAvailableDriver.driverId = map['key'];
+            GeoFireAssistant.updateActiveNearbyAvailableDriverLocation(activeNearbyAvailableDriver);
             displayActiveDriversOnUsersMap();
             break;
 
-          //display those online/active drivers on user's map
+        //display those online/active drivers on user's map
           case Geofire.onGeoQueryReady:
             activeNearbyDriverKeysLoaded = true;
             displayActiveDriversOnUsersMap();
@@ -1066,12 +1065,12 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
     setState(() {
       Set<Marker> driversMarkerSet = <Marker>{};
 
-      for (NearbyDriver eachDriver in FireHelper.nearbyDriverList) {
+      for (ActiveNearbyAvailableDrivers eachDriver in GeoFireAssistant.activeNearbyAvailableDriversList) {
         LatLng eachDriverActivePosition =
-            LatLng(eachDriver.locationLatitude!, eachDriver.locationLongitude!);
+        LatLng(eachDriver.locationLatitude!, eachDriver.locationLongitude!);
 
         Marker marker = Marker(
-          markerId: MarkerId("driver" + eachDriver.key!),
+          markerId: MarkerId("driver" + eachDriver.driverId!),
           position: eachDriverActivePosition,
           icon: activeNearbyIcon!,
           rotation: 360,
@@ -1105,9 +1104,9 @@ class _screenstate extends State<MainPage> with TickerProviderStateMixin {
   createActiveNearByDriverIconMarker() {
     if (activeNearbyIcon == null) {
       ImageConfiguration imageConfiguration =
-          createLocalImageConfiguration(context, size: const Size(2, 2));
+      createLocalImageConfiguration(context, size: const Size(2, 2));
       BitmapDescriptor.fromAssetImage(
-              imageConfiguration, "images/car_android.png")
+          imageConfiguration, "images/car_android.png")
           .then((value) {
         activeNearbyIcon = value;
       });

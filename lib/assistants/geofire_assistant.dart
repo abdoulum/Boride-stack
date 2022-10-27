@@ -1,4 +1,5 @@
-import 'package:boride/models/active_nearby_available_drivers.dart';
+
+import '../models/active_nearby_available_drivers.dart';
 
 class GeoFireAssistant
 {
