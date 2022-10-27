@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:boride/brand_colors.dart';
 import 'package:boride/global/global.dart';
 import 'package:boride/mainScreens/about_screen.dart';
 import 'package:boride/mainScreens/profile_screen.dart';
 import 'package:boride/mainScreens/trips_history_screen.dart';
 import 'package:boride/splashScreen/splash_screen.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 
-
-class MyDrawer extends StatefulWidget
-{
+class MyDrawer extends StatefulWidget {
   String? name;
   String? email;
 
@@ -17,126 +18,143 @@ class MyDrawer extends StatefulWidget
   _MyDrawerState createState() => _MyDrawerState();
 }
 
-
-
-class _MyDrawerState extends State<MyDrawer>
-{
+class _MyDrawerState extends State<MyDrawer> {
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Colors.white,
       child: ListView(
         children: [
           //drawer header
           Container(
             height: 165,
-            color: Colors.grey,
             child: DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.black),
+              decoration: const BoxDecoration(),
               child: Row(
                 children: [
                   const Icon(
-                    Icons.person,
-                    size: 80,
-                    color: Colors.grey,
+                    Ionicons.person_circle,
+                    size: 60,
+                    color: Colors.black,
                   ),
 
-                  const SizedBox(width: 16,),
+                  const SizedBox(
+                    width: 16,
+                  ),
 
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.name.toString(),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
+                  ///Email And Name
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.name.toString(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontFamily: "Brand-Bold",
+                            color: BrandColors.colorTextDark,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10,),
-                      Text(
-                        widget.email.toString(),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                        const SizedBox(
+                          height: 5,
                         ),
-                      ),
-                    ],
+                        Text(
+                          widget.email.toString(),
+                          style: const TextStyle(
+                            fontFamily: "Brand-Bold",
+                            fontSize: 12,
+                            color: BrandColors.colorTextDark,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
           ),
 
-          const  SizedBox(height: 12.0,),
+          const SizedBox(
+            height: 12.0,
+          ),
 
           //drawer body
           GestureDetector(
-            onTap: ()
-            {
-              Navigator.push(context, MaterialPageRoute(builder: (c)=> const TripsHistoryScreen()));
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (c) => const TripsHistoryScreen()));
             },
             child: const ListTile(
-              leading: Icon(Icons.history, color: Colors.white54,),
+              leading: Icon(Ionicons.reload, color: BrandColors.colorTextDark),
               title: Text(
                 "History",
                 style: TextStyle(
-                  color: Colors.white54
-                ),
+                    fontSize: 16,
+                    fontFamily: "Brand-Bold",
+                    fontWeight: FontWeight.w200,
+                    color: BrandColors.colorTextDark),
               ),
             ),
           ),
 
           GestureDetector(
-            onTap: ()
-            {
-              Navigator.push(context, MaterialPageRoute(builder: (c)=> const ProfileScreen()));
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (c) => const ProfileScreen()));
             },
             child: const ListTile(
-              leading: Icon(Icons.person, color: Colors.white54,),
+              leading: Icon(Ionicons.person_outline,
+                  color: BrandColors.colorTextDark),
               title: Text(
                 "Visit Profile",
                 style: TextStyle(
-                    color: Colors.white54
-                ),
+                    fontSize: 16,
+                    fontFamily: "Brand-Bold",
+                    color: BrandColors.colorTextDark),
               ),
             ),
           ),
 
           GestureDetector(
-            onTap: ()
-            {
-              Navigator.push(context, MaterialPageRoute(builder: (c)=> const AboutScreen()));
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (c) => const AboutScreen()));
             },
             child: const ListTile(
-              leading: Icon(Icons.info, color: Colors.white54,),
+              leading: Icon(Ionicons.information_circle_outline,
+                  color: BrandColors.colorTextDark),
               title: Text(
                 "About",
                 style: TextStyle(
-                    color: Colors.white54
-                ),
+                    fontSize: 16,
+                    fontFamily: "Brand-Bold",
+                    color: BrandColors.colorTextDark),
               ),
             ),
           ),
 
           GestureDetector(
-            onTap: ()
-            {
+            onTap: () {
               fAuth.signOut();
-              Navigator.push(context, MaterialPageRoute(builder: (c)=> const MySplashScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (c) => const MySplashScreen()));
             },
             child: const ListTile(
-              leading: Icon(Icons.logout, color: Colors.white54,),
+              leading: Icon(Ionicons.log_out_outline,
+                  color: BrandColors.colorTextDark),
               title: Text(
                 "Sign Out",
                 style: TextStyle(
-                    color: Colors.white54
-                ),
+                    fontSize: 16,
+                    fontFamily: "Brand-Bold",
+                    color: BrandColors.colorTextDark),
               ),
             ),
           ),
-
         ],
       ),
     );

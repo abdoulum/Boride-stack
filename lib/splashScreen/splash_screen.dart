@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:boride/brand_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:boride/assistants/assistant_methods.dart';
 import 'package:boride/authentication/login_screen.dart';
@@ -49,21 +50,17 @@ class _MySplashScreenState extends State<MySplashScreen>
   {
     return Material(
       child: Container(
-        color: Colors.black,
+        color: Colors.white,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-
-              Image.asset("images/logo.png"),
-
-              const SizedBox(height: 10,),
-
-              const Text(
-                "Uber & inDriver Clone App",
+            children: const [
+              Text(
+                "BORIDE",
                 style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
+                  fontSize: 50,
+                  fontFamily: "Brand-Regular",
+                  color: BrandColors.colorPrimaryDark,
                   fontWeight: FontWeight.bold
                 ),
               ),

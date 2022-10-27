@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:boride/brand_colors.dart';
 import 'package:boride/infoHandler/app_info.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
@@ -77,7 +80,7 @@ class _MainScreenState extends State<MainScreen>
   String userRideRequestStatus="";
   bool requestPositionInfo = true;
 
-
+  double searchUiHeight = (Platform.isAndroid)? 245 : 255;
 
 
 
@@ -657,8 +660,9 @@ class _MainScreenState extends State<MainScreen>
             padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
             mapType: MapType.normal,
             myLocationEnabled: true,
+            myLocationButtonEnabled: false,
             zoomGesturesEnabled: true,
-            zoomControlsEnabled: true,
+            zoomControlsEnabled: false,
             initialCameraPosition: _kGooglePlex,
             polylines: polyLineSet,
             markers: markersSet,
@@ -669,7 +673,6 @@ class _MainScreenState extends State<MainScreen>
               newGoogleMapController = controller;
 
               //for black theme google map
-              blackThemeGoogleMap();
 
               setState(() {
                 bottomPaddingOfMap = 240;
@@ -679,34 +682,53 @@ class _MainScreenState extends State<MainScreen>
             },
           ),
 
-          //custom hamburger button for drawer
+          /// Drawer / Cancel Request Button
           Positioned(
             top: 30,
             left: 14,
             child: GestureDetector(
-              onTap: ()
-              {
-                if(openNavigationDrawer)
-                {
+              onTap: () {
+                if (openNavigationDrawer) {
                   sKey.currentState!.openDrawer();
-                }
-                else
-                {
+                } else {
                   //restart-refresh-minimize app progmatically
                   SystemNavigator.pop();
                 }
               },
               child: CircleAvatar(
-                backgroundColor: Colors.grey,
+                backgroundColor: Colors.white,
                 child: Icon(
                   openNavigationDrawer ? Icons.menu : Icons.close,
-                  color: Colors.black54,
+                  color: BrandColors.colorPrimaryDark,
                 ),
               ),
             ),
           ),
 
-          //ui for searching location
+          /// Locate me
+          Positioned(
+            right: 10,
+            bottom: 260,
+            child: GestureDetector(
+              onTap: () {
+                if (openNavigationDrawer) {
+                  sKey.currentState!.openDrawer();
+                } else {
+                  //restart-refresh-minimize app progmatically
+                  SystemNavigator.pop();
+                }
+              },
+              child: const CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(
+                    Icons.my_location,
+                  color: BrandColors.colorPrimaryDark,
+                ),
+              ),
+            ),
+          ),
+
+          /// Search location UI
           Positioned(
             bottom: 0,
             left: 0,
@@ -715,60 +737,42 @@ class _MainScreenState extends State<MainScreen>
               curve: Curves.easeIn,
               duration: const Duration(milliseconds: 120),
               child: Container(
-                height: searchLocationContainerHeight,
+                height: searchUiHeight,
                 decoration: const BoxDecoration(
-                  color: Colors.black87,
+                  color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(20),
                     topLeft: Radius.circular(20),
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      //from
-                      Row(
-                        children: [
-                          const Icon(Icons.add_location_alt_outlined, color: Colors.grey,),
-                          const SizedBox(width: 12.0,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "From",
-                                style: TextStyle(color: Colors.grey, fontSize: 12),
-                              ),
-                              Text(
-                                Provider.of<AppInfo>(context).userPickUpLocation != null
-                                    ? (Provider.of<AppInfo>(context).userPickUpLocation!.locationName!).substring(0,24) + "..."
-                                    : "not getting address",
-                                style: const TextStyle(color: Colors.grey, fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ],
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Text("Where are you going?",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              fontFamily: 'Brand-Bold')),
+                      const SizedBox(
+                        height: 15,
                       ),
 
-                      const SizedBox(height: 10.0),
-
-                      const Divider(
-                        height: 1,
-                        thickness: 1,
-                        color: Colors.grey,
-                      ),
-
-                      const SizedBox(height: 16.0),
-
-                      //to
+                      ///Search
                       GestureDetector(
-                        onTap: () async
-                        {
+                        onTap: () async {
                           //go to search places screen
-                          var responseFromSearchScreen = await Navigator.push(context, MaterialPageRoute(builder: (c)=> const SearchPlacesScreen()));
+                          var responseFromSearchScreen = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (c) => SearchPlacesScreen()));
 
-                          if(responseFromSearchScreen == "obtainedDropoff")
-                          {
+                          if (responseFromSearchScreen == "obtainedDropoff") {
                             setState(() {
                               openNavigationDrawer = false;
                             });
@@ -777,60 +781,98 @@ class _MainScreenState extends State<MainScreen>
                             await drawPolyLineFromOriginToDestination();
                           }
                         },
-                        child: Row(
-                          children: [
-                            const Icon(Icons.add_location_alt_outlined, color: Colors.grey,),
-                            const SizedBox(width: 12.0,),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "To",
-                                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: const [
+                                BoxShadow(
+                                    blurRadius: 1,
+                                    spreadRadius: 0.1,
+                                    offset: Offset(0.1, 0.5))
+                              ]),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              children: const [
+                                Icon(
+                                  Icons.search,
+                                  color: Colors.blueAccent,
+                                ),
+                                SizedBox(
+                                  width: 10,
                                 ),
                                 Text(
-                                  Provider.of<AppInfo>(context).userDropOffLocation != null
-                                      ? Provider.of<AppInfo>(context).userDropOffLocation!.locationName!
-                                      : "Where to go?",
-                                  style: const TextStyle(color: Colors.grey, fontSize: 14),
-                                ),
+                                  "Search",
+                                  style: TextStyle(color: Colors.grey),
+                                )
                               ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
 
-                      const SizedBox(height: 10.0),
-
-                      const Divider(
-                        height: 1,
-                        thickness: 1,
-                        color: Colors.grey,
+                      const SizedBox(
+                        height: 15,
                       ),
 
-                      const SizedBox(height: 16.0),
+                      ///My Address
+                      Row(
+                        children: [
+                          const Icon(
+                            CupertinoIcons.location_solid,
+                            color: BrandColors.colorPrimaryDark,
+                          ),
+                          const SizedBox(
+                            width: 12.0,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "My Location",
+                                style:
+                                TextStyle(color: BrandColors.colorPrimaryDark, fontSize: 12),
+                              ),
+                              Text(
+                                Provider.of<AppInfo>(context)
+                                    .userPickUpLocation !=
+                                    null
+                                    ? (Provider.of<AppInfo>(context)
+                                    .userPickUpLocation!
+                                    .locationName!)
+                                    .substring(0, 24) +
+                                    "..."
+                                    : "not getting address",
+                                style: const TextStyle(
+                                    color: BrandColors.colorPrimaryDark, fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 18.0),
 
                       ElevatedButton(
                         child: const Text(
                           "Request a Ride",
                         ),
-                        onPressed: ()
-                        {
-                          if(Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null)
-                          {
+                        onPressed: () {
+                          if (Provider.of<AppInfo>(context, listen: false)
+                              .userDropOffLocation !=
+                              null) {
                             saveRideRequestInformation();
-                          }
-                          else
-                          {
-                            Fluttertoast.showToast(msg: "Please select destination location");
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: "Please select destination location");
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
-                          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
-                        ),
+                            primary: BrandColors.colorPrimaryDark,
+                            textStyle: const TextStyle(
+                                fontSize: 19, fontWeight: FontWeight.bold)),
                       ),
-
                     ],
                   ),
                 ),
@@ -838,7 +880,7 @@ class _MainScreenState extends State<MainScreen>
             ),
           ),
 
-          //ui for waiting response from driver
+          ///ui for waiting response from driver
           Positioned(
             bottom: 0,
             left: 0,
@@ -876,7 +918,7 @@ class _MainScreenState extends State<MainScreen>
             ),
           ),
 
-          //ui for displaying assigned driver information
+          ///ui for displaying assigned driver information
           Positioned(
             bottom: 0,
             left: 0,
@@ -1207,7 +1249,7 @@ class _MainScreenState extends State<MainScreen>
     if(activeNearbyIcon == null)
     {
       ImageConfiguration imageConfiguration = createLocalImageConfiguration(context, size: const Size(2, 2));
-      BitmapDescriptor.fromAssetImage(imageConfiguration, "images/car.png").then((value)
+      BitmapDescriptor.fromAssetImage(imageConfiguration, "images/car_android.png").then((value)
       {
         activeNearbyIcon = value;
       });

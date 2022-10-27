@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:boride/assistants/request_assistant.dart';
 import 'package:boride/global/map_key.dart';
@@ -20,6 +22,8 @@ class SearchPlacesScreen extends StatefulWidget
 class _SearchPlacesScreenState extends State<SearchPlacesScreen>
 {
   List<PredictedPlaces> placesPredictedList = [];
+
+  double searchSheetHeight = (Platform.isAndroid) ? 180 : 200;
 
   void findPlaceAutoCompleteSearch(String inputText) async
   {
@@ -51,14 +55,14 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen>
   Widget build(BuildContext context)
   {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           //search place ui
           Container(
-            height: 160,
+            height: searchSheetHeight,
             decoration: const BoxDecoration(
-              color: Colors.black54,
+              color: Colors.black,
               boxShadow:
               [
                 BoxShadow(
@@ -67,6 +71,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen>
                   spreadRadius: 0.5,
                   offset: Offset(
                     0.7,
+
                     0.7,
                   ),
                 ),
