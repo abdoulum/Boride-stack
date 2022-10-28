@@ -59,7 +59,7 @@ class _MySplashScreenState extends State<MySplashScreen>
                 "BORIDE",
                 style: TextStyle(
                   fontSize: 50,
-                  fontFamily: "Brand-Regular",
+                  fontFamily: "Brand-Bold",
                   color: BrandColors.colorPrimaryDark,
                   fontWeight: FontWeight.bold
                 ),

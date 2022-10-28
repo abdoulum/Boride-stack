@@ -1,9 +1,11 @@
 import 'package:boride/assistants/request_assistant.dart';
+import 'package:boride/brand_colors.dart';
 import 'package:boride/global/map_key.dart';
 import 'package:boride/models/directions.dart';
 import 'package:boride/models/predicted_places.dart';
 import 'package:boride/widgets/progress_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:boride/global/global.dart';
 import 'package:boride/infoHandler/app_info.dart';
@@ -67,17 +69,17 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
         getPlaceDirectionDetails(widget.predictedPlaces!.place_id, context);
       },
       style: ElevatedButton.styleFrom(
-        primary: Colors.white24,
+        primary: Colors.white,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(5),
         child: Row(
           children: [
             const Icon(
-              Icons.add_location,
-              color: Colors.grey,
+              Ionicons.location_outline,
+              color: BrandColors.colorPrimaryDark,
             ),
-            const SizedBox(width: 14.0,),
+            const SizedBox(width: 15.0,),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,8 +89,10 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
                     widget.predictedPlaces!.main_text!,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.white54,
+                        fontSize: 16.0,
+                        fontFamily: "Brand-Bold",
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold
                     ),
                   ),
                   const SizedBox(height: 2.0,),
@@ -97,7 +101,8 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 12.0,
-                      color: Colors.white54,
+                      fontFamily: "Brand-Bold",
+                      color: Colors.black,
                     ),
                   ),
                   const SizedBox(height: 8.0,),
