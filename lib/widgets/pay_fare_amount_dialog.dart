@@ -87,10 +87,7 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog>
                 ),
                 onPressed: ()
                 {
-                  Future.delayed(const Duration(milliseconds: 2000), ()
-                  {
-                    Navigator.pop(context, "cashPayed");
-                  });
+                  ///After payment
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

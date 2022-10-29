@@ -40,11 +40,11 @@ class _LoginScreenState extends State<LoginScreen> {
         });
 
     final User? firebaseUser = (await fAuth
-            .signInWithEmailAndPassword(
+        .signInWithEmailAndPassword(
       email: emailTextEditingController.text.trim(),
       password: passwordTextEditingController.text.trim(),
     )
-            .catchError((msg) {
+        .catchError((msg) {
       Navigator.pop(context);
       Fluttertoast.showToast(msg: "Error: " + msg.toString());
     }))
@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (firebaseUser != null) {
       DatabaseReference driversRef =
-          FirebaseDatabase.instance.ref().child("users");
+      FirebaseDatabase.instance.ref().child("users");
       driversRef.child(firebaseUser.uid).once().then((driverKey) {
         final snap = driverKey.snapshot;
         if (snap.value != null) {

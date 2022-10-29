@@ -29,11 +29,11 @@ class _MySplashScreenState extends State<MySplashScreen>
       if(await fAuth.currentUser != null)
       {
         currentFirebaseUser = fAuth.currentUser;
-        Navigator.push(context, MaterialPageRoute(builder: (c)=> const MainScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c)=> const MainScreen()));
       }
       else
       {
-        Navigator.push(context, MaterialPageRoute(builder: (c)=> const LoginScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c)=> const LoginScreen()));
       }
     });
   }
@@ -60,8 +60,8 @@ class _MySplashScreenState extends State<MySplashScreen>
                 style: TextStyle(
                   fontSize: 50,
                   fontFamily: "Brand-Bold",
-                  color: BrandColors.colorPrimaryDark,
-                  fontWeight: FontWeight.bold
+                  fontWeight: FontWeight.bold,
+                  color: BrandColors.colorPrimary,
                 ),
               ),
 

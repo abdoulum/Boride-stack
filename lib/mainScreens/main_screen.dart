@@ -16,7 +16,6 @@ import 'package:boride/widgets/progress_dialog.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -78,9 +77,9 @@ class _MainScreenState extends State<MainScreen> {
 
   double searchUiHeight = 260;
   double rideDetailsSheetHeight = 0;
-  double locateMeButtomPadding = 270;
+  double locateMeBottomPadding = 270;
 
-  blackThemeGoogleMap() {
+  myMapTheme() {
     newGoogleMapController!.setMapStyle('''
                     [
                       {
@@ -271,7 +270,6 @@ class _MainScreenState extends State<MainScreen> {
     String humanReadableAddress =
         await AssistantMethods.searchAddressForGeographicCoOrdinates(
             userCurrentPosition!, context);
-    print("this is your address = " + humanReadableAddress);
 
     userName = userModelCurrentInfo!.name!;
     userEmail = userModelCurrentInfo!.email!;
@@ -290,7 +288,7 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
 
       searchUiHeight = 0;
-      locateMeButtomPadding = 240;
+      locateMeBottomPadding = 240;
       rideDetailsSheetHeight = 230;
       openNavigationDrawer = false;
     });
@@ -492,7 +490,6 @@ class _MainScreenState extends State<MainScreen> {
     //no active driver available
     if (onlineNearByAvailableDriversList.isEmpty) {
       //cancel/delete the RideRequest Information
-      referenceRideRequest!.remove();
 
       setState(() {
         polyLineSet.clear();
@@ -500,14 +497,10 @@ class _MainScreenState extends State<MainScreen> {
         circlesSet.clear();
         pLineCoOrdinatesList.clear();
       });
-
       Fluttertoast.showToast(
           msg:
-              "No Online Nearest Driver Available. Search Again after some time, Restarting App Now.");
-
-      Future.delayed(const Duration(milliseconds: 4000), () {
-        SystemNavigator.pop();
-      });
+              "No Drivers Available ");
+      referenceRideRequest!.remove();
 
       return;
     }
@@ -521,7 +514,7 @@ class _MainScreenState extends State<MainScreen> {
             builder: (c) => SelectNearestActiveDriversScreen(
                 referenceRideRequest: referenceRideRequest)));
 
-    if (response == "driverChoosed") {
+    if (response == "driverChosen") {
       FirebaseDatabase.instance
           .ref()
           .child("drivers")
@@ -549,12 +542,6 @@ class _MainScreenState extends State<MainScreen> {
               Fluttertoast.showToast(
                   msg:
                       "The driver has cancelled your request. Please choose another driver.");
-
-              Future.delayed(const Duration(milliseconds: 3000), () {
-                Fluttertoast.showToast(msg: "Please Restart App Now.");
-
-                SystemNavigator.pop();
-              });
             }
 
             //2. driver has accept the rideRequest :: Push Notification
@@ -617,6 +604,10 @@ class _MainScreenState extends State<MainScreen> {
         Fluttertoast.showToast(msg: "Notification sent Successfully.");
       } else {
         Fluttertoast.showToast(msg: "Please choose another driver.");
+        setState(() {
+          dList.clear();
+          waitingResponseFromDriverContainerHeight = 0;
+        });
         return;
       }
     });
@@ -633,555 +624,6 @@ class _MainScreenState extends State<MainScreen> {
         dList.add(driverKeyInfo);
       });
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    createActiveNearByDriverIconMarker();
-
-    return Scaffold(
-      key: sKey,
-      drawer: SizedBox(
-        width: 265,
-        child: Theme(
-          data: Theme.of(context).copyWith(
-            canvasColor: Colors.black,
-          ),
-          child: MyDrawer(
-            name: userName,
-            email: userEmail,
-          ),
-        ),
-      ),
-      body: Stack(
-        children: [
-          GoogleMap(
-            padding: EdgeInsets.only(
-              bottom: bottomPaddingOfMap,
-            ),
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: false,
-            initialCameraPosition: _kBorideHq,
-            polylines: polyLineSet,
-            markers: markersSet,
-            circles: circlesSet,
-            onMapCreated: (GoogleMapController controller) {
-              _controllerGoogleMap.complete(controller);
-              newGoogleMapController = controller;
-
-              //for black theme google map
-
-              setState(() {
-                bottomPaddingOfMap = 260;
-              });
-
-              locateUserPosition();
-            },
-          ),
-
-          /// Drawer / Cancel Request Button
-          Positioned(
-            top: 30,
-            left: 14,
-            child: GestureDetector(
-              onTap: () {
-                if (openNavigationDrawer) {
-                  sKey.currentState!.openDrawer();
-                } else {
-                  resetFields();
-                }
-              },
-              child: CircleAvatar(
-                radius: 25,
-                backgroundColor: Colors.white,
-                child: Icon(
-                  openNavigationDrawer ? Icons.menu : Icons.close,
-                  color: BrandColors.colorPrimaryDark,
-                ),
-              ),
-            ),
-          ),
-
-          /// Locate me
-          Positioned(
-            right: 10,
-            bottom: locateMeButtomPadding,
-            child: GestureDetector(
-              onTap: () {
-                locateUserPosition();
-              },
-              child: const CircleAvatar(
-                radius: 25,
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.my_location,
-                  color: BrandColors.colorPrimaryDark,
-                ),
-              ),
-            ),
-          ),
-
-          /// Search location UI
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: AnimatedSize(
-              curve: Curves.easeIn,
-              duration: const Duration(milliseconds: 120),
-              child: Container(
-                height: searchUiHeight,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(20),
-                    topLeft: Radius.circular(20),
-                  ),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      const Text("Where are you going?",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 24,
-                              fontFamily: 'Brand-Bold')),
-                      const SizedBox(
-                        height: 15,
-                      ),
-
-                      ///Search
-                      GestureDetector(
-                        onTap: () async {
-                          //go to search places screen
-                          var responseFromSearchScreen = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (c) => const SearchPlacesScreen()));
-
-                          if (responseFromSearchScreen == "obtainedDropoff") {
-                            setState(() {
-                              openNavigationDrawer = false;
-                            });
-
-                            //draw routes - draw polyline
-                            await drawPolyLineFromOriginToDestination();
-                            showDetailsSheet();
-                          }
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: const [
-                                BoxShadow(
-                                    blurRadius: 0.5,
-                                    spreadRadius: 0.1,
-                                    offset: Offset(0.1, 0.2))
-                              ]),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Row(
-                              children: const [
-                                Icon(
-                                  Icons.search,
-                                  color: BrandColors.colorPrimaryDark,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "Search",
-                                  style: TextStyle(color: BrandColors.colorPrimaryDark),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height: 15,
-                      ),
-
-                      ///Home Address
-                      Row(
-                        children: [
-                          const Icon(
-                            Ionicons.home_outline,
-                            color: Colors.black,
-                          ),
-                          const SizedBox(
-                            width: 12.0,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Home",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Brand-Bold"),
-                              ),
-                              Text(
-                                Provider.of<AppInfo>(context)
-                                            .userPickUpLocation !=
-                                        null
-                                    ? (Provider.of<AppInfo>(context)
-                                                .userPickUpLocation!
-                                                .locationName!)
-                                            .substring(0, 24) +
-                                        "..."
-                                    : "not getting address",
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: "Brand-Regular",
-                                    fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 18.0),
-                      ///Work Address
-                      Row(
-                        children: [
-                          const Icon(
-                            CupertinoIcons.briefcase,
-                            color: Colors.black,
-                          ),
-                          const SizedBox(
-                            width: 12.0,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Office",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Brand-Bold"),
-                              ),
-                              Text( "No. 03 NNDC, Central city",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: "Brand-Regular",
-                                    fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          ///Request Sheet
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: AnimatedSize(
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.easeIn,
-              child: Container(
-                height: rideDetailsSheetHeight,
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15)),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 0.5,
-                          spreadRadius: 0.5,
-                          offset: Offset(0.7, 0.7))
-                    ]),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        color: BrandColors.colorAccent2,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                'images/taxi.png',
-                                height: 70,
-                                width: 70,
-                              ),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Taxi",
-                                    style: TextStyle(
-                                        fontSize: 18, fontFamily: "Brand-Bold"),
-                                  ),
-                                  Text(
-                                    tripDirectionDetailsInfo != null
-                                        ? tripDirectionDetailsInfo!
-                                            .duration_text!
-                                        : "",
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        color: BrandColors.colorTextLight),
-                                  ),
-                                ],
-                              ),
-                              Expanded(child: Container()),
-                              Text(
-                                tripDirectionDetailsInfo != null
-                                    ? "\$ ${AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!)}"
-                                    : "",
-                                style: const TextStyle(
-                                    fontSize: 18, fontFamily: 'Brand-Bold'),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 22,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          children: const [
-                            Icon(
-                              FontAwesomeIcons.moneyBillWave,
-                              size: 18,
-                              color: BrandColors.colorTextLight,
-                            ),
-                            SizedBox(
-                              width: 16,
-                            ),
-                            Text("Cash"),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 16,
-                              color: BrandColors.colorTextLight,
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 22,
-                      ),
-                      ElevatedButton(
-                        child: const Text(
-                          "Request a Ride",
-                        ),
-                        onPressed: () {
-
-                          if (Provider.of<AppInfo>(context, listen: false)
-                                  .userDropOffLocation !=
-                              null) {
-                            saveRideRequestInformation();
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "Please select destination location");
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                            primary: BrandColors.colorPrimaryDark,
-                            textStyle: const TextStyle(
-                                fontSize: 19, fontWeight: FontWeight.bold)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          ///ui for waiting response from driver
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: waitingResponseFromDriverContainerHeight,
-              decoration: const BoxDecoration(
-                color: Colors.black87,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  topLeft: Radius.circular(20),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Center(
-                  child: AnimatedTextKit(
-                    animatedTexts: [
-                      FadeAnimatedText(
-                        'Waiting for Response\nfrom Driver',
-                        duration: const Duration(seconds: 6),
-                        textAlign: TextAlign.center,
-                        textStyle: const TextStyle(
-                            fontSize: 30.0,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      ScaleAnimatedText(
-                        'Please wait...',
-                        duration: const Duration(seconds: 10),
-                        textAlign: TextAlign.center,
-                        textStyle: const TextStyle(
-                            fontSize: 32.0,
-                            color: Colors.white,
-                            fontFamily: 'Canterbury'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          ///ui for displaying assigned driver information
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: assignedDriverInfoContainerHeight,
-              decoration: const BoxDecoration(
-                color: Colors.black87,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  topLeft: Radius.circular(20),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //status of ride
-                    Center(
-                      child: Text(
-                        driverRideStatus,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white54,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-
-                    const Divider(
-                      height: 2,
-                      thickness: 2,
-                      color: Colors.white54,
-                    ),
-
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-
-                    //driver vehicle details
-                    Text(
-                      driverCarDetails,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white54,
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 2.0,
-                    ),
-
-                    //driver name
-                    Text(
-                      driverName,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white54,
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-
-                    const Divider(
-                      height: 2,
-                      thickness: 2,
-                      color: Colors.white54,
-                    ),
-
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-
-                    //call driver button
-                    Center(
-                      child: ElevatedButton.icon(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
-                        ),
-                        icon: const Icon(
-                          Icons.phone_android,
-                          color: Colors.black54,
-                          size: 22,
-                        ),
-                        label: const Text(
-                          "Call Driver",
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   Future<void> drawPolyLineFromOriginToDestination() async {
@@ -1211,12 +653,9 @@ class _MainScreenState extends State<MainScreen> {
 
     Navigator.pop(context);
 
-    print("These are points = ");
-    print(directionDetailsInfo!.e_points);
-
     PolylinePoints pPoints = PolylinePoints();
     List<PointLatLng> decodedPolyLinePointsResultList =
-        pPoints.decodePolyline(directionDetailsInfo.e_points!);
+        pPoints.decodePolyline(directionDetailsInfo!.e_points!);
 
     pLineCoOrdinatesList.clear();
 
@@ -1231,7 +670,8 @@ class _MainScreenState extends State<MainScreen> {
 
     setState(() {
       Polyline polyline = Polyline(
-        color: Colors.purpleAccent,
+        color: BrandColors.colorPrimary,
+        width: 4,
         polylineId: const PolylineId("PolylineID"),
         jointType: JointType.round,
         points: pLineCoOrdinatesList,
@@ -1412,16 +852,567 @@ class _MainScreenState extends State<MainScreen> {
   void resetFields() {
 
     setState(() {
+      onlineNearByAvailableDriversList.clear();
       pLineCoOrdinatesList.clear();
       polyLineSet.clear();
       circlesSet.clear();
       markersSet.clear();
       rideDetailsSheetHeight = 0;
+      waitingResponseFromDriverContainerHeight = 0;
       searchUiHeight = 260;
-      locateMeButtomPadding = 270;
+      locateMeBottomPadding = 270;
       openNavigationDrawer = true;
       locateUserPosition();
     });
 
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    createActiveNearByDriverIconMarker();
+
+    return Scaffold(
+      key: sKey,
+      drawer: SizedBox(
+        width: 265,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            canvasColor: Colors.black,
+          ),
+          child: MyDrawer(
+            name: userName,
+            email: userEmail,
+          ),
+        ),
+      ),
+      body: Stack(
+        children: [
+          GoogleMap(
+            padding: EdgeInsets.only(
+              bottom: bottomPaddingOfMap,
+            ),
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: false,
+            initialCameraPosition: _kBorideHq,
+            polylines: polyLineSet,
+            markers: markersSet,
+            circles: circlesSet,
+            onMapCreated: (GoogleMapController controller) {
+              _controllerGoogleMap.complete(controller);
+              newGoogleMapController = controller;
+
+              //for black theme google map
+
+              setState(() {
+                bottomPaddingOfMap = 260;
+              });
+
+              locateUserPosition();
+            },
+          ),
+
+          /// Drawer / Cancel Request Button
+          Positioned(
+            top: 30,
+            left: 14,
+            child: GestureDetector(
+              onTap: () {
+                if (openNavigationDrawer) {
+                  sKey.currentState!.openDrawer();
+                } else {
+                  resetFields();
+                }
+              },
+              child: CircleAvatar(
+                radius: 25,
+                backgroundColor: Colors.white,
+                child: Icon(
+                  openNavigationDrawer ? Icons.menu : Icons.close,
+                  color: BrandColors.colorPrimary,
+                ),
+              ),
+            ),
+          ),
+
+          /// Locate me
+          Positioned(
+            right: 10,
+            bottom: locateMeBottomPadding,
+            child: GestureDetector(
+              onTap: () {
+                locateUserPosition();
+              },
+              child: const CircleAvatar(
+                radius: 25,
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.my_location,
+                  color: BrandColors.colorPrimary,
+                ),
+              ),
+            ),
+          ),
+
+          /// Search location UI
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: AnimatedSize(
+              curve: Curves.easeIn,
+              duration: const Duration(milliseconds: 120),
+              child: Container(
+                height: searchUiHeight,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(20),
+                  ),
+                ),
+                child: Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Text("Where are you going?",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 24,
+                              fontFamily: 'Brand-Bold')),
+                      const SizedBox(
+                        height: 15,
+                      ),
+
+                      ///Search
+                      GestureDetector(
+                        onTap: () async {
+                          //go to search places screen
+                          var responseFromSearchScreen = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (c) => const SearchPlacesScreen()));
+
+                          if (responseFromSearchScreen == "obtainedDropoff") {
+                            setState(() {
+                              openNavigationDrawer = false;
+                            });
+
+                            //draw routes - draw polyline
+                            await drawPolyLineFromOriginToDestination();
+                            showDetailsSheet();
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: const [
+                                BoxShadow(
+                                    blurRadius: 0.5,
+                                    spreadRadius: 0.1,
+                                    offset: Offset(0.1, 0.2))
+                              ]),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              children: const [
+                                Icon(
+                                  Icons.search,
+                                  color: BrandColors.colorPrimary,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Search",
+                                  style: TextStyle(color: BrandColors.colorPrimary),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 15,
+                      ),
+
+                      ///Home Address
+                      Row(
+                        children: [
+                          const Icon(
+                            Ionicons.home_outline,
+                            color: Colors.black,
+                          ),
+                          const SizedBox(
+                            width: 12.0,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Home",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Brand-Bold"),
+                              ),
+                              Text(
+                                Provider.of<AppInfo>(context)
+                                    .userPickUpLocation !=
+                                    null
+                                    ? (Provider.of<AppInfo>(context)
+                                    .userPickUpLocation!
+                                    .locationName!)
+                                    .substring(0, 24) +
+                                    "..."
+                                    : "not getting address",
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: "Brand-Regular",
+                                    fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 18.0),
+                      ///Work Address
+                      Row(
+                        children: [
+                          const Icon(
+                            CupertinoIcons.briefcase,
+                            color: Colors.black,
+                          ),
+                          const SizedBox(
+                            width: 12.0,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                "Office",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Brand-Bold"),
+                              ),
+                              Text( "No. 03 NNDC, Central city",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: "Brand-Regular",
+                                    fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          ///Request Sheet
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AnimatedSize(
+              duration: const Duration(milliseconds: 150),
+              curve: Curves.easeIn,
+              child: Container(
+                height: rideDetailsSheetHeight,
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 0.5,
+                          spreadRadius: 0.5,
+                          offset: Offset(0.7, 0.7))
+                    ]),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        color: BrandColors.colorAccent2,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'images/taxi.png',
+                                height: 70,
+                                width: 70,
+                              ),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Taxi",
+                                    style: TextStyle(
+                                        fontSize: 18, fontFamily: "Brand-Bold"),
+                                  ),
+                                  Text(
+                                    tripDirectionDetailsInfo != null
+                                        ? tripDirectionDetailsInfo!
+                                        .duration_text!
+                                        : "",
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        color: BrandColors.colorTextLight),
+                                  ),
+                                ],
+                              ),
+                              Expanded(child: Container()),
+                              Text(
+                                tripDirectionDetailsInfo != null
+                                    ? "\$ ${AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!)}"
+                                    : "",
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Brand-Bold'),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 22,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: const [
+                            Icon(
+                              FontAwesomeIcons.moneyBillWave,
+                              size: 18,
+                              color: BrandColors.colorTextLight,
+                            ),
+                            SizedBox(
+                              width: 16,
+                            ),
+                            Text("Cash"),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 16,
+                              color: BrandColors.colorTextLight,
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 22,
+                      ),
+                      ElevatedButton(
+                        child: const Text(
+                          "Request a Ride",
+                        ),
+                        onPressed: () {
+
+                          if (Provider.of<AppInfo>(context, listen: false)
+                              .userDropOffLocation !=
+                              null) {
+                            saveRideRequestInformation();
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: "Please select destination location");
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                            primary: BrandColors.colorPrimary,
+                            textStyle: const TextStyle(
+                                fontSize: 19, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          ///ui for waiting response from driver
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: waitingResponseFromDriverContainerHeight,
+              decoration: const BoxDecoration(
+                color: Colors.black87,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(20),
+                  topLeft: Radius.circular(20),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Center(
+                  child: AnimatedTextKit(
+                    animatedTexts: [
+                      FadeAnimatedText(
+                        'Waiting for Response\nfrom Driver',
+                        duration: const Duration(seconds: 6),
+                        textAlign: TextAlign.center,
+                        textStyle: const TextStyle(
+                            fontSize: 30.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      ScaleAnimatedText(
+                        'Please wait...',
+                        duration: const Duration(seconds: 10),
+                        textAlign: TextAlign.center,
+                        textStyle: const TextStyle(
+                            fontSize: 32.0,
+                            color: Colors.white,
+                            fontFamily: 'Canterbury'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          ///ui for displaying assigned driver information
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: assignedDriverInfoContainerHeight,
+              decoration: const BoxDecoration(
+                color: Colors.black87,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(20),
+                  topLeft: Radius.circular(20),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //status of ride
+                    Center(
+                      child: Text(
+                        driverRideStatus,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white54,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+
+                    const Divider(
+                      height: 2,
+                      thickness: 2,
+                      color: Colors.white54,
+                    ),
+
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+
+                    //driver vehicle details
+                    Text(
+                      driverCarDetails,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white54,
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 2.0,
+                    ),
+
+                    //driver name
+                    Text(
+                      driverName,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white54,
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+
+                    const Divider(
+                      height: 2,
+                      thickness: 2,
+                      color: Colors.white54,
+                    ),
+
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+
+                    //call driver button
+                    Center(
+                      child: ElevatedButton.icon(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green,
+                        ),
+                        icon: const Icon(
+                          Icons.phone_android,
+                          color: Colors.black54,
+                          size: 22,
+                        ),
+                        label: const Text(
+                          "Call Driver",
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

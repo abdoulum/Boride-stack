@@ -1,6 +1,7 @@
 import 'package:boride/brand_colors.dart';
 import 'package:boride/global/global.dart';
 import 'package:boride/mainScreens/about_screen.dart';
+import 'package:boride/mainScreens/discount_offers_screen.dart';
 import 'package:boride/mainScreens/profile_screen.dart';
 import 'package:boride/mainScreens/trips_history_screen.dart';
 import 'package:boride/splashScreen/splash_screen.dart';
@@ -92,6 +93,26 @@ class _MyDrawerState extends State<MyDrawer> {
               leading: Icon(Ionicons.reload, color: BrandColors.colorTextDark),
               title: Text(
                 "History",
+                style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: "Brand-Bold",
+                    fontWeight: FontWeight.w200,
+                    color: BrandColors.colorTextDark),
+              ),
+            ),
+          ),
+
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (c) => const DiscountScreen()));
+            },
+            child: const ListTile(
+              leading: Icon(Ionicons.pricetag, color: BrandColors.colorTextDark),
+              title: Text(
+                "Offers",
                 style: TextStyle(
                     fontSize: 16,
                     fontFamily: "Brand-Bold",

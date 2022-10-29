@@ -23,14 +23,13 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
   List<PredictedPlaces> placesPredictedList = [];
 
   void findPlaceAutoCompleteSearch(String inputText) async {
-
     if (inputText.length > 1) //2 or more than 2 input characters
-        {
+    {
       String urlAutoCompleteSearch =
           "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputText&key=$mapKey&components=country:NG";
 
       var responseAutoCompleteSearch =
-      await RequestAssistant.receiveRequest(urlAutoCompleteSearch);
+          await RequestAssistant.receiveRequest(urlAutoCompleteSearch);
 
       if (responseAutoCompleteSearch ==
           "Error Occurred, Failed. No Response.") {
@@ -50,6 +49,9 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
       }
     }
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +76,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 40.0, left: 24, right: 24),
+              padding: const EdgeInsets.only(top: 40.0, left: 24, right: 24),
               child: Column(
                 children: [
                   const SizedBox(height: 10.0),
@@ -121,11 +122,12 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
                               color: BrandColors.colorLightGrayFair,
                               borderRadius: BorderRadius.circular(4)),
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(address.substring(0, 28)  +
-                              "...", style: const TextStyle(
-                            fontFamily: "Brand-Bold",
-
-                          ),),
+                          child: Text(
+                            address.substring(0, 28) + "...",
+                            style: const TextStyle(
+                              fontFamily: "Brand-Bold",
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -135,7 +137,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
                     children: [
                       const Icon(
                         Ionicons.location_outline,
-                        color: BrandColors.colorPrimaryDark,
+                        color: BrandColors.colorPrimary,
                         size: 22,
                       ),
                       const SizedBox(
@@ -152,15 +154,13 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
                               keyboardType: TextInputType.name,
                               textCapitalization: TextCapitalization.words,
                               controller: destinationController,
-                              onChanged: (valueTyped)
-                              {
+                              onChanged: (valueTyped) {
                                 findPlaceAutoCompleteSearch(valueTyped);
                               },
                               decoration: const InputDecoration(
                                 hintText: "Where to..",
                                 hintStyle: TextStyle(
-                                  color: BrandColors.colorTextSemiLight
-                                ),
+                                    color: BrandColors.colorTextSemiLight),
                                 fillColor: BrandColors.colorLightGrayFair,
                                 filled: true,
                                 border: InputBorder.none,
@@ -183,23 +183,23 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
           ),
           (placesPredictedList.isNotEmpty)
               ? Expanded(
-            child: ListView.separated(
-              itemCount: placesPredictedList.length,
-              physics: const ClampingScrollPhysics(),
-              itemBuilder: (context, index) {
-                return PlacePredictionTileDesign(
-                  predictedPlaces: placesPredictedList[index],
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const Divider(
-                  height: 1,
-                  color: Colors.white,
-                  thickness: 1,
-                );
-              },
-            ),
-          )
+                  child: ListView.separated(
+                    itemCount: placesPredictedList.length,
+                    physics: const ClampingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return PlacePredictionTileDesign(
+                        predictedPlaces: placesPredictedList[index],
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const Divider(
+                        height: 1,
+                        color: Colors.white,
+                        thickness: 1,
+                      );
+                    },
+                  ),
+                )
               : Container(),
         ],
       ),

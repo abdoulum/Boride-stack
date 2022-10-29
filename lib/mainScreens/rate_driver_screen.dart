@@ -67,9 +67,9 @@ class _RateDriverScreenState extends State<RateDriverScreen>
                 color: Colors.green,
                 borderColor: Colors.green,
                 size: 46,
-                onRatingChanged: (valueOfStarsChoosed)
+                onRatingChanged: (valueOfStarsChosen)
                 {
-                  countRatingStars = valueOfStarsChoosed;
+                  countRatingStars = valueOfStarsChosen;
 
                   if(countRatingStars == 1)
                   {

@@ -10,7 +10,7 @@ class BrandColors{
 
   static const Color colorBackground = Color(0xFFFBFAFF);
 
-  static const Color colorPink = Color(0xFFE66C75);
+  static const Color colorPink = Color(0xFF777F8A);
   static const Color colorOrange = Color(0xFFE8913A);
   static const Color colorBlue = Color(0xFF2254A3);
   static const Color colorAccentPurple = Color(0xFF4f5cd1);

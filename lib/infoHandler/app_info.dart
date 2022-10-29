@@ -22,6 +22,7 @@ class AppInfo extends ChangeNotifier
     notifyListeners();
   }
 
+
   updateOverAllTripsCounter(int overAllTripsCounter)
   {
     countTotalTrips = overAllTripsCounter;

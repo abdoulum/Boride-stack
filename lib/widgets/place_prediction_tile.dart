@@ -77,7 +77,7 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
           children: [
             const Icon(
               Ionicons.location_outline,
-              color: BrandColors.colorPrimaryDark,
+              color: BrandColors.colorPrimary,
             ),
             const SizedBox(width: 15.0,),
             Expanded(

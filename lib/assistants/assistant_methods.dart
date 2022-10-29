@@ -1,16 +1,17 @@
 import 'dart:convert';
-import 'package:boride/assistants/request_assistant.dart';
-import 'package:boride/global/map_key.dart';
-import 'package:boride/models/direction_details_info.dart';
-import 'package:boride/models/directions.dart';
-import 'package:boride/models/trips_history_model.dart';
-import 'package:boride/models/user_model.dart';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:boride/assistants/request_assistant.dart';
 import 'package:boride/global/global.dart';
+import 'package:boride/global/map_key.dart';
 import 'package:boride/infoHandler/app_info.dart';
+import 'package:boride/models/direction_details_info.dart';
+import 'package:boride/models/directions.dart';
+import 'package:boride/models/trips_history_model.dart';
+import 'package:boride/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class AssistantMethods
@@ -80,13 +81,16 @@ class AssistantMethods
 
   static double calculateFareAmountFromOriginToDestination(DirectionDetailsInfo directionDetailsInfo)
   {
-    double timeTraveledFareAmountPerMinute = (directionDetailsInfo.duration_value! / 60) * 0.1;
-    double distanceTraveledFareAmountPerKilometer = (directionDetailsInfo.duration_value! / 1000) * 0.1;
+    // per km = ₦50,
+    // per min = ₦10
+    // base fare = ₦200
 
-    //USD
-    double totalFareAmount = timeTraveledFareAmountPerMinute + distanceTraveledFareAmountPerKilometer;
+    double baseFare = 200;
+    double distanceFare = (directionDetailsInfo.distance_value!/1000) * 50;
+    double timeFare = (directionDetailsInfo.duration_value! / 60) * 10;
 
-    return double.parse(totalFareAmount.toStringAsFixed(1));
+    double totalFare = baseFare + distanceFare + timeFare;
+    return double.parse(totalFare.toStringAsExponential(1));
   }
 
   static sendNotificationToDriverNow(String deviceRegistrationToken, String userRideRequestId, context) async
@@ -134,7 +138,7 @@ class AssistantMethods
   static void readTripsKeysForOnlineUser(context)
   {
     FirebaseDatabase.instance.ref()
-        .child("All Ride Requests")
+        .child("RideRequest")
         .orderByChild("userName")
         .equalTo(userModelCurrentInfo!.name)
         .once()
@@ -169,7 +173,7 @@ class AssistantMethods
     for(String eachKey in tripsAllKeys)
     {
       FirebaseDatabase.instance.ref()
-          .child("RideRequest")
+          .child("All Ride Requests")
           .child(eachKey)
           .once()
           .then((snap)
