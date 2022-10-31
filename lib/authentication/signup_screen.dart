@@ -246,17 +246,6 @@ class _SignUpScreenState extends State<SignUpScreen>
                 ),
               ),
 
-              TextButton(
-                child: const Text(
-                  "Already have an Account? Login Here",
-                  style: TextStyle(color: Colors.grey),
-                ),
-                onPressed: ()
-                {
-                  Navigator.push(context, MaterialPageRoute(builder: (c)=> const LoginScreen()));
-                },
-              ),
-
             ],
           ),
         ),

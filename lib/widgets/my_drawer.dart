@@ -2,6 +2,7 @@ import 'package:boride/brand_colors.dart';
 import 'package:boride/global/global.dart';
 import 'package:boride/mainScreens/about_screen.dart';
 import 'package:boride/mainScreens/discount_offers_screen.dart';
+import 'package:boride/mainScreens/paymentscreen.dart';
 import 'package:boride/mainScreens/profile_screen.dart';
 import 'package:boride/mainScreens/trips_history_screen.dart';
 import 'package:boride/splashScreen/splash_screen.dart';
@@ -143,7 +144,7 @@ class _MyDrawerState extends State<MyDrawer> {
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (c) => const AboutScreen()));
+                  MaterialPageRoute(builder: (c) => const PaymentPage()));
             },
             child: const ListTile(
               leading: Icon(Ionicons.information_circle_outline,

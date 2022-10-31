@@ -1014,7 +1014,7 @@ class _MainScreenState extends State<MainScreen> {
                           decoration: BoxDecoration(
                               color: Colors.grey[100],
                               borderRadius: BorderRadius.circular(8),
-                              boxShadow: const [
+                              boxShadow: [
                                 BoxShadow(
                                     blurRadius: 0.5,
                                     spreadRadius: 0.1,
