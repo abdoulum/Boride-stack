@@ -1,3 +1,4 @@
+import 'package:boride/assistants/assistant_methods.dart';
 import 'package:boride/global/global.dart';
 import 'package:boride/widgets/info_design_ui.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+
+  String userName = "YourName";
+  String userPhone = "YourPhone";
+
+  @override
+  void initState() {
+    super.initState();
+    AssistantMethods.readCurrentOnlineUserInfo();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +60,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: 100,
             ),
             //name
-            Text(userModelCurrentInfo!.name!,
+            Text(
+               userName,
                 style: const TextStyle(
                     color: Colors.black,
                     fontSize: 22,
@@ -69,13 +83,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             //phone
             InfoDesignUIWidget(
-              textInfo: userModelCurrentInfo!.phone!,
+              textInfo: userPhone,
               iconData: Icons.phone_iphone,
             ),
 
             //email
             InfoDesignUIWidget(
-              textInfo: userModelCurrentInfo!.email!,
+              textInfo: userPhone,
               iconData: Icons.email,
             ),
 
