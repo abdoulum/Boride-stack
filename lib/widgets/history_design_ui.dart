@@ -7,7 +7,7 @@ class HistoryDesignUIWidget extends StatefulWidget
 {
   TripsHistoryModel? tripsHistoryModel;
 
-  HistoryDesignUIWidget({Key? key, this.tripsHistoryModel}) : super(key: key);
+  HistoryDesignUIWidget({this.tripsHistoryModel});
 
   @override
   State<HistoryDesignUIWidget> createState() => _HistoryDesignUIWidgetState();
@@ -105,11 +105,13 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget>
                 const SizedBox(width: 12,),
 
                 Expanded(
-                  child: Text(
-                    widget.tripsHistoryModel!.originAddress!,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 16,
+                  child: Container(
+                    child: Text(
+                      widget.tripsHistoryModel!.originAddress!,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
@@ -132,11 +134,13 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget>
                 const SizedBox(width: 12,),
 
                 Expanded(
-                  child: Text(
-                    widget.tripsHistoryModel!.destinationAddress!,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 16,
+                  child: Container(
+                    child: Text(
+                      widget.tripsHistoryModel!.destinationAddress!,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),

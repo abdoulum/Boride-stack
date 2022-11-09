@@ -4,7 +4,7 @@ import 'package:boride/models/trips_history_model.dart';
 
 class AppInfo extends ChangeNotifier
 {
-  Directions? userPickUpLocation, userDropOffLocation;
+  Directions? userPickUpLocation, userDropOffLocation; //endTripLocation
   int countTotalTrips = 0;
   List<String> historyTripsKeysList = [];
   List<TripsHistoryModel> allTripsHistoryInformationList = [];
@@ -22,6 +22,10 @@ class AppInfo extends ChangeNotifier
     notifyListeners();
   }
 
+  // void updateEndTripLocationAddress(Directions endTripLocationAddress) {
+  //   endTripLocation = endTripLocationAddress;
+  //   notifyListeners();
+  // }
 
   updateOverAllTripsCounter(int overAllTripsCounter)
   {

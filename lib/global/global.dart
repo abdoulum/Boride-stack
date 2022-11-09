@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:boride/models/direction_details_info.dart';
 import 'package:boride/models/user_model.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 
 
@@ -17,3 +18,8 @@ String driverName="";
 String driverPhone="";
 double countRatingStars=0.0;
 String titleStarsRating="";
+String userRideRequestStatus="";
+String state = "normal";
+String driverRideStatus = "Driver is Coming";
+int driverRequestTimeOut = 60;
+DatabaseReference driversRef = FirebaseDatabase.instance.ref().child("drivers");

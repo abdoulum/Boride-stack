@@ -10,8 +10,6 @@ import 'package:boride/widgets/progress_dialog.dart';
 
 class SignUpScreen extends StatefulWidget
 {
-  const SignUpScreen({Key? key}) : super(key: key);
-
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -86,7 +84,7 @@ class _SignUpScreenState extends State<SignUpScreen>
 
       currentFirebaseUser = firebaseUser;
       Fluttertoast.showToast(msg: "Account has been Created.");
-      Navigator.push(context, MaterialPageRoute(builder: (c)=> const MySplashScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (c)=> MySplashScreen()));
     }
     else
     {
@@ -244,6 +242,17 @@ class _SignUpScreenState extends State<SignUpScreen>
                     fontSize: 18,
                   ),
                 ),
+              ),
+
+              TextButton(
+                child: const Text(
+                  "Already have an Account? Login Here",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                onPressed: ()
+                {
+                  Navigator.push(context, MaterialPageRoute(builder: (c)=> LoginScreen()));
+                },
               ),
 
             ],

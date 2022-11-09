@@ -2,13 +2,13 @@ import 'package:boride/brand_colors.dart';
 import 'package:boride/global/global.dart';
 import 'package:boride/mainScreens/about_screen.dart';
 import 'package:boride/mainScreens/discount_offers_screen.dart';
-import 'package:boride/mainScreens/paymentscreen.dart';
 import 'package:boride/mainScreens/profile_screen.dart';
 import 'package:boride/mainScreens/trips_history_screen.dart';
 import 'package:boride/splashScreen/splash_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+
+import '../mainScreens/paymentscreen.dart';
 
 class MyDrawer extends StatefulWidget {
   String? name;
@@ -28,54 +28,68 @@ class _MyDrawerState extends State<MyDrawer> {
       child: ListView(
         children: [
           //drawer header
-          Container(
-            height: 165,
-            child: DrawerHeader(
-              decoration: const BoxDecoration(),
-              child: Row(
-                children: [
-                  const Icon(
-                    Ionicons.person_circle,
-                    size: 60,
-                    color: Colors.black,
-                  ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (c) => ProfileScreen()));
+            },
+            child: Container(
+              height: 140,
 
-                  const SizedBox(
-                    width: 16,
-                  ),
+              child: DrawerHeader(
+                decoration: const BoxDecoration(),
+                child: Expanded(
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Ionicons.person_circle,
+                        size: 60,
+                        color: Colors.black,
+                      ),
 
-                  ///Email And Name
-                  Padding(
-                    padding: const EdgeInsets.only(top: 50),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.name.toString(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontFamily: "Brand-Bold",
-                            color: BrandColors.colorTextDark,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+
+                      ///Email And Name
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.name.toString(),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontFamily: "Brand-Regular",
+                                color: BrandColors.colorTextDark,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 3,
+                            ),
+                            Text(
+                              widget.email.toString(),
+                              style: const TextStyle(
+                                fontFamily: "Brand-Bold",
+                                fontSize: 14,
+                                color: BrandColors.colorTextDark,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          widget.email.toString(),
-                          style: const TextStyle(
-                            fontFamily: "Brand-Bold",
-                            fontSize: 12,
-                            color: BrandColors.colorTextDark,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
+          ),
+
+          const Divider(
+            thickness: 0.2,
+            color: Colors.black,
           ),
 
           const SizedBox(
@@ -105,13 +119,12 @@ class _MyDrawerState extends State<MyDrawer> {
 
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (c) => const DiscountScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (c) => const DiscountScreen()));
             },
             child: const ListTile(
-              leading: Icon(Ionicons.pricetag, color: BrandColors.colorTextDark),
+              leading:
+                  Icon(Ionicons.pricetag_outline, color: BrandColors.colorTextDark),
               title: Text(
                 "Offers",
                 style: TextStyle(
@@ -126,13 +139,13 @@ class _MyDrawerState extends State<MyDrawer> {
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (c) => const ProfileScreen()));
+                  MaterialPageRoute(builder: (c) =>   AboutScreen()));
             },
             child: const ListTile(
-              leading: Icon(Ionicons.person_outline,
+              leading: Icon(Ionicons.information_circle_outline,
                   color: BrandColors.colorTextDark),
               title: Text(
-                "Visit Profile",
+                "About",
                 style: TextStyle(
                     fontSize: 16,
                     fontFamily: "Brand-Bold",
@@ -140,17 +153,16 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
             ),
           ),
-
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (c) => const PaymentPage()));
+                  MaterialPageRoute(builder: (c) =>   AboutScreen()));
             },
             child: const ListTile(
-              leading: Icon(Ionicons.information_circle_outline,
+              leading: Icon(Ionicons.help_circle_outline,
                   color: BrandColors.colorTextDark),
               title: Text(
-                "About",
+                "Support",
                 style: TextStyle(
                     fontSize: 16,
                     fontFamily: "Brand-Bold",

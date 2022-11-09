@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'package:boride/brand_colors.dart';
+import 'package:boride/infoHandler/app_info.dart';
 import 'package:flutter/material.dart';
 import 'package:boride/assistants/assistant_methods.dart';
 import 'package:boride/authentication/login_screen.dart';
 import 'package:boride/global/global.dart';
 import 'package:boride/mainScreens/main_screen.dart';
+import 'package:provider/provider.dart';
 
 
 class MySplashScreen extends StatefulWidget
@@ -20,6 +21,7 @@ class MySplashScreen extends StatefulWidget
 class _MySplashScreenState extends State<MySplashScreen>
 {
 
+
   startTimer()
   {
     fAuth.currentUser != null ? AssistantMethods.readCurrentOnlineUserInfo() : null;
@@ -29,11 +31,12 @@ class _MySplashScreenState extends State<MySplashScreen>
       if(await fAuth.currentUser != null)
       {
         currentFirebaseUser = fAuth.currentUser;
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c)=> const MainScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (c)=> const MainScreen()));
+
       }
       else
       {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c)=>  LoginScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (c)=> const LoginScreen()));
       }
     });
   }
@@ -41,7 +44,8 @@ class _MySplashScreenState extends State<MySplashScreen>
   @override
   void initState() {
     super.initState();
-    
+
+    AssistantMethods.readCurrentOnlineUserInfo();
     startTimer();
   }
   
@@ -50,22 +54,16 @@ class _MySplashScreenState extends State<MySplashScreen>
   {
     return Material(
       child: Container(
-        color: Colors.white,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                "BORIDE",
-                style: TextStyle(
-                  fontSize: 50,
-                  fontFamily: "Brand-Bold",
-                  fontWeight: FontWeight.bold,
-                  color: BrandColors.colorPrimary,
-                ),
-              ),
-
-            ],
+        color: Colors.blue,
+        child: const Center(
+          child: Text(
+            "Boride.",
+            style: TextStyle(
+              fontSize: 65,
+              fontFamily: "Brand-Regular",
+              color: Colors.white,
+              fontWeight: FontWeight.bold
+            ),
           ),
         ),
       ),

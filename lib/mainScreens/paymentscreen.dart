@@ -5,10 +5,10 @@ class PaymentPage extends StatefulWidget {
   const PaymentPage({Key? key}) : super(key: key);
 
   @override
-  _MyPaymentPageState createState() => _MyPaymentPageState();
+  _PaymentPageState createState() => _PaymentPageState();
 }
 
-class _MyPaymentPageState extends State<PaymentPage> {
+class _PaymentPageState extends State<PaymentPage> {
   final formKey = GlobalKey<FormState>();
   final amountController = TextEditingController();
   final currencyController = TextEditingController();

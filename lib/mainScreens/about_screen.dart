@@ -1,110 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-
-class AboutScreen extends StatefulWidget
-{
-  const AboutScreen({Key? key}) : super(key: key);
-
+class AboutScreen extends StatefulWidget {
   @override
   State<AboutScreen> createState() => _AboutScreenState();
 }
 
-
-
-
-class _AboutScreenState extends State<AboutScreen>
-{
+class _AboutScreenState extends State<AboutScreen> {
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 50),
-        child: ListView(
-
-          children: [
-            //image
-             SizedBox(
-              height: 230,
-              child: Center(
-                child: Image.asset(
-                  "images/logo.png",
-                  width: 260,
-                ),
-              ),
-            ),
-
-            Column(
+      body: Column(
+        children: [
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15, top: 50),
+            child: Column(
               children: [
-
-                //company name
-                const Text(
-                  "Uber & inDriver Clone",
-                  style: TextStyle(
-                    fontSize: 28,
-                    color: Colors.white54,
-                    fontWeight: FontWeight.bold,
+                SizedBox(
+                  height: 230,
+                  child: Center(
+                    child: Image.asset(
+                      "images/taxi.png",
+                      width: 200,
+                    ),
                   ),
                 ),
+                Column(
+                  children: const [
+                    //company name
+                    Text(
+                      "Boride",
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontFamily: "Brand-Regular",
+                        color: Colors.black,
+                      ),
+                    ),
 
-                const SizedBox(
-                  height: 20,
-                ),
+                    SizedBox(
+                      height: 20,
+                    ),
 
-                //about you & your company - write some info
-                const Text(
-                  "This app has been developed by Muhammad Ali, "
-                  "This is the world number 1 ride sharing app. Available for all. "
-                  "20M+ people already use this app.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: "Brand-Bold",
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                ),
-
-                const SizedBox(
-                  height: 10,
-                ),
-
-                const Text(
-                  "This app has been developed by Muhammad Ali, "
+                    //about you & your company - write some info
+                    Text(
+                      "This app has been developed by Muhammad Ali, "
                       "This is the world number 1 ride sharing app. Available for all. "
                       "20M+ people already use this app.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white54,
-                  ),
-                ),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: "Brand-Regular",
+                        color: Colors.black,
+                      ),
+                    ),
 
-                const SizedBox(
-                  height: 40,
-                ),
+                    SizedBox(
+                      height: 10,
+                    ),
 
-                //close
-                ElevatedButton(
-                  onPressed: ()
-                  {
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white54,
-                  ),
-                  child: const Text(
-                    "Close",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                    Text(
+                      "This app has been developed by Muhammad Ali, "
+                      "This is the world number 1 ride sharing app. Available for all. "
+                      "20M+ people already use this app.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white54,
+                      ),
+                    ),
+                  ],
                 ),
-
               ],
             ),
-
-          ],
-
-        ),
+          )),
+          const Center(
+              child: Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Text(
+              "Developed By UTech",
+              style: TextStyle(fontSize: 16, fontFamily: "Brand-Regular"),
+            ),
+          ))
+        ],
       ),
     );
   }

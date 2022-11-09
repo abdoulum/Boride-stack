@@ -10,7 +10,7 @@ class RateDriverScreen extends StatefulWidget
 {
   String? assignedDriverId;
 
-  RateDriverScreen({Key? key, this.assignedDriverId}) : super(key: key);
+  RateDriverScreen({this.assignedDriverId});
 
   @override
   State<RateDriverScreen> createState() => _RateDriverScreenState();
@@ -67,9 +67,9 @@ class _RateDriverScreenState extends State<RateDriverScreen>
                 color: Colors.green,
                 borderColor: Colors.green,
                 size: 46,
-                onRatingChanged: (valueOfStarsChosen)
+                onRatingChanged: (valueOfStarsChoosed)
                 {
-                  countRatingStars = valueOfStarsChosen;
+                  countRatingStars = valueOfStarsChoosed;
 
                   if(countRatingStars == 1)
                   {
@@ -131,15 +131,15 @@ class _RateDriverScreenState extends State<RateDriverScreen>
                       {
                         rateDriverRef.set(countRatingStars.toString());
 
-                        SystemNavigator.pop();
+                        Navigator.pop(context);
                       }
                       else
                       {
                         double pastRatings = double.parse(snap.snapshot.value.toString());
-                        double newAverageRatings = (pastRatings + countRatingStars) / 2;
+                        double newAverageRatings = (pastRatings + countRatingStars) / 1.4;
                         rateDriverRef.set(newAverageRatings.toString());
 
-                        SystemNavigator.pop();
+                        Navigator.pop(context);
                       }
 
                       Fluttertoast.showToast(msg: "Please Restart App Now");
@@ -147,7 +147,7 @@ class _RateDriverScreenState extends State<RateDriverScreen>
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.green,
-                    padding: const EdgeInsets.symmetric(horizontal: 74),
+                    padding: EdgeInsets.symmetric(horizontal: 74),
                   ),
                   child: const Text(
                     "Submit",

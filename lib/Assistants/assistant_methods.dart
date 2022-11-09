@@ -81,16 +81,18 @@ class AssistantMethods
 
   static double calculateFareAmountFromOriginToDestination(DirectionDetailsInfo directionDetailsInfo)
   {
+
     // per km = ₦50,
     // per min = ₦10
     // base fare = ₦200
 
-    double baseFare = 200;
-    double distanceFare = (directionDetailsInfo.distance_value!/1000) * 50;
-    double timeFare = (directionDetailsInfo.duration_value! / 60) * 10;
+    double baseFare = 150;
+    double distanceFare = (directionDetailsInfo.distance_value! / 1000) * 50;
+    double timeFare = (directionDetailsInfo.duration_value! / 60) * 9;
 
     double totalFare = baseFare + distanceFare + timeFare;
-    return double.parse(totalFare.toStringAsExponential(1));
+
+    return double.parse(totalFare.toStringAsFixed(0));
   }
 
   static sendNotificationToDriverNow(String deviceRegistrationToken, String userRideRequestId, context) async
@@ -138,7 +140,7 @@ class AssistantMethods
   static void readTripsKeysForOnlineUser(context)
   {
     FirebaseDatabase.instance.ref()
-        .child("RideRequest")
+        .child("Ride Request")
         .orderByChild("userName")
         .equalTo(userModelCurrentInfo!.name)
         .once()
@@ -173,7 +175,7 @@ class AssistantMethods
     for(String eachKey in tripsAllKeys)
     {
       FirebaseDatabase.instance.ref()
-          .child("All Ride Requests")
+          .child("Ride Request")
           .child(eachKey)
           .once()
           .then((snap)

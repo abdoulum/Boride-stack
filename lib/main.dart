@@ -1,13 +1,16 @@
-import 'package:boride/infoHandler/app_info.dart';
-import 'package:boride/splashScreen/splash_screen.dart';
+import 'package:boride/assistants/assistant_methods.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:boride/infoHandler/app_info.dart';
+import 'package:boride/splashScreen/splash_screen.dart';
 
 void main() async
 {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  AssistantMethods.readCurrentOnlineUserInfo();
+
 
   runApp(
     MyApp(
@@ -32,7 +35,7 @@ class MyApp extends StatefulWidget
 {
   final Widget? child;
 
-  const MyApp({Key? key, this.child}) : super(key: key);
+  MyApp({this.child});
 
   static void restartApp(BuildContext context)
   {
