@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'package:boride/infoHandler/app_info.dart';
 import 'package:flutter/material.dart';
 import 'package:boride/assistants/assistant_methods.dart';
 import 'package:boride/authentication/login_screen.dart';
 import 'package:boride/global/global.dart';
 import 'package:boride/mainScreens/main_screen.dart';
-import 'package:provider/provider.dart';
 
 
 class MySplashScreen extends StatefulWidget
@@ -31,12 +29,12 @@ class _MySplashScreenState extends State<MySplashScreen>
       if(await fAuth.currentUser != null)
       {
         currentFirebaseUser = fAuth.currentUser;
-          Navigator.push(context, MaterialPageRoute(builder: (c)=> const MainScreen()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (c)=> const MainScreen()));
 
       }
       else
       {
-        Navigator.push(context, MaterialPageRoute(builder: (c)=> const LoginScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c)=> const LoginScreen()));
       }
     });
   }

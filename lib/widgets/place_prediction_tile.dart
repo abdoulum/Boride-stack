@@ -64,48 +64,50 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
   {
     return Container(
 
-      child: ElevatedButton(
-        onPressed: ()
-        {
-          getPlaceDirectionDetails(widget.predictedPlaces!.place_id, context);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Row(
-            children: [
-              const Icon(
-                Ionicons.location,
-                color: Colors.red,
-              ),
-              const SizedBox(width: 14.0,),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 8.0,),
-                    Text(
-                      widget.predictedPlaces!.main_text!,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 16.0, fontFamily: "Brand-Regular",
-                        color: Colors.white54,
-                      ),
-                    ),
-                    const SizedBox(height: 2.0,),
-                    Text(
-                      widget.predictedPlaces!.secondary_text!,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontFamily: "Brand-Regular",
-                        fontSize: 12.0,
-                        color: Colors.white54,
-                      ),
-                    ),
-                    const SizedBox(height: 8.0,),
-                  ],
+      child: SizedBox(
+        child: GestureDetector(
+          onTap: ()
+          {
+            getPlaceDirectionDetails(widget.predictedPlaces!.place_id, context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Row(
+              children: [
+                const Icon(
+                  Ionicons.location,
+                  color: Colors.red,
                 ),
-              ),
-            ],
+                const SizedBox(width: 14.0,),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8.0,),
+                      Text(
+                        widget.predictedPlaces!.main_text!,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 16.0, fontFamily: "Brand-Regular",
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 2.0,),
+                      Text(
+                        widget.predictedPlaces!.secondary_text!,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontFamily: "Brand-Regular",
+                          fontSize: 12.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 8.0,),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

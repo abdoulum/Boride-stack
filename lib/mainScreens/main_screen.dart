@@ -18,17 +18,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutterwave_standard/core/flutterwave.dart';
-import 'package:flutterwave_standard/models/requests/customer.dart';
-import 'package:flutterwave_standard/models/requests/customizations.dart';
-import 'package:flutterwave_standard/models/responses/charge_response.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -46,15 +41,12 @@ class _MainScreenState extends State<MainScreen> {
     zoom: 16,
   );
 
-
   GlobalKey<ScaffoldState> sKey = GlobalKey<ScaffoldState>();
-
 
   bool requestPositionInfo = true;
   bool openNavigationDrawer = true;
   bool activeNearbyDriverKeysLoaded = false;
   bool isTestMode = true;
-
 
   double searchLocationContainerHeight = 260;
   double requestingRideContainerHeight = 0;
@@ -70,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
   List<ActiveNearbyAvailableDrivers> onlineNearByAvailableDriversList = [];
   StreamSubscription<DatabaseEvent>? tripRideRequestInfoStreamSubscription;
 
-  String carRideType="";
+  String carRideType = "";
   String fareAmount = "";
   String userName = "your Name";
   String userEmail = "your Email";
@@ -82,10 +74,8 @@ class _MainScreenState extends State<MainScreen> {
   Set<Circle> circlesSet = {};
   List<LatLng> pLineCoOrdinatesList = [];
 
-
   var geoLocator = Geolocator();
   final paymentMethodController = TextEditingController();
-
 
   checkIfLocationPermissionAllowed() async {
     _locationPermission = await Geolocator.requestPermission();
@@ -159,6 +149,7 @@ class _MainScreenState extends State<MainScreen> {
       "driver_id": "waiting",
       "payment_method": selectedPaymentMethod,
       "ride_type": carRideType,
+      "time": DateTime.now().toString(),
     };
 
     referenceRideRequest!.set(userInformationMap);
@@ -171,8 +162,12 @@ class _MainScreenState extends State<MainScreen> {
 
       if ((eventSnap.snapshot.value as Map)["car_details"] != null) {
         setState(() {
-          driverCarDetails =
-              (eventSnap.snapshot.value as Map)["car_details"].toString();
+          driverCarColor = (eventSnap.snapshot.value as dynamic)["car_color"]
+              .toString();
+          driverCarPlate = (eventSnap.snapshot.value as dynamic)["car_number"]
+              .toString();
+          driverCarModel = (eventSnap.snapshot.value as dynamic)["car_model"]
+              .toString();
         });
       }
 
@@ -231,13 +226,15 @@ class _MainScreenState extends State<MainScreen> {
         //status = ended
         if (userRideRequestStatus == "ended") {
           if ((eventSnap.snapshot.value as Map)["fareAmount"] != null) {
-            String fareAmount = (eventSnap.snapshot.value as Map)["fareAmount"].toString();
+            String fareAmount =
+                (eventSnap.snapshot.value as Map)["fareAmount"].toString();
 
             var response = await showDialog(
               context: context,
               barrierDismissible: false,
               builder: (BuildContext c) => PayFareAmountDialog(
-                fareAmount: fareAmount, paymentMtd: selectedPaymentMethod,
+                fareAmount: fareAmount,
+                paymentMtd: selectedPaymentMethod,
               ),
             );
 
@@ -258,11 +255,10 @@ class _MainScreenState extends State<MainScreen> {
                 tripRideRequestInfoStreamSubscription!.cancel();
                 resetApp();
               }
-            } else if(response == "CardPaymentSuccessful") {
+            } else if (response == "CardPaymentSuccessful") {
               Fluttertoast.showToast(msg: "Card Payment Successful");
               resetApp();
-            }
-            else {
+            } else {
               Fluttertoast.showToast(msg: "Error, check payment method");
             }
           }
@@ -353,67 +349,13 @@ class _MainScreenState extends State<MainScreen> {
 
     //active driver available
     await retrieveOnlineDriversInformation(onlineNearByAvailableDriversList);
-
-    // var response = await Navigator.push(context, MaterialPageRoute(builder: (c)=> SelectNearestActiveDriversScreen(referenceRideRequest: referenceRideRequest)));
-
-    // if(response == "driverChoosed")
-    // {
-    //   FirebaseDatabase.instance.ref()
-    //       .child("drivers")
-    //       .child(chosenDriverId!)
-    //       .once()
-    //       .then((snap)
-    //   {
-    //     if(snap.snapshot.value != null)
-    //     {
-    //       //send notification to that specific driver
-    //       sendNotificationToDriverNow(chosenDriverId!);
-    //
-    //       //Display Waiting Response UI from a Driver
-    //       showWaitingResponseFromDriverUI();
-    //
-    //       //Response from a Driver
-    //       FirebaseDatabase.instance.ref()
-    //           .child("drivers")
-    //           .child(chosenDriverId!)
-    //           .child("newRide")
-    //           .onValue.listen((eventSnapshot)
-    //       {
-    //         //1. driver has cancel the rideRequest :: Push Notification
-    //         // (newRideStatus = idle)
-    //         if(eventSnapshot.snapshot.value == "idle")
-    //         {
-    //           Fluttertoast.showToast(msg: "The driver has cancelled your request. Please choose another driver.");
-    //
-    //           Future.delayed(const Duration(milliseconds: 3000), ()
-    //           {
-    //             Fluttertoast.showToast(msg: "Please Restart App Now.");
-    //
-    //           });
-    //         }
-    //
-    //         //2. driver has accept the rideRequest :: Push Notification
-    //         // (newRideStatus = accepted)
-    //         if(eventSnapshot.snapshot.value == "accepted")
-    //         {
-    //           //design and display ui for displaying assigned driver information
-    //           showUIForAssignedDriverInfo();
-    //         }
-    //       });
-    //     }
-    //     else
-    //     {
-    //       Fluttertoast.showToast(msg: "This driver do not exist. Try again.");
-    //     }
-    //   });
-    // }
   }
 
   showUIForAssignedDriverInfo() {
     setState(() {
       requestingRideContainerHeight = 0;
       searchLocationContainerHeight = 0;
-      assignedDriverInfoContainerHeight = 260;
+      assignedDriverInfoContainerHeight = 270;
     });
   }
 
@@ -426,7 +368,7 @@ class _MainScreenState extends State<MainScreen> {
 
   sendNotificationToDriverNow(String chosenDriverId) {
     //assign/SET rideRequestId to newRideStatus in
-    // Drivers Parent node for that specific choosen driver
+    // Drivers Parent node for that specific chosen driver
     FirebaseDatabase.instance
         .ref()
         .child("drivers")
@@ -726,9 +668,7 @@ class _MainScreenState extends State<MainScreen> {
                                 Provider.of<AppInfo>(context)
                                             .userPickUpLocation !=
                                         null
-                                    ? "${Provider.of<AppInfo>(context)
-                                            .userPickUpLocation!
-                                            .locationName!} ..."
+                                    ? "${Provider.of<AppInfo>(context).userPickUpLocation!.locationName!} ..."
                                     : "Add Home",
                                 style: const TextStyle(
                                     fontSize: 12, fontFamily: "Brand-Regular"),
@@ -939,7 +879,10 @@ class _MainScreenState extends State<MainScreen> {
             right: 0,
             child: Container(
               decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0),),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
@@ -955,39 +898,37 @@ class _MainScreenState extends State<MainScreen> {
                 padding: const EdgeInsets.all(30.0),
                 child: Column(
                   children: [
-                    const SizedBox(height: 12.0,),
-
+                    const SizedBox(
+                      height: 12.0,
+                    ),
                     SizedBox(
                       width: double.infinity,
                       child: ColorizeAnimatedTextKit(
-                          onTap: () {
-                            print("Tap Event");
-                          },
-                          text: const [
-                            "Requesting a Ride...",
-                            "Please wait...",
-                          ],
-                          textStyle: const TextStyle(
-                              fontSize: 35.0,
-                              fontFamily: "Signatra"
-                          ),
-                          colors: const [
-                            Colors.green,
-                            Colors.purple,
-                            Colors.pink,
-                            Colors.blue,
-                            Colors.yellow,
-                            Colors.red,
-                          ],
-                          textAlign: TextAlign.center,
+                        onTap: () {
+                          print("Tap Event");
+                        },
+                        text: const [
+                          "Requesting a Ride...",
+                          "Please wait...",
+                        ],
+                        textStyle: const TextStyle(
+                            fontSize: 35.0, fontFamily: "Brand-Regular"),
+                        colors: const [
+                          Colors.green,
+                          Colors.purple,
+                          Colors.pink,
+                          Colors.blue,
+                          Colors.yellow,
+                          Colors.red,
+                        ],
+                        textAlign: TextAlign.center,
                       ),
                     ),
-
-                    const SizedBox(height: 22.0,),
-
+                    const SizedBox(
+                      height: 22.0,
+                    ),
                     GestureDetector(
-                      onTap: ()
-                      {
+                      onTap: () {
                         cancelRideRequest();
                         resetApp();
                       },
@@ -999,15 +940,22 @@ class _MainScreenState extends State<MainScreen> {
                           borderRadius: BorderRadius.circular(26.0),
                           border: Border.all(width: 2.0, color: Colors.grey),
                         ),
-                        child: const Icon(Icons.close, size: 26.0,),
+                        child: const Icon(
+                          Icons.close,
+                          size: 26.0,
+                        ),
                       ),
                     ),
-
-                    const SizedBox(height: 10.0,),
-
+                    const SizedBox(
+                      height: 10.0,
+                    ),
                     Container(
                       width: double.infinity,
-                      child: const Text("Cancel Ride", textAlign: TextAlign.center, style: TextStyle(fontSize: 12.0),),
+                      child: const Text(
+                        "Cancel Ride",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 12.0),
+                      ),
                     ),
                   ],
                 ),
@@ -1039,14 +987,13 @@ class _MainScreenState extends State<MainScreen> {
               height: assignedDriverInfoContainerHeight,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 18.0),
+                    horizontal: 24.0, vertical: 10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
-                      height: 6.0,
+                      height: 5.0,
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -1061,46 +1008,61 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                       ],
                     ),
-
                     const SizedBox(
-                      height: 18.0,
+                      height: 5.0,
                     ),
-
                     const Divider(
-                      height: 2.0,
-                      thickness: 2.0,
+                      height: 1.0,
+                      thickness: 1.0,
                     ),
-
-                    const SizedBox(
-                      height: 18.0,
-                    ),
-
-                    Text(
-                      driverCarDetails,
-                      style: const TextStyle(
-                          color: Colors.grey, fontFamily: "Brand-Bold"),
-                    ),
-
-                    Text(
-                      driverName,
-                      style: const TextStyle(
-                          fontSize: 20.0, fontFamily: "Brand-Bold"),
-                    ),
-
-                    const SizedBox(
-                      height: 22.0,
-                    ),
-
-                    const Divider(
-                      height: 2.0,
-                      thickness: 2.0,
-                    ),
-
                     const SizedBox(
                       height: 15.0,
                     ),
-
-
+                    Text(
+                      "Driver name: $driverName",
+                      style: const TextStyle(
+                          fontSize: 20, fontFamily: "Brand-Regular"),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Car Color: $driverCarColor",
+                      style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontFamily: "Brand-Bold"),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Car Number: $driverCarPlate",
+                      style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontFamily: "Brand-Bold"),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Car Model: $driverCarModel",
+                      style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontFamily: "Brand-Bold"),
+                    ),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
+                    const Divider(
+                      height: 1,
+                      thickness: 1,
+                    ),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
                     Center(
                       child: Column(
                         children: [
@@ -1199,10 +1161,11 @@ class _MainScreenState extends State<MainScreen> {
 
     setState(() {
       Polyline polyline = Polyline(
-        color: Colors.purpleAccent,
         polylineId: const PolylineId("PolylineID"),
+        color: Colors.grey.shade900,
         jointType: JointType.round,
         points: pLineCoOrdinatesList,
+        width: 4,
         startCap: Cap.roundCap,
         endCap: Cap.roundCap,
         geodesic: true,
@@ -1369,7 +1332,7 @@ class _MainScreenState extends State<MainScreen> {
     if (activeNearbyIcon == null) {
       ImageConfiguration imageConfiguration =
           createLocalImageConfiguration(context, size: const Size(2, 2));
-      BitmapDescriptor.fromAssetImage(imageConfiguration, "images/car_android.png")
+      BitmapDescriptor.fromAssetImage(imageConfiguration, "images/car_ios.png")
           .then((value) {
         activeNearbyIcon = value;
       });
@@ -1441,7 +1404,9 @@ class _MainScreenState extends State<MainScreen> {
       userRideRequestStatus = "";
       driverName = "";
       driverPhone = "";
-      driverCarDetails = "";
+      driverCarColor = "";
+      driverCarModel = "";
+      driverCarPlate = "";
       driverRideStatus = "Driver is Coming";
       assignedDriverInfoContainerHeight = 0.0;
     });

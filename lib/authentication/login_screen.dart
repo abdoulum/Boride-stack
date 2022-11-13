@@ -1,206 +1,141 @@
+import 'package:boride/authentication/otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:boride/authentication/signup_screen.dart';
-import 'package:boride/global/global.dart';
-import 'package:boride/splashScreen/splash_screen.dart';
-import 'package:boride/widgets/progress_dialog.dart';
 
+import '../widgets/progress_dialog.dart';
 
-class LoginScreen extends StatefulWidget
-{
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
-
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController phoneNController = TextEditingController();
+  var phone = "";
 
-
-
-class _LoginScreenState extends State<LoginScreen>
-{
-  TextEditingController emailTextEditingController = TextEditingController();
-  TextEditingController passwordTextEditingController = TextEditingController();
-
-
-  validateForm()
-  {
-    if(!emailTextEditingController.text.contains("@"))
-    {
-      Fluttertoast.showToast(msg: "Email address is not Valid.");
-    }
-    else if(passwordTextEditingController.text.isEmpty)
-    {
-      Fluttertoast.showToast(msg: "Password is required.");
-    }
-    else
-    {
-      loginUserNow();
-    }
-  }
-
-  loginUserNow() async
-  {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext c)
-        {
-          return ProgressDialog(message: "Processing, Please wait...",);
-        }
-    );
-
-    final User? firebaseUser = (
-        await fAuth.signInWithEmailAndPassword(
-          email: emailTextEditingController.text.trim(),
-          password: passwordTextEditingController.text.trim(),
-        ).catchError((msg){
-          Navigator.pop(context);
-          Fluttertoast.showToast(msg: "Error: $msg");
-        })
-    ).user;
-
-    if(firebaseUser != null)
-    {
-      DatabaseReference driversRef = FirebaseDatabase.instance.ref().child("users");
-      driversRef.child(firebaseUser.uid).once().then((driverKey)
-      {
-        final snap = driverKey.snapshot;
-        if(snap.value != null)
-        {
-          currentFirebaseUser = firebaseUser;
-          Fluttertoast.showToast(msg: "Login Successful.");
-          Navigator.push(context, MaterialPageRoute(builder: (c)=> const MySplashScreen()));
-        }
-        else
-        {
-          Fluttertoast.showToast(msg: "No record exist with this email.");
-          fAuth.signOut();
-          Navigator.push(context, MaterialPageRoute(builder: (c)=> const MySplashScreen()));
-        }
-      });
-    }
-    else
-    {
-      Navigator.pop(context);
-      Fluttertoast.showToast(msg: "Error Occurred during Login.");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
+      body: Container(
+        margin: const EdgeInsets.only(left: 25, right: 25),
+        alignment: Alignment.center,
+        child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
-              const SizedBox(height: 30,),
-
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Image.asset("images/logo.png"),
+             const Text("Boride", style: TextStyle(
+               fontSize: 60, fontFamily: "Brand-Regular",
+               fontWeight: FontWeight.bold,
+               color: Colors.blue
+             ),),
+              const SizedBox(
+                height: 25,
               ),
-
-              const SizedBox(height: 10,),
-
               const Text(
-                "Login as a User",
+                "Phone Verification",
+                style: TextStyle(fontSize: 22,fontFamily: "Brand-Regular", fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                "We need to register your phone to get you started!",
                 style: TextStyle(
-                  fontSize: 26,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                    fontFamily: "Brand-Regular",
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Container(
+                height: 55,
+                decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const SizedBox(
+                      width: 40,
+                      child: Text("+234", style: TextStyle(fontFamily: "Brand-Regular", fontSize: 16),),
+                    ),
+                    const Text(
+                      "|",
+                      style: TextStyle(fontSize: 40, color: Colors.grey),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                        child: TextField(
+                          onChanged: (value) {
+                            phone = value;
+                          },
+                          keyboardType: TextInputType.phone,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Phone",
+                            hintStyle: TextStyle(fontFamily: "Brand-Regular")
+                          ),
+                        ))
+                  ],
                 ),
               ),
-
-              TextField(
-                controller: emailTextEditingController,
-                keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(
-                    color: Colors.grey
-                ),
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                  hintText: "Email",
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 10,
-                  ),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                ),
+              const SizedBox(
+                height: 20,
               ),
+              SizedBox(
+                width: double.infinity,
+                height: 45,
+                child: ElevatedButton(
+                    onPressed: () async {
 
-              TextField(
-                controller: passwordTextEditingController,
-                keyboardType: TextInputType.text,
-                obscureText: true,
-                style: const TextStyle(
-                    color: Colors.grey
-                ),
-                decoration: const InputDecoration(
-                  labelText: "Password",
-                  hintText: "Password",
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 10,
-                  ),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
+                      if(phone == "") {
+                        Fluttertoast.showToast(msg: "Enter a valid number");
+                      }else if(phone.length <= 9 || phone.length >= 12) {
+                        Fluttertoast.showToast(msg: "Enter a valid number");
+                      }else {
 
-              const SizedBox(height: 20,),
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext c) {
+                              return ProgressDialog(
+                                message: "Processing, Please wait...",
+                              );
+                            });
 
-              ElevatedButton(
-                onPressed: ()
-                {
-                  validateForm();
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.lightGreenAccent,
-                ),
-                child: const Text(
-                  "Login",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
+                        await FirebaseAuth.instance.verifyPhoneNumber(
+                          phoneNumber: "+234$phone",
+                          verificationCompleted: (PhoneAuthCredential credential) {},
+                          verificationFailed: (FirebaseAuthException e) {},
+                          codeSent: (String verificationId, int? resendToken) {
+                            String verifyId = verificationId;
+                            String phoneN = phone;
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => MyVerify(verifyId, phoneN)));
+                          },
+                          codeAutoRetrievalTimeout: (String verificationId) {},
+                        );
+                      }
 
-              TextButton(
-                child: const Text(
-                  "Do not have an Account? SignUp Here",
-                  style: TextStyle(color: Colors.grey),
-                ),
-                onPressed: ()
-                {
-                  Navigator.push(context, MaterialPageRoute(builder: (c)=> SignUpScreen()));
-                },
-              ),
 
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
+
+                    child: const Text("Send the code", style: TextStyle(fontFamily: "Brand-Regular"),)),
+              )
             ],
           ),
         ),

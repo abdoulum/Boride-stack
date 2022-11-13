@@ -84,11 +84,11 @@ class AssistantMethods
 
     // per km = ₦50,
     // per min = ₦10
-    // base fare = ₦200
+    // base fare = ₦150
 
     double baseFare = 150;
     double distanceFare = (directionDetailsInfo.distance_value! / 1000) * 50;
-    double timeFare = (directionDetailsInfo.duration_value! / 60) * 9;
+    double timeFare = (directionDetailsInfo.duration_value! / 60) * 10;
 
     double totalFare = baseFare + distanceFare + timeFare;
 

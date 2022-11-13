@@ -1,6 +1,8 @@
+import 'package:boride/assistants/assistant_methods.dart';
 import 'package:boride/brand_colors.dart';
 import 'package:boride/global/global.dart';
 import 'package:boride/mainScreens/edit_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -12,6 +14,15 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    AssistantMethods.readCurrentOnlineUserInfo();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,8 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  userModelCurrentInfo!.name! ?? "Fetching Data" ,
+                                Text(userModelCurrentInfo!.name !=null ? userModelCurrentInfo!.name! : "Loading Data..." ,
                                   style: const TextStyle(
                                     fontSize: 25.0,
                                     fontFamily: "Brand-Regular",
@@ -124,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: const Icon(Icons.email_outlined)),
                             Container(
                               margin: const EdgeInsets.only(left: 15),
-                              child: Text(userModelCurrentInfo!.email!,
+                              child: Text( userModelCurrentInfo!.email !=null ? userModelCurrentInfo!.email! : "Loading Data...",
                                   style: const TextStyle(
                                     fontFamily: "Brand-Regular",
                                     fontSize: 17.0,
@@ -163,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: const Icon(Icons.phone_outlined)),
                             Container(
                               margin: const EdgeInsets.only(left: 15),
-                              child: Text(userModelCurrentInfo!.phone!,
+                              child: Text(FirebaseAuth.instance.currentUser!.phoneNumber.toString(),
                                   style: const TextStyle(
                                     fontFamily: "Brand-Regular",
                                     fontSize: 17.0,

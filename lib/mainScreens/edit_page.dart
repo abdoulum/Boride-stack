@@ -1,3 +1,6 @@
+import 'package:boride/mainScreens/main_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,6 +12,10 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
+
+  String fullName = "";
+  String email = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +73,13 @@ class _EditPageState extends State<EditPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: TextFormField(
+                          keyboardType: TextInputType.name,
+                          textCapitalization: TextCapitalization.words,
+                          onChanged: (value) {
+                            setState(() {
+                              fullName = value;
+                            });
+                          },
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(null)
                           ],
@@ -89,8 +103,16 @@ class _EditPageState extends State<EditPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: TextFormField(
+
+                          keyboardType: TextInputType.emailAddress,
+                          textCapitalization: TextCapitalization.words,
+                          onChanged: (value) {
+                            setState(() {
+                              email = value;
+                            });
+                          },
                           decoration: const InputDecoration(
-                            hintText: "Phone Number",
+                            hintText: "Email",
                             hintStyle: TextStyle(fontFamily: "Brand-Regular"),
                             //  prefixIcon: Icon(Icons.person),
                             border: InputBorder.none,
@@ -112,7 +134,25 @@ class _EditPageState extends State<EditPage> {
                           ),
                         ),
                       ),
-                    )
+                    ),
+
+                    const Spacer(),
+
+                    Padding(
+                      padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.2),
+                      child: ElevatedButton(
+                          onPressed: () async {
+
+                            updateProfile();
+
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
+
+                          child: const Text("Submit", style: TextStyle(fontFamily: "Brand-Regular"),)),
+                    ),
                   ],
                 ),
               ),
@@ -121,5 +161,21 @@ class _EditPageState extends State<EditPage> {
         ),
       ),
     );
+  }
+
+  updateProfile()  {
+    Map profileMap = {
+      "id": FirebaseAuth.instance.currentUser!.uid,
+      "name": fullName,
+      "email": email,
+      "phone": FirebaseAuth.instance.currentUser!.phoneNumber,
+
+    };
+
+    DatabaseReference profileRef = FirebaseDatabase.instance.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid);
+    profileRef.set(profileMap);
+
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainScreen()));
+
   }
 }
