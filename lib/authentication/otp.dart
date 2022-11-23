@@ -1,4 +1,6 @@
+import 'package:boride/assistants/assistant_methods.dart';
 import 'package:boride/mainScreens/edit_page.dart';
+import 'package:boride/mainScreens/main_screen.dart';
 import 'package:boride/widgets/progress_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -190,12 +192,27 @@ class _MyVerifyState extends State<MyVerify> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const EditPage(),
-            ),
-          );
+          AssistantMethods.getTripsKeys(context);
+          FirebaseDatabase.instance.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid).child("name").once().then((snap) {
+            if(snap.snapshot.value !=null) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MainScreen(),
+                ),
+              );
+            }else
+              {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EditPage(),
+                  ),
+                );
+              }
+          });
+
+
         } else {
           Fluttertoast.showToast(
             msg: "your login failed",

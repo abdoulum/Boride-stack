@@ -15,12 +15,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  @override
-  void initState() {
-    super.initState();
 
-    AssistantMethods.readCurrentOnlineUserInfo();
-  }
 
 
   @override
@@ -134,10 +129,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: const Icon(Icons.email_outlined)),
                             Container(
                               margin: const EdgeInsets.only(left: 15),
-                              child: Text( userModelCurrentInfo!.email !=null ? userModelCurrentInfo!.email! : "Loading Data...",
+                              child: Text( userModelCurrentInfo!.email !=null ? userModelCurrentInfo!.email!.substring(0, 20) : "Loading Data...",
                                   style: const TextStyle(
                                     fontFamily: "Brand-Regular",
-                                    fontSize: 17.0,
+                                    fontSize: 16.0,
                                     color: Colors.black54,
                                     //fontWeight: FontWeight.bold,
                                   )),
@@ -176,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Text(FirebaseAuth.instance.currentUser!.phoneNumber.toString(),
                                   style: const TextStyle(
                                     fontFamily: "Brand-Regular",
-                                    fontSize: 17.0,
+                                    fontSize: 16.0,
                                     color: Colors.black54,
                                     //fontWeight: FontWeight.bold,
                                   )),
@@ -200,7 +195,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: Text(
                                   "Favorite Places",
                                   style: TextStyle(
-                                    fontFamily: "Brand-Regular",
+                                    fontFamily: "Brand-Bold",
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15,
                                   ),
@@ -226,18 +221,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ],
                                 ),
                               ),
-                              const SizedBox(
-                                width: 370,
-                                child: Divider(
-                                  thickness: 0.2,
-                                  color: Colors.black,
-                                ),
-                              ),
+
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Row(
                                   children: const [
                                     Icon(
+
                                       Icons.work_outline,
                                       size: 22,
                                     ),
@@ -253,21 +243,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ],
                                 ),
                               ),
+                              const SizedBox(
+                                width: 370,
+                                child: Divider(
+                                  thickness: 0.2,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 1,
-                          child: Divider(
-                            color: Colors.grey.shade300,
-                            thickness: 8,
-                          ),
-                        ),
 
-                        //       InfoDesignUIWidget(
-                        //   textInfo: userModelCurrentInfo!.email!,
-                        //  iconData: Icons.email_outlined,
-                        // ),
+
 
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.03,
@@ -282,7 +269,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 25),
                             height: 50,
                             decoration: BoxDecoration(
-                                color: BrandColors.tabAccent,
+                                color: Color.fromARGB(100, 200, 200, 250),
                                 borderRadius: BorderRadius.circular(20.0)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -310,7 +297,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 25),
                           height: 50,
                           decoration: BoxDecoration(
-                              color: BrandColors.tabAccent,
+                              color: Color.fromARGB(100, 200, 200, 250),
                               borderRadius: BorderRadius.circular(20.0)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -337,7 +324,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           height: 50,
                           decoration: BoxDecoration(
-                              color: BrandColors.tabAccent,
+                              color: Color.fromARGB(100, 200, 200, 250),
                               borderRadius: BorderRadius.circular(20.0)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

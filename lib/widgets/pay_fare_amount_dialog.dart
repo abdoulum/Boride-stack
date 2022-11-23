@@ -129,7 +129,6 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
   _handlePaymentInitialization() async {
 
 
-
     final Customer customer = Customer(
         name: userModelCurrentInfo!.name!,
         phoneNumber: userModelCurrentInfo!.phone!,

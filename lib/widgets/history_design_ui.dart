@@ -1,44 +1,25 @@
+import 'package:boride/models/history.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:boride/models/trips_history_model.dart';
+import 'package:ionicons/ionicons.dart';
 
+class HistoryTile extends StatelessWidget {
+  final TripsHistoryModel? history;
 
-class HistoryDesignUIWidget extends StatefulWidget
-{
-  TripsHistoryModel? tripsHistoryModel;
-
-  HistoryDesignUIWidget({this.tripsHistoryModel});
+  HistoryTile({this.history});
 
   @override
-  State<HistoryDesignUIWidget> createState() => _HistoryDesignUIWidgetState();
-}
-
-
-
-
-class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget>
-{
-  String formatDateAndTime(String dateTimeFromDB)
-  {
-    DateTime dateTime = DateTime.parse(dateTimeFromDB);
-
-                                          // Dec 10                            //2022                         //1:12 pm
-    String formattedDatetime = "${DateFormat.MMMd().format(dateTime)}, ${DateFormat.y().format(dateTime)} - ${DateFormat.jm().format(dateTime)}";
-
-    return formattedDatetime;
-  }
-
-  @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Container(
-      color: Colors.black54,
+      margin: EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: const Color.fromARGB(150, 200, 200, 250),
+      ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             //driver name + Fare Amount
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,126 +27,77 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget>
                 Padding(
                   padding: const EdgeInsets.only(left: 6.0),
                   child: Text(
-                    "Driver : " + widget.tripsHistoryModel!.driverName!,
+                    "Rider: ${history!.driverName}",
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 18,
+                      fontFamily: "Brand-Regular",
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-
-                const SizedBox(width: 12,),
-
+                const SizedBox(
+                  width: 12,
+                ),
                 Text(
-                  "\$ " + widget.tripsHistoryModel!.fareAmount!,
+                  "\$ ${history!.fareAmount!}",
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 25,
+                    fontFamily: "Brand-Regular",
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
+            const SizedBox(
+              height: 10,
+            ),
 
-            const SizedBox(height: 2,),
-
-            // car details
             Row(
               children: [
                 const Icon(
-                  Icons.car_repair,
-                  color: Colors.black,
-                  size: 28,
+                  Ionicons.pin,
+                  color: Colors.indigo,
                 ),
-
-                const SizedBox(width: 12,),
-
-                Text(
-                  widget.tripsHistoryModel!.car_details!,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w600,
-                  ),
+                const SizedBox(
+                  width: 12,
                 ),
-              ],
-            ),
-
-            const SizedBox(height: 20,),
-
-            //icon + pickup
-            Row(
-              children: [
-
-                Image.asset(
-                  "images/origin.png",
-                  height: 26,
-                  width: 26,
-                ),
-
-                const SizedBox(width: 12,),
-
                 Expanded(
-                  child: Container(
-                    child: Text(
-                      widget.tripsHistoryModel!.originAddress!,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
+                  child: Text(
+                    history!.pickup!,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontFamily: "Brand-Regular",
                     ),
                   ),
                 ),
-
               ],
             ),
+            const SizedBox(
+              height: 5,
+            ),
 
-            const SizedBox(height: 14,),
-
-            //icon + dropOff
             Row(
               children: [
-
-                Image.asset(
-                  "images/destination.png",
-                  height: 24,
-                  width: 24,
+                Icon(
+                  Ionicons.location,
+                  color: Colors.greenAccent.shade700,
                 ),
-
-                const SizedBox(width: 12,),
-
+                const SizedBox(
+                  width: 12,
+                ),
                 Expanded(
-                  child: Container(
-                    child: Text(
-                      widget.tripsHistoryModel!.destinationAddress!,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
+                  child: Text(
+                    history!.dropoff!,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: "Brand-Regular",
+                      fontSize: 16,
                     ),
                   ),
                 ),
-
               ],
             ),
-
-            const SizedBox(height: 14,),
-
-            //trip time and date
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(""),
-                Text(
-                  formatDateAndTime(widget.tripsHistoryModel!.time!),
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 2,),
-
           ],
         ),
       ),

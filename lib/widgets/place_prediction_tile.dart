@@ -26,7 +26,7 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
     showDialog(
         context: context,
         builder: (BuildContext context) => ProgressDialog(
-          message: "Setting Up Drof-Off, Please wait...",
+          message: "Setting Up Dropoff...",
         ),
     );
 
@@ -63,38 +63,49 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
   Widget build(BuildContext context)
   {
     return Container(
-
+      margin: EdgeInsets.symmetric(horizontal: 3, vertical: 1.5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Colors.grey.shade100,
+      ),
       child: SizedBox(
         child: GestureDetector(
-          onTap: ()
-          {
+          onTap: () {
             getPlaceDirectionDetails(widget.predictedPlaces!.place_id, context);
           },
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Row(
-              children: [
-                const Icon(
-                  Ionicons.location,
-                  color: Colors.red,
-                ),
-                const SizedBox(width: 14.0,),
-                Expanded(
-                  child: Column(
+          child: Container(
+            color: Colors.transparent,
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Row(
+                children: [
+                  const Icon(
+                    Ionicons.location,
+                    color: Colors.indigo,
+                  ),
+                  const SizedBox(
+                    width: 14.0,
+                  ),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 8.0,),
-                      Text(
-                        widget.predictedPlaces!.main_text!,
+                      const SizedBox(
+                        height: 8.0,
+                      ),
+                      Text(widget.predictedPlaces!.main_text!.length > 30 ?
+                        "${widget.predictedPlaces!.main_text!.substring(0, 30)}..." : widget.predictedPlaces!.main_text!,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 16.0, fontFamily: "Brand-Regular",
+                          fontSize: 16.0,
+                          fontFamily: "Brand-Regular",
                           color: Colors.black,
                         ),
                       ),
-                      const SizedBox(height: 2.0,),
-                      Text(
-                        widget.predictedPlaces!.secondary_text!,
+                      const SizedBox(
+                        height: 2.0,
+                      ),
+                      Text( widget.predictedPlaces!.secondary_text!.length > 40 ?
+                        widget.predictedPlaces!.secondary_text!.substring(0, 40) : widget.predictedPlaces!.secondary_text!,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontFamily: "Brand-Regular",
@@ -102,11 +113,13 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
                           color: Colors.black,
                         ),
                       ),
-                      const SizedBox(height: 8.0,),
+                      const SizedBox(
+                        height: 8.0,
+                      ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

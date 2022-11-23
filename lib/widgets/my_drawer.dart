@@ -1,14 +1,15 @@
 import 'package:boride/brand_colors.dart';
 import 'package:boride/global/global.dart';
 import 'package:boride/mainScreens/about_screen.dart';
-import 'package:boride/mainScreens/discount_offers_screen.dart';
+import 'package:boride/mainScreens/discount_screen.dart';
 import 'package:boride/mainScreens/profile_screen.dart';
-import 'package:boride/mainScreens/trips_history_screen.dart';
+import 'package:boride/mainScreens/support_screen.dart';
+import 'package:boride/mainScreens/trip_history_screen.dart';
 import 'package:boride/splashScreen/splash_screen.dart';
+import 'package:boride/testui.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
-import '../mainScreens/paymentscreen.dart';
 
 class MyDrawer extends StatefulWidget {
   String? name;
@@ -31,57 +32,50 @@ class _MyDrawerState extends State<MyDrawer> {
           GestureDetector(
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (c) => ProfileScreen()));
+                  context, MaterialPageRoute(builder: (c) => const ProfileScreen()));
             },
             child: Container(
               height: 140,
 
               child: DrawerHeader(
                 decoration: const BoxDecoration(),
-                child: Expanded(
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Ionicons.person_circle,
-                        size: 60,
-                        color: Colors.black,
-                      ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Ionicons.person_circle,
+                      size: 60,
+                      color: Colors.black,
+                    ),
 
-                      const SizedBox(
-                        width: 16,
-                      ),
+                    const SizedBox(
+                      width: 16,
+                    ),
 
-                      ///Email And Name
-                      Padding(
-                        padding: const EdgeInsets.only(top: 50),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.name.toString(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontFamily: "Brand-Regular",
-                                color: BrandColors.colorTextDark,
-                                fontWeight: FontWeight.bold,
-                              ),
+                    ///Email And Name
+                   Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userModelCurrentInfo!.name! !=null ? userModelCurrentInfo!.name! : "Loading Data..." ,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontFamily: "Brand-Regular",
+                              color: BrandColors.colorTextDark,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(
-                              height: 3,
+                          ),
+                          const SizedBox(height: 5,),
+                          const Text("Visit profile",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "Brand-Regular",
+                              color: Colors.black54,
                             ),
-                            Text(
-                              widget.email.toString(),
-                              style: const TextStyle(
-                                fontFamily: "Brand-Bold",
-                                fontSize: 14,
-                                color: BrandColors.colorTextDark,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
             ),
@@ -102,7 +96,7 @@ class _MyDrawerState extends State<MyDrawer> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (c) => const TripsHistoryScreen()));
+                      builder: (c) =>  HistoryPage()));
             },
             child: const ListTile(
               leading: Icon(Ionicons.reload, color: BrandColors.colorTextDark),
@@ -110,7 +104,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 "History",
                 style: TextStyle(
                     fontSize: 16,
-                    fontFamily: "Brand-Bold",
+                    fontFamily: "Brand-Regular",
                     fontWeight: FontWeight.w200,
                     color: BrandColors.colorTextDark),
               ),
@@ -129,7 +123,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 "Offers",
                 style: TextStyle(
                     fontSize: 16,
-                    fontFamily: "Brand-Bold",
+                    fontFamily: "Brand-Regular",
                     fontWeight: FontWeight.w200,
                     color: BrandColors.colorTextDark),
               ),
@@ -139,7 +133,7 @@ class _MyDrawerState extends State<MyDrawer> {
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (c) =>   AboutScreen()));
+                  MaterialPageRoute(builder: (c) =>   TestUi()));
             },
             child: const ListTile(
               leading: Icon(Ionicons.information_circle_outline,
@@ -148,7 +142,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 "About",
                 style: TextStyle(
                     fontSize: 16,
-                    fontFamily: "Brand-Bold",
+                    fontFamily: "Brand-Regular",
                     color: BrandColors.colorTextDark),
               ),
             ),
@@ -156,7 +150,7 @@ class _MyDrawerState extends State<MyDrawer> {
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (c) =>   AboutScreen()));
+                  MaterialPageRoute(builder: (c) =>   const Support()));
             },
             child: const ListTile(
               leading: Icon(Ionicons.help_circle_outline,
@@ -165,7 +159,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 "Support",
                 style: TextStyle(
                     fontSize: 16,
-                    fontFamily: "Brand-Bold",
+                    fontFamily: "Brand-Regular",
                     color: BrandColors.colorTextDark),
               ),
             ),
@@ -184,7 +178,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 "Sign Out",
                 style: TextStyle(
                     fontSize: 16,
-                    fontFamily: "Brand-Bold",
+                    fontFamily: "Brand-Regular",
                     color: BrandColors.colorTextDark),
               ),
             ),
