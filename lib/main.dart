@@ -1,44 +1,42 @@
-import 'package:boride/assistants/assistant_methods.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:boride/infoHandler/app_info.dart';
+import 'package:boride/assistants/app_info.dart';
 import 'package:boride/splashScreen/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:provider/provider.dart';
 
-void main() async
-{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  AssistantMethods.readCurrentOnlineUserInfo();
-
+  await FirebaseDynamicLinks.instance.getInitialLink();
 
   runApp(
-    MyApp(
-      child: ChangeNotifierProvider(
-        create: (context) => AppInfo(),
-        child: MaterialApp(
-          title: 'Drivers App',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
+    Phoenix(
+      child: MyApp(
+        child: ChangeNotifierProvider(
+          create: (context) => AppInfo(),
+          child: MaterialApp(
+            restorationScopeId: "root",
+            title: 'Drivers App',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: const MySplashScreen(),
+            debugShowCheckedModeBanner: false,
           ),
-          home: const MySplashScreen(),
-          debugShowCheckedModeBanner: false,
         ),
       ),
     ),
   );
 }
 
-
-
-class MyApp extends StatefulWidget
-{
+class MyApp extends StatefulWidget {
   final Widget? child;
 
-  MyApp({this.child});
+  const MyApp({Key? key, this.child}) : super(key: key);
 
-  static void restartApp(BuildContext context)
-  {
+  static void restartApp(BuildContext context) {
     context.findAncestorStateOfType<_MyAppState>()!.restartApp();
   }
 
@@ -46,12 +44,15 @@ class MyApp extends StatefulWidget
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp>
-{
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Key key = UniqueKey();
 
-  void restartApp()
-  {
+  void restartApp() {
     setState(() {
       key = UniqueKey();
     });
@@ -65,6 +66,3 @@ class _MyAppState extends State<MyApp>
     );
   }
 }
-
-
-

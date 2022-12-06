@@ -6,7 +6,7 @@ class BrandColors{
   static const Color colorPrimaryDark = Color(0xFF1c3aa9);
   static const Color colorAccent = Color(0xFF21ba45);
   static const Color colorAccent1 = Color(0xfffefff7);
-  static const Color colorAccent2 = Color(0xffd4daf4);
+  static const Color Accent2 = Color(0xffeaedf7);
   static const Color tabAccent = Color(0xffa9ddf9);
 
 

@@ -1,5 +1,5 @@
 import 'package:boride/assistants/assistant_methods.dart';
-import 'package:boride/infoHandler/app_info.dart';
+import 'package:boride/assistants/app_info.dart';
 import 'package:boride/widgets/history_design_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +24,7 @@ class _HistoryPageState extends State<HistoryPage> {
           onPressed: (){
             Navigator.pop(context);
           },
-          icon: Icon(Icons.keyboard_arrow_left),
+          icon: Icon(Icons.arrow_back, color: Colors.black,),
         ),
       ),
       body: Padding(

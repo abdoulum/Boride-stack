@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:boride/assistants/app_info.dart';
+import 'package:boride/assistants/global.dart';
+import 'package:boride/assistants/map_key.dart';
 import 'package:boride/assistants/request_assistant.dart';
-import 'package:boride/global/global.dart';
-import 'package:boride/global/map_key.dart';
-import 'package:boride/infoHandler/app_info.dart';
 import 'package:boride/models/direction_details_info.dart';
 import 'package:boride/models/directions.dart';
-import 'package:boride/models/history.dart';
 import 'package:boride/models/user_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
@@ -15,6 +14,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AssistantMethods {
   static Future<String> searchAddressForGeographicCoOrdinates(
@@ -40,13 +40,11 @@ class AssistantMethods {
     return humanReadableAddress;
   }
 
-  static void readCurrentOnlineUserInfo() async {
-    currentFirebaseUser = fAuth.currentUser;
-
+  static readCurrentOnlineUserInfo() async {
     DatabaseReference userRef = FirebaseDatabase.instance
         .ref()
         .child("users")
-        .child(currentFirebaseUser!.uid);
+        .child(fAuth.currentUser!.uid);
 
     userRef.once().then((snap) {
       if (snap.snapshot.value != null) {
@@ -85,20 +83,8 @@ class AssistantMethods {
     return directionDetailsInfo;
   }
 
-  static double calculateFareAmountFromOriginToDestination(
-      DirectionDetailsInfo directionDetailsInfo) {
-    // per km = ₦60,
-    // per min = ₦15
-    // base fare = ₦200
 
-    double baseFare = 200;
-    double distanceFare = (directionDetailsInfo.distance_value! / 1000) * 55;
-    double timeFare = (directionDetailsInfo.duration_value! / 60) * 12;
 
-    double totalFare = baseFare + distanceFare + timeFare;
-
-    return totalFare.truncate().toDouble();
-  }
 
   static sendNotificationToDriverNow(
       String deviceRegistrationToken, String userRideRequestId, context) async {
@@ -160,24 +146,9 @@ class AssistantMethods {
 
   static void getTripsData(context) {
     var keys = Provider.of<AppInfo>(context, listen: false).tripsKeys;
-    for (String key in keys) {
-      FirebaseDatabase.instance
-          .ref()
-          .child("Ride Request")
-          .child(key)
-          .once()
-          .then((snapshot) {
-        if (snapshot.snapshot.value != null) {
-          var tripsData = TripsHistoryModel.fromSnapshot(snapshot.snapshot);
-          Provider.of<AppInfo>(context, listen: false)
-              .updateTripsData(tripsData);
-        }
-      });
-    }
   }
 
-  static double generateRandomNumber(int max){
-
+  static double generateRandomNumber(int max) {
     var randomGenerator = Random();
     int randInt = randomGenerator.nextInt(max);
 
@@ -190,5 +161,69 @@ class AssistantMethods {
         '${DateFormat.MMMd().format(thisDate)}, ${DateFormat.y().format(thisDate)} - ${DateFormat.jm().format(thisDate)}';
 
     return formattedDate;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  static int calculateFareAmountFromOriginToDestination(
+      DirectionDetailsInfo directionDetailsInfo, String type) {
+    // per km = ₦70,
+    // per min = ₦10
+    // base fare = ₦250
+
+    double baseFare = 250;
+    double distanceFare = (directionDetailsInfo.distance_value! / 1000) * 70;
+    double timeFare = (directionDetailsInfo.duration_value! / 60) * 10;
+
+    var totalFare = baseFare + distanceFare + timeFare;
+
+    if (type == "corp") {
+      totalFare = totalFare + 300;
+      return (((totalFare - 0) ~/ 100) * 100).toInt();
+    } else {
+      if (totalFare <= 400) {
+        totalFare = 500;
+        return (((totalFare - 1) ~/ 100) * 100).toInt();
+      }
+      return (((totalFare - 0) ~/ 100) * 100).toInt();
+    }
+  }
+
+
+
+  static calculateFareAmountFromOriginToDestinationDiscount(DirectionDetailsInfo directionDetailsInfo, String s, int percentageDiscount) {
+    // per km = ₦70,
+    // per min = ₦10
+    // base fare = ₦250
+
+    double baseFare = 250;
+    double distanceFare = (directionDetailsInfo.distance_value! / 1000) * 70;
+    double timeFare = (directionDetailsInfo.duration_value! / 60) * 10;
+    var totalFare = baseFare + distanceFare + timeFare;
+
+
+    if(s == "corp") {
+      var nTotalFare = totalFare + 300;
+      var dTotalFare = nTotalFare - ((percentageDiscount / 100) * totalFare);
+      return (((dTotalFare - 0) ~/ 100) * 100).toInt();
+    }
+    else{
+      var dTotalFare;
+      dTotalFare = totalFare - ((percentageDiscount / 100) * totalFare);
+      return (((dTotalFare - 0) ~/ 100) * 100).toInt();
+    }
+
   }
 }

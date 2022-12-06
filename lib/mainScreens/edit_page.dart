@@ -1,8 +1,10 @@
+import 'package:boride/assistants/assistant_methods.dart';
 import 'package:boride/mainScreens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditPage extends StatefulWidget {
   const EditPage({Key? key}) : super(key: key);
@@ -15,6 +17,13 @@ class _EditPageState extends State<EditPage> {
 
   String fullName = "";
   String email = "";
+
+  String? sName;
+  String? sEmail;
+  String? sPhone;
+
+  final Future<SharedPreferences> _sharedPreferences = SharedPreferences.getInstance();
+
 
   @override
   Widget build(BuildContext context) {
@@ -163,17 +172,20 @@ class _EditPageState extends State<EditPage> {
     );
   }
 
-  updateProfile()  {
-    Map profileMap = {
-      "id": FirebaseAuth.instance.currentUser!.uid,
-      "name": fullName,
-      "email": email,
-      "phone": FirebaseAuth.instance.currentUser!.phoneNumber,
-
-    };
-
+  updateProfile() async{
+    final prefs = await SharedPreferences.getInstance();
     DatabaseReference profileRef = FirebaseDatabase.instance.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid);
-    profileRef.set(profileMap);
+    profileRef.child("name").set(fullName);
+    profileRef.child("email").set(email);
+    profileRef.child("phone").set(FirebaseAuth.instance.currentUser!.phoneNumber);
+    profileRef.child("id").set(FirebaseAuth.instance.currentUser!.uid);
+
+    prefs.setString('my_name', fullName);
+    prefs.setString('my_email', email);
+    prefs.setString('my_phone', fullName);
+
+    await AssistantMethods.readCurrentOnlineUserInfo();
+
 
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainScreen()));
 

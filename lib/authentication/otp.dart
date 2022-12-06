@@ -175,13 +175,8 @@ class _MyVerifyState extends State<MyVerify> {
         });
       },
     ).whenComplete(
-      () {
+      () async {
         if (user != null) {
-          Map profileMap = {
-            "phone": FirebaseAuth.instance.currentUser!.phoneNumber,
-          };
-          DatabaseReference profileRef = FirebaseDatabase.instance.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid);
-          profileRef.set(profileMap);
 
           Fluttertoast.showToast(
             msg: "You are logged in successfully",
@@ -193,6 +188,7 @@ class _MyVerifyState extends State<MyVerify> {
             fontSize: 16.0,
           );
           AssistantMethods.getTripsKeys(context);
+          await AssistantMethods.readCurrentOnlineUserInfo();
           FirebaseDatabase.instance.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid).child("name").once().then((snap) {
             if(snap.snapshot.value !=null) {
               Navigator.pushReplacement(
@@ -214,6 +210,7 @@ class _MyVerifyState extends State<MyVerify> {
 
 
         } else {
+          Navigator.pop(context);
           Fluttertoast.showToast(
             msg: "your login failed",
             toastLength: Toast.LENGTH_LONG,

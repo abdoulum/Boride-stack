@@ -10,17 +10,19 @@ import 'package:boride/models/predicted_places.dart';
 import 'package:boride/widgets/progress_dialog.dart';
 
 
-class PlacePredictionTileDesign extends StatefulWidget
+class FavoritePredictionTileDesign extends StatefulWidget
 {
-  final PredictedPlaces? predictedPlaces;
+  final PredictedPlaces? favoritePlaces;
+  String? from;
 
-  PlacePredictionTileDesign({this.predictedPlaces});
+
+  FavoritePredictionTileDesign({this.favoritePlaces, this.from});
 
   @override
-  State<PlacePredictionTileDesign> createState() => _PlacePredictionTileDesignState();
+  State<FavoritePredictionTileDesign> createState() => _FavoritePredictionTileDesignState();
 }
 
-class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
+class _FavoritePredictionTileDesignState extends State<FavoritePredictionTileDesign> {
   getPlaceDirectionDetails(String? placeId, context) async
   {
     showDialog(
@@ -51,15 +53,27 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
 
       Provider.of<AppInfo>(context, listen: false).updateDropOffLocationAddress(directions);
 
-      setState(() {
-        userDropOffAddress = directions.locationName!;
+      if(widget.from == "home") {
+        setState(() {
+          userHomeAddress = directions.locationName!;
+          userHomeAddressId = directions.locationId!;
+        });
 
-      });
+      }else if(widget.from == "favorite1") {
+        setState(() {
+          userFavoriteAddress = directions.locationName!;
+          userFavoriteAddressId = directions.locationId!;
+        });
+      }else if(widget.from == "favorite2") {
+        setState(() {
+          userFavoriteAddress2 = directions.locationName!;
+          userFavoriteAddress2Id = directions.locationId!;
+        });
+      }
 
       Navigator.pop(context, "obtainedDropoff");
     }
   }
-
 
   @override
   Widget build(BuildContext context)
@@ -73,7 +87,7 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
       child: SizedBox(
         child: GestureDetector(
           onTap: () {
-            getPlaceDirectionDetails(widget.predictedPlaces!.place_id, context);
+            getPlaceDirectionDetails(widget.favoritePlaces!.place_id, context);
           },
           child: Container(
             color: Colors.transparent,
@@ -94,8 +108,8 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
                       const SizedBox(
                         height: 8.0,
                       ),
-                      Text(widget.predictedPlaces!.main_text!.length > 30 ?
-                        "${widget.predictedPlaces!.main_text!.substring(0, 30)}..." : widget.predictedPlaces!.main_text!,
+                      Text(widget.favoritePlaces!.main_text!.length > 30 ?
+                        "${widget.favoritePlaces!.main_text!.substring(0, 30)}..." : widget.favoritePlaces!.main_text!,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 16.0,
@@ -106,8 +120,8 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
                       const SizedBox(
                         height: 2.0,
                       ),
-                      Text( widget.predictedPlaces!.secondary_text!.length > 40 ?
-                        widget.predictedPlaces!.secondary_text!.substring(0, 40) : widget.predictedPlaces!.secondary_text!,
+                      Text( widget.favoritePlaces!.secondary_text!.length > 40 ?
+                        widget.favoritePlaces!.secondary_text!.substring(0, 40) : widget.favoritePlaces!.secondary_text!,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontFamily: "Brand-Regular",

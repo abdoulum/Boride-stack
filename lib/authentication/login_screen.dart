@@ -6,7 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../widgets/progress_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  String? ssLink;
+   LoginScreen(this.ssLink, {Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -19,6 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Fluttertoast.showToast(msg: widget.ssLink.toString());
+
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.only(left: 25, right: 25),
@@ -30,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
              const Text("Boride", style: TextStyle(
                fontSize: 60, fontFamily: "Brand-Regular",
                fontWeight: FontWeight.bold,
-               color: Colors.blue
+               color: Colors.indigo
              ),),
               const SizedBox(
                 height: 25,
@@ -54,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 30,
               ),
               Container(
-                height: 55,
+                height: 50,
                 decoration: BoxDecoration(
                     border: Border.all(width: 1, color: Colors.grey),
                     borderRadius: BorderRadius.circular(10)),
@@ -121,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           codeSent: (String verificationId, int? resendToken) {
                             String verifyId = verificationId;
                             String phoneN = phone;
+                            Navigator.pop(context);
                             Navigator.push(context, MaterialPageRoute(builder: (context) => MyVerify(verifyId, phoneN)));
                           },
                           codeAutoRetrievalTimeout: (String verificationId) {},
@@ -130,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Colors.indigo,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
 

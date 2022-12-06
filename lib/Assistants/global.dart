@@ -6,22 +6,33 @@ import 'package:firebase_database/firebase_database.dart';
 
 
 final FirebaseAuth fAuth = FirebaseAuth.instance;
-User? currentFirebaseUser;
 UserModel? userModelCurrentInfo;
 List dList = []; //online-active drivers Information List
 DirectionDetailsInfo? tripDirectionDetailsInfo;
 String? chosenDriverId="";
 String cloudMessagingServerToken = "key=AAAAf6dyvU8:APA91bHQhfqDLvANOr4y962gN0a-aEDSBJT5ZAdMaE5VGSGHchUCB_2OsUF2iQkBlldFxsBAc-vkNInOJdkLOEif0fyGIIw3iSahKK0dY8-U7NKTAPlmY-o62Sv1eflvueyKkaNzWBPJ";
 String userDropOffAddress = "";
+
+
+String userHomeAddress = "";
+String userHomeAddressId = "";
+String userFavoriteAddress= "";
+String userFavoriteAddressId= "";
+String userFavoriteAddress2= "";
+String userFavoriteAddress2Id= "";
+
+
 String driverCarColor = "";
 String driverCarPlate = "";
 String driverCarModel = "";
 String driverName="";
 String driverPhone="";
+String driverRId="";
+
 double countRatingStars=0.0;
 String titleStarsRating="";
 String userRideRequestStatus="";
 String state = "normal";
 String driverRideStatus = "Driver is Coming";
-int driverRequestTimeOut = 60;
+int driverRequestTimeOut = 10;
 DatabaseReference driversRef = FirebaseDatabase.instance.ref().child("drivers");

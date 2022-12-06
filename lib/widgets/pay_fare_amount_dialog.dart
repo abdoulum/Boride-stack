@@ -1,4 +1,4 @@
-import 'package:boride/global/global.dart';
+import 'package:boride/assistants/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -46,31 +46,31 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(
-              height: 22.0,
+              height: 20.0,
             ),
             const Text(
               "Trip Fare",
               style: TextStyle(fontSize: 16.0, fontFamily: "Brand-Bold"),
             ),
             const SizedBox(
-              height: 22.0,
+              height: 20.0,
             ),
             const Divider(
               height: 2.0,
               thickness: 2.0,
             ),
             const SizedBox(
-              height: 16.0,
+              height: 15.0,
             ),
             Text(
               "\$ $fareAmount",
               style: const TextStyle(fontSize: 45.0, fontFamily: "Brand-Bold"),
             ),
             const SizedBox(
-              height: 16.0,
+              height: 15.0,
             ),
             const SizedBox(
-              height: 16.0,
+              height: 15.0,
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),

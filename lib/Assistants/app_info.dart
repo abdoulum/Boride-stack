@@ -4,6 +4,9 @@ import 'package:boride/models/directions.dart';
 
 class AppInfo extends ChangeNotifier
 {
+
+
+
   Directions? userPickUpLocation, userDropOffLocation; //endTripLocation
   int countTotalTrips = 0;
 

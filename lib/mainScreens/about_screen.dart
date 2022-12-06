@@ -79,7 +79,7 @@ class _AboutScreenState extends State<AboutScreen> {
               child: Padding(
             padding: EdgeInsets.only(bottom: 10),
             child: Text(
-              "Developed By UTech",
+              "Developed By UATech",
               style: TextStyle(fontSize: 16, fontFamily: "Brand-Regular"),
             ),
           ))

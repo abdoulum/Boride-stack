@@ -1,28 +1,51 @@
-import 'package:boride/assistants/assistant_methods.dart';
-import 'package:boride/brand_colors.dart';
-import 'package:boride/global/global.dart';
+import 'package:boride/assistants/global.dart';
+import 'package:boride/mainScreens/add_favorite.dart';
 import 'package:boride/mainScreens/edit_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class Profile extends StatefulWidget {
+  const Profile({Key? key}) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileState extends State<Profile> {
+
+  String name = "";
+  String email = "";
+  String phone = "";
 
 
+  @override
+  void initState() {
+    super.initState();
 
+    fetchData();
+  }
+
+  fetchData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      name = prefs.getString('my_name') ?? userModelCurrentInfo!.name!;
+      email = prefs.getString('my_email') ?? userModelCurrentInfo!.email!;
+      phone = fAuth.currentUser!.phoneNumber!;
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(children: [
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
           Padding(
             padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.06,
@@ -89,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(userModelCurrentInfo!.name !=null ? userModelCurrentInfo!.name! : "Loading Data..." ,
+                                Text(name,
                                   style: const TextStyle(
                                     fontSize: 25.0,
                                     fontFamily: "Brand-Regular",
@@ -129,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: const Icon(Icons.email_outlined)),
                             Container(
                               margin: const EdgeInsets.only(left: 15),
-                              child: Text( userModelCurrentInfo!.email !=null ? userModelCurrentInfo!.email!.substring(0, 20) : "Loading Data...",
+                              child: Text( email,
                                   style: const TextStyle(
                                     fontFamily: "Brand-Regular",
                                     fontSize: 16.0,
@@ -160,7 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           ],
                         ),
-                        SizedBox(height: 10,),
+                        const SizedBox(height: 10,),
                         Row(
                           children: [
                             Container(
@@ -168,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: const Icon(Icons.phone_outlined)),
                             Container(
                               margin: const EdgeInsets.only(left: 15),
-                              child: Text(FirebaseAuth.instance.currentUser!.phoneNumber.toString(),
+                              child: Text(phone,
                                   style: const TextStyle(
                                     fontFamily: "Brand-Regular",
                                     fontSize: 16.0,
@@ -202,15 +225,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(6.0),
                                 child: Row(
-                                  children: const [
-                                    Icon(
+                                  children: [
+                                    const Icon(
                                       Icons.home_outlined,
                                       size: 22,
                                     ),
-                                    SizedBox(width: 15),
-                                    Text(
+                                    const SizedBox(width: 15),
+                                    const Text(
                                       "Home",
                                       style: TextStyle(
                                         fontFamily: "Brand-Regular",
@@ -218,6 +241,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
+                                    Spacer(),
+                                    ElevatedButton(
+                                        onPressed: ()  {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddFavorite()));
+                                        },
+                                        child: const Text("add"))
                                   ],
                                 ),
                               ),
@@ -262,14 +291,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditPage()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const EditPage()));
                           },
                           child: Container(
                             margin: const EdgeInsets.symmetric(horizontal: 40),
                             padding: const EdgeInsets.symmetric(horizontal: 25),
                             height: 50,
                             decoration: BoxDecoration(
-                                color: Color.fromARGB(100, 200, 200, 250),
+                                color: const Color.fromARGB(100, 200, 200, 250),
                                 borderRadius: BorderRadius.circular(20.0)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -297,7 +326,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 25),
                           height: 50,
                           decoration: BoxDecoration(
-                              color: Color.fromARGB(100, 200, 200, 250),
+                              color: const Color.fromARGB(100, 200, 200, 250),
                               borderRadius: BorderRadius.circular(20.0)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -324,7 +353,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           height: 50,
                           decoration: BoxDecoration(
-                              color: Color.fromARGB(100, 200, 200, 250),
+                              color: const Color.fromARGB(100, 200, 200, 250),
                               borderRadius: BorderRadius.circular(20.0)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -360,4 +389,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
+
+
 }

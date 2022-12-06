@@ -1,27 +1,45 @@
 import 'package:boride/brand_colors.dart';
-import 'package:boride/global/global.dart';
+import 'package:boride/assistants/global.dart';
 import 'package:boride/mainScreens/about_screen.dart';
-import 'package:boride/mainScreens/discount_screen.dart';
+import 'package:boride/mainScreens/promo_screen.dart';
 import 'package:boride/mainScreens/profile_screen.dart';
 import 'package:boride/mainScreens/support_screen.dart';
 import 'package:boride/mainScreens/trip_history_screen.dart';
 import 'package:boride/splashScreen/splash_screen.dart';
 import 'package:boride/testui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class MyDrawer extends StatefulWidget {
-  String? name;
-  String? email;
 
-  MyDrawer({Key? key, this.name, this.email}) : super(key: key);
+  MyDrawer({Key? key,}) : super(key: key);
 
   @override
   _MyDrawerState createState() => _MyDrawerState();
 }
 
 class _MyDrawerState extends State<MyDrawer> {
+
+  String name = "";
+
+  @override
+  void initState()  {
+    super.initState();
+    fetchData();
+  }
+
+
+  fetchData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString('my_name') ?? '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -32,7 +50,7 @@ class _MyDrawerState extends State<MyDrawer> {
           GestureDetector(
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (c) => const ProfileScreen()));
+                  context, MaterialPageRoute(builder: (c) => const Profile()));
             },
             child: Container(
               height: 140,
@@ -57,7 +75,7 @@ class _MyDrawerState extends State<MyDrawer> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            userModelCurrentInfo!.name! !=null ? userModelCurrentInfo!.name! : "Loading Data..." ,
+                            name,
                             style: const TextStyle(
                               fontSize: 20,
                               fontFamily: "Brand-Regular",
@@ -133,7 +151,7 @@ class _MyDrawerState extends State<MyDrawer> {
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (c) =>   TestUi()));
+                  MaterialPageRoute(builder: (c) =>   AboutScreen()));
             },
             child: const ListTile(
               leading: Icon(Ionicons.information_circle_outline,
@@ -164,12 +182,28 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
             ),
           ),
+          GestureDetector(
+            onTap: () {
+              Share.share('https://boride.page.link/referral/${fAuth.currentUser!.uid}');
+            },
+            child: const ListTile(
+              leading: Icon(Ionicons.help_circle_outline,
+                  color: BrandColors.colorTextDark),
+              title: Text(
+                "Invite friends",
+                style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: "Brand-Regular",
+                    color: BrandColors.colorTextDark),
+              ),
+            ),
+          ),
 
           GestureDetector(
             onTap: () {
-              fAuth.signOut();
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (c) => const MySplashScreen()));
+              fAuth.signOut().whenComplete(() {
+                Phoenix.rebirth(context);
+              });
             },
             child: const ListTile(
               leading: Icon(Ionicons.log_out_outline,

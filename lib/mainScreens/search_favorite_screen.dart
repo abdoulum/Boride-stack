@@ -1,27 +1,33 @@
 import 'package:boride/brand_colors.dart';
 import 'package:boride/assistants/app_info.dart';
+import 'package:boride/widgets/favorite_prediction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:boride/assistants/request_assistant.dart';
 import 'package:boride/assistants/map_key.dart';
 import 'package:boride/models/predicted_places.dart';
 import 'package:boride/widgets/place_prediction_tile.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 
-class SearchPlacesScreen extends StatefulWidget
+class SearchFavorite extends StatefulWidget
 {
 
+  String? from;
+
+  SearchFavorite({this.from});
+
   @override
-  _SearchPlacesScreenState createState() => _SearchPlacesScreenState();
+  _SearchFavoriteState createState() => _SearchFavoriteState();
 }
 
 
 
 
-class _SearchPlacesScreenState extends State<SearchPlacesScreen>
+class _SearchFavoriteState extends State<SearchFavorite>
 {
-  List<PredictedPlaces> placesPredictedList = [];
+  List<PredictedPlaces> favoritePredictedList = [];
 
   void findPlaceAutoCompleteSearch(String inputText) async
   {
@@ -43,17 +49,23 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen>
         var placePredictionsList = (placePredictions as List).map((jsonData) => PredictedPlaces.fromJson(jsonData)).toList();
 
         setState(() {
-          placesPredictedList = placePredictionsList;
+          favoritePredictedList = placePredictionsList;
         });
       }
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    Fluttertoast.showToast(msg: widget.from!);
+  }
+
+
+  @override
   Widget build(BuildContext context)
   {
-
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -90,7 +102,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen>
                       ),
                       const Center(
                         child: Text(
-                          "Set Destination",
+                          "Set Favorite",
                           style: TextStyle(
                             fontSize: 22.0,
                             fontFamily: "Brand-Bold",
@@ -126,7 +138,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen>
                                 findPlaceAutoCompleteSearch(valueTyped);
                               },
                               decoration: const InputDecoration(
-                                hintText: "Where to..",
+                                hintText: "Search...",
                                 hintStyle: TextStyle(
                                   fontFamily: "Brand-Regular",
                                     color: BrandColors.colorTextSemiLight),
@@ -151,12 +163,13 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen>
           ),
           Expanded(
                   child: ListView.separated(
-                    itemCount: placesPredictedList.length,
+                    itemCount: favoritePredictedList.length,
                     physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index)
                     {
-                      return PlacePredictionTileDesign(
-                        predictedPlaces: placesPredictedList[index],
+                      return FavoritePredictionTileDesign(
+                        favoritePlaces: favoritePredictedList[index],
+                        from : widget.from,
                       );
                     },
                     separatorBuilder: (BuildContext context, int index)
