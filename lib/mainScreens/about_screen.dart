@@ -1,5 +1,10 @@
+import 'package:boride/brand_colors.dart';
+import 'package:boride/mainScreens/web_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
 
 class AboutScreen extends StatefulWidget {
   @override
@@ -15,76 +20,209 @@ class _AboutScreenState extends State<AboutScreen> {
         children: [
           Expanded(
               child: Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15, top: 50),
+            padding: EdgeInsets.only(
+                left: 15,
+                right: 15,
+                top: MediaQuery.of(context).size.height * 0.15),
             child: Column(
               children: [
                 SizedBox(
-                  height: 230,
                   child: Center(
                     child: Image.asset(
-                      "images/taxi.png",
-                      width: 200,
+                      "images/boride_logoD.png",
+                      scale: MediaQuery.of(context).size.aspectRatio * 5.5,
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
                 Column(
-                  children: const [
-                    //company name
-                    Text(
-                      "Boride",
-                      style: TextStyle(
-                        fontSize: 50,
-                        fontFamily: "Brand-Regular",
-                        color: Colors.black,
+                  children: [
+                    Column(
+                      children: const [
+                        Text(
+                          "Get Home. Get Around !",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: "Brand-Bold",
+                              fontSize: 20,
+                              color: Colors.black),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        //about you & your company - write some info
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text(
+                            "Welcome to Boride, the ride hailing Service where we put our users first."
+                            " We are dedicated to making sure Our users have the best experience "
+                            "possible, From your first ride, to every ride thereafter, we are committed. ",
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "Brand-Regular",
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      color: Colors.transparent,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 8),
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * 1 ,
+                                color: Colors.transparent,
+                                child: const Center(
+                                  child: Text(
+                                    "Rate our app",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: BrandColors.colorTextM,
+                                        fontFamily: "brand-regular"),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Divider(
+                              height: 2,
+                              thickness: 1,
+                              color: Colors.grey.shade300,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 8),
+                              child: GestureDetector(
+                                onTap: () {
+                                  _launchInstagram();
+                                },
+                                child: Container(
+                                  height: 40,
+                                  width: MediaQuery.of(context).size.width * 1 ,
+                                  color: Colors.transparent,
+                                  child: const Center(
+                                    child: Text(
+                                      "Follow us on Instagram",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: BrandColors.colorTextM,
+                                          fontFamily: "brand-regular"),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: Colors.grey.shade300,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 8),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => WebPage("https://boride.app/?page_id=262")));
+                                },
+                                child: Container(
+                                  height: 40,
+                                  width: MediaQuery.of(context).size.width * 1 ,
+                                  color: Colors.transparent,
+                                  child: const Center(
+                                    child: Text(
+                                      "Terms & Conditions",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: BrandColors.colorTextM,
+                                          fontFamily: "brand-regular"),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: Colors.grey.shade300,
+                            ),
+                             Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 8),
+                              child: GestureDetector(
+                                onTap: () {
+                                 Navigator.push(context, MaterialPageRoute(builder: (context) => WebPage("https://boride.app/?page_id=3")));
+                                },
+                                child: Container(
+                                  height: 40,
+                                  width: MediaQuery.of(context).size.width * 1 ,
+                                  color: Colors.transparent,
+                                  child: Center(
+                                    child: const Text(
+                                      "Privacy Policy",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: BrandColors.colorTextM,
+                                          fontFamily: "brand-regular"),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: Colors.grey.shade300,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-
-                    SizedBox(
-                      height: 20,
-                    ),
-
-                    //about you & your company - write some info
-                    Text(
-                      "This app has been developed by Muhammad Ali, "
-                      "This is the world number 1 ride sharing app. Available for all. "
-                      "20M+ people already use this app.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: "Brand-Regular",
-                        color: Colors.black,
-                      ),
-                    ),
-
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
-                    ),
-
-                    Text(
-                      "This app has been developed by Muhammad Ali, "
-                      "This is the world number 1 ride sharing app. Available for all. "
-                      "20M+ people already use this app.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white54,
-                      ),
                     ),
                   ],
                 ),
               ],
             ),
           )),
-          const Center(
-              child: Padding(
+          const Padding(
             padding: EdgeInsets.only(bottom: 10),
             child: Text(
-              "Developed By UATech",
-              style: TextStyle(fontSize: 16, fontFamily: "Brand-Regular"),
+              "Developed By UATech"
+              "\nNigeria",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: BrandColors.colorTextp,
+                  fontSize: 15,
+                  fontFamily: "Brand-Regular"),
             ),
-          ))
+          )
         ],
       ),
     );
+  }
+
+  _launchInstagram() async {
+    var nativeUrl = "instagram://user?username=abdoul_bori";
+    var webUrl = "https://www.instagram.com/abdoul_bori";
+
+    try {
+      await launchUrlString(nativeUrl, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      print(e);
+      await launchUrlString(webUrl, mode: LaunchMode.platformDefault);
+    }
   }
 }
