@@ -41,6 +41,8 @@ class AssistantMethods {
   }
 
   static readCurrentOnlineUserInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+
     DatabaseReference userRef = FirebaseDatabase.instance
         .ref()
         .child("users")
@@ -49,8 +51,12 @@ class AssistantMethods {
     userRef.once().then((snap) {
       if (snap.snapshot.value != null) {
         userModelCurrentInfo = UserModel.fromSnapshot(snap.snapshot);
+        prefs.setString('my_name', userModelCurrentInfo!.name!);
+        prefs.setString('my_email', userModelCurrentInfo!.email!);
+        prefs.setString('my_phone', fAuth.currentUser!.phoneNumber!);
       }
     });
+
   }
 
   static Future<DirectionDetailsInfo?>
@@ -208,6 +214,7 @@ class AssistantMethods {
     // per min = ₦10
     // base fare = ₦250
 
+
     double baseFare = 250;
     double distanceFare = (directionDetailsInfo.distance_value! / 1000) * 70;
     double timeFare = (directionDetailsInfo.duration_value! / 60) * 10;
@@ -220,6 +227,7 @@ class AssistantMethods {
       return (((dTotalFare - 0) ~/ 100) * 100).toInt();
     }
     else{
+
       var dTotalFare;
       dTotalFare = totalFare - ((percentageDiscount / 100) * totalFare);
       return (((dTotalFare - 0) ~/ 100) * 100).toInt();

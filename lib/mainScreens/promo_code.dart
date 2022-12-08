@@ -52,7 +52,7 @@ class _PromoCodeState extends State<PromoCode> {
                 height: 15,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 20),
                   height: 55,
@@ -82,7 +82,7 @@ class _PromoCodeState extends State<PromoCode> {
                   ),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.0),
                 child: Text(
                   "Depending on the discount code entered, promo will be applied to next ride",
@@ -109,7 +109,7 @@ class _PromoCodeState extends State<PromoCode> {
               const SizedBox(
                 height: 20,
               ),
-              Center(
+              const Center(
                 child: Text(
                   "Invite friends to earn discounts.",
                   textAlign: TextAlign.center,
@@ -140,38 +140,36 @@ class _PromoCodeState extends State<PromoCode> {
           promoKeys.add(key);
         });
 
-        if(promoKeys.contains(discountCode)) {
+        if (promoKeys.contains(discountCode)) {
           FirebaseDatabase.instance
-                .ref()
-                .child("promo")
-                .child(discountCode!)
-                .once()
-                .then((snapshot) {
-                  if(snapshot.snapshot.value !=null) {
-                    setState(() {
-                      percentage = snapshot.snapshot.value;
-                    });
-                  }
+              .ref()
+              .child("promo")
+              .child(discountCode!)
+              .once()
+              .then((snapshot) {
+            if (snapshot.snapshot.value != null) {
+              setState(() {
+                percentage = snapshot.snapshot.value;
+              });
+              FirebaseDatabase.instance
+                  .ref()
+                  .child("users")
+                  .child(fAuth.currentUser!.uid)
+                  .child("promo")
+                  .child("percentageDiscount")
+                  .set(percentage)
+                  .whenComplete(() {
+                Fluttertoast.showToast(msg: "Redeem successful");
+                Navigator.pop(context);
+                Navigator.pop(context);
+              });
+            }
           });
-
-          FirebaseDatabase.instance.ref().child("users").child(fAuth.currentUser!.uid).child("promo")
-          .child("percentageDiscount").set(percentage).whenComplete(() {
-            Fluttertoast.showToast(msg: "Redeem successful");
-            setState(() {
-              percentage = null;
-            });
-            Navigator.pop(context);
-            Navigator.pop(context);
-          });
-
-
-        }else{
-          Fluttertoast.showToast(msg: "Redeem failed. Discount code is not valid");
+        } else {
+          Fluttertoast.showToast(
+              msg: "Redeem failed. Discount code is not valid");
           Navigator.pop(context);
-
-
         }
-
 
         // for (String key in promoKeys) {
         //   FirebaseDatabase.instance

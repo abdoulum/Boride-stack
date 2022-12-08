@@ -6,8 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../widgets/progress_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
-  String? ssLink;
-   LoginScreen(this.ssLink, {Key? key}) : super(key: key);
+   LoginScreen( {Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -20,7 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Fluttertoast.showToast(msg: widget.ssLink.toString());
 
     return Scaffold(
       body: Container(

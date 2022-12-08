@@ -19,8 +19,6 @@ class MySplashScreen extends StatefulWidget {
 class MySplashScreenState extends State<MySplashScreen> {
   bool hasInternet = false;
 
-  String? sLink;
-
   @override
   void initState() {
     super.initState();
@@ -38,7 +36,7 @@ class MySplashScreenState extends State<MySplashScreen> {
             context, MaterialPageRoute(builder: (c) => const MainScreen()));
       } else {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (c) => LoginScreen(sLink)));
+            context, MaterialPageRoute(builder: (c) => LoginScreen()));
       }
     });
   }

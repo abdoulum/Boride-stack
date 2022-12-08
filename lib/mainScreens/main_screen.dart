@@ -62,8 +62,9 @@ class MainScreenState extends State<MainScreen> {
   double safetyContainerHeight = 0;
   double bottomPaddingOfMap = 0;
   double locateUiPadding = Platform.isAndroid ? 270 : 270;
-
   double amountSize = 20;
+
+  Color textP = Colors.black;
 
   Position? userCurrentPosition;
   BitmapDescriptor? activeNearbyIcon;
@@ -76,7 +77,8 @@ class MainScreenState extends State<MainScreen> {
   String fareAmount = "";
   String userName = "your Name";
   String userEmail = "your Email";
-  String selectedPaymentMethod = "";
+  String selectedPaymentMethod = "Cash";
+
   int? percentageDiscount;
 
   Set<Polyline> polyLineSet = {};
@@ -90,9 +92,10 @@ class MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    AssistantMethods.getTripsKeys(context);
-    checkIfLocationPermissionAllowed();
+
     checkPromo();
+    checkIfLocationPermissionAllowed();
+    AssistantMethods.getTripsKeys(context);
   }
 
   @override
@@ -335,10 +338,15 @@ class MainScreenState extends State<MainScreen> {
                                   final prefs =
                                       await SharedPreferences.getInstance();
                                   final homeAddressId =
-                                      prefs.getString('my_home_address_id') ??
-                                          '';
-                                  getPlaceDirectionDetails(homeAddressId);
+                                      prefs.getString('my_home_address_id');
+                                  if (homeAddressId != null) {
+                                    getPlaceDirectionDetails(homeAddressId);
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg: "Set location in profile");
+                                  }
                                 },
+                                onDoubleTap: () {},
                                 child: Container(
                                   padding: const EdgeInsets.all(15),
                                   width: 55,
@@ -366,12 +374,16 @@ class MainScreenState extends State<MainScreen> {
                                 onTap: () async {
                                   final prefs =
                                       await SharedPreferences.getInstance();
-                                  final favAddressId = prefs.getString(
-                                          'my_favorite_address_id') ??
-                                      '';
-
-                                  getPlaceDirectionDetails(favAddressId);
+                                  final favAddressId =
+                                      prefs.getString('my_favorite_address_id');
+                                  if (favAddressId != null) {
+                                    getPlaceDirectionDetails(favAddressId);
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg: "Set location in profile");
+                                  }
                                 },
+                                onDoubleTap: () {},
                                 child: Container(
                                   padding: const EdgeInsets.all(15),
                                   width: 55,
@@ -380,7 +392,7 @@ class MainScreenState extends State<MainScreen> {
                                       color: Colors.grey.shade300,
                                       borderRadius: BorderRadius.circular(50)),
                                   child: const Icon(
-                                    Ionicons.star_outline,
+                                    Ionicons.briefcase_outline,
                                     size: 20,
                                   ),
                                 ),
@@ -399,12 +411,16 @@ class MainScreenState extends State<MainScreen> {
                                 onTap: () async {
                                   final prefs =
                                       await SharedPreferences.getInstance();
-                                  final favAddressId = prefs.getString(
-                                          'my_favorite_address2_id') ??
-                                      '';
-
-                                  getPlaceDirectionDetails(favAddressId);
+                                  final favAddress2Id = prefs
+                                      .getString('my_favorite_address2_id');
+                                  if (favAddress2Id != null) {
+                                    getPlaceDirectionDetails(favAddress2Id);
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg: "Set location in profile");
+                                  }
                                 },
+                                onDoubleTap: () {},
                                 child: Container(
                                   padding: const EdgeInsets.all(15),
                                   width: 55,
@@ -413,7 +429,7 @@ class MainScreenState extends State<MainScreen> {
                                       color: Colors.grey.shade300,
                                       borderRadius: BorderRadius.circular(50)),
                                   child: const Icon(
-                                    Ionicons.star_outline,
+                                    Ionicons.location_outline,
                                     size: 20,
                                   ),
                                 ),
@@ -468,6 +484,8 @@ class MainScreenState extends State<MainScreen> {
                       //boride-go
                       GestureDetector(
                         onTap: () {
+                          checkPromo();
+
                           if (selectedPaymentMethod.isEmpty) {
                             Fluttertoast.showToast(
                                 msg: "Please select a payment method");
@@ -482,6 +500,7 @@ class MainScreenState extends State<MainScreen> {
                             searchNearestDriver();
                           }
                         },
+                        onDoubleTap: () {},
                         child: Container(
                           color: BrandColors.Accent2,
                           width: MediaQuery.of(context).size.width * 1,
@@ -532,19 +551,22 @@ class MainScreenState extends State<MainScreen> {
                                           ? '\$${AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!, "go")}'
                                           : ''),
                                       style: TextStyle(
+                                        color: textP,
                                         fontSize: amountSize,
                                         fontFamily: "Brand-Bold",
                                       ),
                                     ),
-                                    hasDiscount ? Text(
-                                      ((tripDirectionDetailsInfo != null)
-                                          ? '\$${AssistantMethods.calculateFareAmountFromOriginToDestinationDiscount(tripDirectionDetailsInfo!, "go", percentageDiscount!)}'
-                                          : ''),
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "Brand-Bold",
-                                      ),
-                                    ) : Container()
+                                    hasDiscount
+                                        ? Text(
+                                            ((tripDirectionDetailsInfo != null)
+                                                ? '\$${AssistantMethods.calculateFareAmountFromOriginToDestinationDiscount(tripDirectionDetailsInfo!, "go", percentageDiscount!)}'
+                                                : ''),
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: "Brand-Bold",
+                                            ),
+                                          )
+                                        : Container()
                                   ],
                                 ),
                               ],
@@ -558,6 +580,8 @@ class MainScreenState extends State<MainScreen> {
                       //boride-corporate
                       GestureDetector(
                         onTap: () {
+                          checkPromo();
+
                           if (selectedPaymentMethod.isEmpty) {
                             Fluttertoast.showToast(
                                 msg: "Please select a payment method");
@@ -572,6 +596,7 @@ class MainScreenState extends State<MainScreen> {
                             searchNearestDriver();
                           }
                         },
+                        onDoubleTap: () {},
                         child: Container(
                           color: BrandColors.Accent2,
                           width: MediaQuery.of(context).size.width * 1,
@@ -622,19 +647,22 @@ class MainScreenState extends State<MainScreen> {
                                           ? '\$${AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!, "corp")}'
                                           : ''),
                                       style: TextStyle(
+                                        color: textP,
                                         fontSize: amountSize,
                                         fontFamily: "Brand-Bold",
                                       ),
                                     ),
-                                    hasDiscount ? Text(
-                                      ((tripDirectionDetailsInfo != null)
-                                          ? '\$${AssistantMethods.calculateFareAmountFromOriginToDestinationDiscount(tripDirectionDetailsInfo!, "corp", percentageDiscount!)}'
-                                          : ''),
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "Brand-Bold",
-                                      ),
-                                    ) : Container()
+                                    hasDiscount
+                                        ? Text(
+                                            ((tripDirectionDetailsInfo != null)
+                                                ? '\$${AssistantMethods.calculateFareAmountFromOriginToDestinationDiscount(tripDirectionDetailsInfo!, "corp", percentageDiscount!)}'
+                                                : ''),
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: "Brand-Bold",
+                                            ),
+                                          )
+                                        : Container()
                                   ],
                                 ),
                               ],
@@ -649,11 +677,16 @@ class MainScreenState extends State<MainScreen> {
                         thickness: 0.2,
                       ),
 
-                      hasDiscount ? const Text("Promo applied", style: TextStyle(
-                          fontFamily: "Brand-bold",
-                          color: Colors.green,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),) : Container(),
+                      hasDiscount
+                          ? const Text(
+                              "Promo applied",
+                              style: TextStyle(
+                                  fontFamily: "Brand-bold",
+                                  color: Colors.green,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : Container(),
 
                       GestureDetector(
                         onTap: _openBottomSheet,
@@ -1144,49 +1177,56 @@ class MainScreenState extends State<MainScreen> {
                           thickness: 0.2,
                           color: Colors.black,
                         ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Ionicons.radio,
-                              color: Colors.red,
-                            ),
-                            const SizedBox(
-                              width: 14.0,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                SizedBox(
-                                  height: 8.0,
+                        GestureDetector(
+                          onTap: () {
+                            reportDriver();
+                          },
+                          child: Container(
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Ionicons.radio,
+                                  color: Colors.red,
                                 ),
-                                Text(
-                                  "Emergency assist",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontFamily: "Brand-Regular",
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red,
-                                  ),
+                                const SizedBox(
+                                  width: 14.0,
                                 ),
-                                SizedBox(
-                                  height: 2.0,
-                                ),
-                                Text(
-                                  "Call local authority",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: "Brand-Regular",
-                                    fontSize: 12.0,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 8.0,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    SizedBox(
+                                      height: 8.0,
+                                    ),
+                                    Text(
+                                      "Report driver",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontFamily: "Brand-Regular",
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 2.0,
+                                    ),
+                                    Text(
+                                      "Driver is not the assigned individual",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontFamily: "Brand-Regular",
+                                        fontSize: 12.0,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 8.0,
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
                       ],
                     )
@@ -1260,7 +1300,7 @@ class MainScreenState extends State<MainScreen> {
       "pickup_address": originLocation.locationName,
       "dropoff_address": destinationLocation.locationName,
       "driver_id": "waiting",
-      "p_discount" : 10,
+      "p_discount": 10,
       "payment_method": selectedPaymentMethod,
       "ride_type": carRideType,
       "time": DateTime.now().toString(),
@@ -1380,10 +1420,20 @@ class MainScreenState extends State<MainScreen> {
                 resetApp();
               }
             } else if (response == "CardPaymentSuccessful") {
-              Fluttertoast.showToast(msg: "Card Payment Successful");
-              resetApp();
+              if ((eventSnap.snapshot.value as Map)["driverId"] != null) {
+                String assignedDriverId =
+                    (eventSnap.snapshot.value as Map)["driverId"].toString();
+                Fluttertoast.showToast(msg: "Card Payment Successful");
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => RateDriverScreen(
+                              assignedDriverId: assignedDriverId,
+                            )));
+                resetApp();
+              }
             } else {
-              Fluttertoast.showToast(msg: "Error, check payment method");
+              Fluttertoast.showToast(msg: "Payment not successful");
             }
           }
         }
@@ -1540,6 +1590,8 @@ class MainScreenState extends State<MainScreen> {
     await drawPolyLineFromOriginToDestination();
     setState(() {
       searchLocationContainerHeight = 0;
+
+      requestingRideContainerHeight = 0;
 
       rideDetailsContainerHeight = Platform.isAndroid
           ? MediaQuery.of(context).size.height * 0.34
@@ -1848,9 +1900,9 @@ class MainScreenState extends State<MainScreen> {
 
   void searchNearestDriver() {
     if (onlineNearByAvailableDriversList.isEmpty) {
-      cancelRideRequest();
-      resetApp();
-      noDriverFound();
+      displayRideDetailsContainer();
+      Fluttertoast.showToast(msg: "No available drivers");
+
       return;
     }
 
@@ -1980,6 +2032,37 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
+  checkPromo() {
+    DatabaseReference promoRef = FirebaseDatabase.instance
+        .ref()
+        .child("users")
+        .child(fAuth.currentUser!.uid)
+        .child("promo");
+
+    promoRef.child("percentageDiscount").once().then((snap) {
+      if (snap.snapshot.value != null) {
+        hasDiscount = true;
+        amountSize = 14;
+        percentageDiscount = int.parse(snap.snapshot.value.toString());
+        textP = BrandColors.colorTextp;
+      }
+    });
+  }
+
+  reportDriver() {
+    Fluttertoast.showToast(
+        msg: "Report driver and cancel ride",
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Colors.red);
+  }
+
+  void noDriverFound() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => NoDriverAvailableDialog());
+  }
+
   void _openBottomSheet() {
     showModalBottomSheet(
         context: context,
@@ -2014,34 +2097,6 @@ class MainScreenState extends State<MainScreen> {
             .toList(),
       ),
     );
-  }
-
-  checkPromo() {
-    DatabaseReference promoRef = FirebaseDatabase.instance
-        .ref()
-        .child("users")
-        .child(fAuth.currentUser!.uid)
-        .child("promo");
-    promoRef.child("percentageDiscount").once().then((snap) {
-      if (snap.snapshot.value != null) {
-        setState(() async {
-          percentageDiscount = snap.snapshot.value as int;
-          hasDiscount = true;
-          amountSize = 14;
-        });
-      }
-    });
-  }
-
-  calculateDiscount() {
-
-  }
-
-  void noDriverFound() {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => NoDriverAvailableDialog());
   }
 
   _handleCurrencyTap(String paymentMethod) {

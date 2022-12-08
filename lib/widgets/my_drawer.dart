@@ -36,7 +36,7 @@ class _MyDrawerState extends State<MyDrawer> {
   fetchData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      name = prefs.getString('my_name') ?? '';
+      name = prefs.getString('my_name') ?? userModelCurrentInfo!.name!;
     });
   }
 
@@ -136,13 +136,30 @@ class _MyDrawerState extends State<MyDrawer> {
             },
             child: const ListTile(
               leading:
-                  Icon(Ionicons.pricetag_outline, color: BrandColors.colorTextDark),
+                  Icon(Ionicons.pricetag_outline, size: 25,color: BrandColors.colorTextDark),
               title: Text(
                 "Offers",
                 style: TextStyle(
                     fontSize: 16,
                     fontFamily: "Brand-Regular",
                     fontWeight: FontWeight.w200,
+                    color: BrandColors.colorTextDark),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Share.share('https://boride.page.link/referral');
+            },
+            child: const ListTile(
+              leading: Icon(Ionicons.person_add_outline,
+                  size: 25,
+                  color: BrandColors.colorTextDark),
+              title: Text(
+                "Invite friends",
+                style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: "Brand-Regular",
                     color: BrandColors.colorTextDark),
               ),
             ),
@@ -155,6 +172,7 @@ class _MyDrawerState extends State<MyDrawer> {
             },
             child: const ListTile(
               leading: Icon(Ionicons.information_circle_outline,
+                  size: 25,
                   color: BrandColors.colorTextDark),
               title: Text(
                 "About",
@@ -172,44 +190,10 @@ class _MyDrawerState extends State<MyDrawer> {
             },
             child: const ListTile(
               leading: Icon(Ionicons.help_circle_outline,
+                  size: 25,
                   color: BrandColors.colorTextDark),
               title: Text(
                 "Support",
-                style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: "Brand-Regular",
-                    color: BrandColors.colorTextDark),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Share.share('https://boride.page.link/referral/${fAuth.currentUser!.uid}');
-            },
-            child: const ListTile(
-              leading: Icon(Ionicons.help_circle_outline,
-                  color: BrandColors.colorTextDark),
-              title: Text(
-                "Invite friends",
-                style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: "Brand-Regular",
-                    color: BrandColors.colorTextDark),
-              ),
-            ),
-          ),
-
-          GestureDetector(
-            onTap: () {
-              fAuth.signOut().whenComplete(() {
-                Phoenix.rebirth(context);
-              });
-            },
-            child: const ListTile(
-              leading: Icon(Ionicons.log_out_outline,
-                  color: BrandColors.colorTextDark),
-              title: Text(
-                "Sign Out",
                 style: TextStyle(
                     fontSize: 16,
                     fontFamily: "Brand-Regular",

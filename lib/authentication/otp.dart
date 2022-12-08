@@ -5,6 +5,7 @@ import 'package:boride/widgets/progress_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pinput/pinput.dart';
 
@@ -191,12 +192,7 @@ class _MyVerifyState extends State<MyVerify> {
           await AssistantMethods.readCurrentOnlineUserInfo();
           FirebaseDatabase.instance.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid).child("name").once().then((snap) {
             if(snap.snapshot.value !=null) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MainScreen(),
-                ),
-              );
+              Phoenix.rebirth(context);
             }else
               {
                 Navigator.pushReplacement(

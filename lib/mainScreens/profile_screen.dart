@@ -1,9 +1,7 @@
 import 'package:boride/assistants/global.dart';
-import 'package:boride/mainScreens/add_favorite.dart';
 import 'package:boride/mainScreens/edit_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,11 +13,9 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   String name = "";
   String email = "";
   String phone = "";
-
 
   @override
   void initState() {
@@ -35,7 +31,6 @@ class _ProfileState extends State<Profile> {
       name = prefs.getString('my_name') ?? userModelCurrentInfo!.name!;
       email = prefs.getString('my_email') ?? userModelCurrentInfo!.email!;
       phone = fAuth.currentUser!.phoneNumber!;
-
     });
   }
 
@@ -43,9 +38,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Padding(
             padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.06,
@@ -90,50 +83,75 @@ class _ProfileState extends State<Profile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         //name
-                        Row(
-                          children: [
-                            Column(
-                              children: [
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                IconButton(
+                        Center(
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 70,
+                                width: 70,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.shade100,
+                                    borderRadius: BorderRadius.circular(50)),
+                                child: IconButton(
                                   icon: const Icon(Icons.person_rounded),
                                   color: Colors.grey[400],
                                   iconSize: 45,
                                   onPressed: () {},
                                 ),
-                                const SizedBox(
-                                  height: 25,
-                                )
-                              ],
-                            ),
-                            const SizedBox(width: 20),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(name,
-                                  style: const TextStyle(
-                                    fontSize: 25.0,
-                                    fontFamily: "Brand-Regular",
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    name,
+                                    style: const TextStyle(
+                                      fontSize: 25.0,
+                                      fontFamily: "Brand-Regular",
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 0,
-                                ),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * .7,
-                                  child: Divider(
-                                    color: Colors.grey.shade300,
-                                    thickness: 0.9,
-                                  ),
-                                ),
-
-                              ],
-                            ),
-                          ],
+                                  const SizedBox(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: SizedBox(
+                                        height: 30,
+                                        width: 30,
+                                        child: GestureDetector(
+                                          child: Container(
+                                              height: 40,
+                                              width: 40,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50)),
+                                              child: const Icon(
+                                                Icons.edit_outlined,
+                                                size: 15,
+                                              )),
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const EditPage()));
+                                          },
+                                        )),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              const SizedBox(
+                                height: 7,
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(
                           width: 385,
@@ -152,7 +170,7 @@ class _ProfileState extends State<Profile> {
                                 child: const Icon(Icons.email_outlined)),
                             Container(
                               margin: const EdgeInsets.only(left: 15),
-                              child: Text( email,
+                              child: Text(email,
                                   style: const TextStyle(
                                     fontFamily: "Brand-Regular",
                                     fontSize: 16.0,
@@ -180,10 +198,11 @@ class _ProfileState extends State<Profile> {
                                 ),
                               ),
                             ),
-
                           ],
                         ),
-                        const SizedBox(height: 10,),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         Row(
                           children: [
                             Container(
@@ -200,7 +219,6 @@ class _ProfileState extends State<Profile> {
                                   )),
                             ),
                             const Spacer(),
-
                           ],
                         ),
 
@@ -224,53 +242,87 @@ class _ProfileState extends State<Profile> {
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.home_outlined,
-                                      size: 22,
-                                    ),
-                                    const SizedBox(width: 15),
-                                    const Text(
-                                      "Home",
-                                      style: TextStyle(
-                                        fontFamily: "Brand-Regular",
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    ElevatedButton(
-                                        onPressed: ()  {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddFavorite()));
-                                        },
-                                        child: const Text("add"))
-                                  ],
-                                ),
-                              ),
-
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Row(
-                                  children: const [
-                                    Icon(
-
-                                      Icons.work_outline,
-                                      size: 22,
-                                    ),
-                                    SizedBox(width: 15),
-                                    Text(
-                                      "Work",
-                                      style: TextStyle(
-                                        fontFamily: "Brand-Regular",
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    )
-                                  ],
-                                ),
+                              Row(
+                                children: [
+                                  Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(Ionicons.home_outline),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            Text("Work",
+                                                style: TextStyle(
+                                                  fontFamily: "Brand-Regular",
+                                                  fontSize: 16.0,
+                                                  color: Colors.black,
+                                                  //fontWeight: FontWeight.bold,
+                                                )),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          children: const [
+                                            Icon(Ionicons.briefcase_outline),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            Text("Favorite ",
+                                                style: TextStyle(
+                                                  fontFamily: "Brand-Regular",
+                                                  fontSize: 16.0,
+                                                  color: Colors.black,
+                                                  //fontWeight: FontWeight.bold,
+                                                )),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          children: const [
+                                            Icon(Ionicons.location_outline),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            Text("Favorite",
+                                                style: TextStyle(
+                                                  fontFamily: "Brand-Regular",
+                                                  fontSize: 16.0,
+                                                  color: Colors.black,
+                                                  //fontWeight: FontWeight.bold,
+                                                )),
+                                          ],
+                                        ),
+                                      ]),
+                                  const Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: GestureDetector(
+                                          child: Container(
+                                              height: 40,
+                                              width: 40,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50)),
+                                              child: const Icon(
+                                                Icons.edit_outlined,
+                                                size: 15,
+                                              )),
+                                          onTap: () {},
+                                        )),
+                                  )
+                                ],
                               ),
                               const SizedBox(
                                 width: 370,
@@ -283,15 +335,16 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
 
-
-
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.03,
                         ),
 
+                        const SizedBox(
+                          height: 15,
+                        ),
                         GestureDetector(
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const EditPage()));
+                          onTap:  () {
+                            Phoenix.rebirth(context);
                           },
                           child: Container(
                             margin: const EdgeInsets.symmetric(horizontal: 40),
@@ -303,11 +356,11 @@ class _ProfileState extends State<Profile> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: const [
-                                Icon(Icons.edit),
+                                Icon(Ionicons.log_out_outline),
                                 SizedBox(width: 40),
                                 Expanded(
                                   child: Text(
-                                    'Edit ',
+                                    'Logout',
                                     style: TextStyle(
                                       fontFamily: "Brand-Regular",
                                     ),
@@ -323,33 +376,6 @@ class _ProfileState extends State<Profile> {
                         ),
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 40),
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(100, 200, 200, 250),
-                              borderRadius: BorderRadius.circular(20.0)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Ionicons.log_out_outline),
-                              SizedBox(width: 40),
-                              Expanded(
-                                child: Text(
-                                  'Logout',
-                                  style: TextStyle(
-                                    fontFamily: "Brand-Regular",
-                                  ),
-                                ),
-                              ),
-                              Spacer(),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 40),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           height: 50,
                           decoration: BoxDecoration(
@@ -358,8 +384,13 @@ class _ProfileState extends State<Profile> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
-                              Icon(Ionicons.trash, color: Colors.red,),
-                              SizedBox(width: 40,),
+                              Icon(
+                                Ionicons.trash,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                width: 40,
+                              ),
                               Expanded(
                                 child: Text(
                                   'Delete Account',
@@ -372,12 +403,6 @@ class _ProfileState extends State<Profile> {
                             ],
                           ),
                         ),
-
-
-                        //phone
-                        //        InfoDesignUIWidget(
-                        //    textInfo: userModelCurrentInfo!.phone!,
-                        //    iconData: Icons.phone_iphone_rounded,
                       ],
                     ),
                   ],
@@ -389,7 +414,4 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-
-
-
 }
