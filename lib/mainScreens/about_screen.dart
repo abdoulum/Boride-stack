@@ -215,13 +215,12 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   _launchInstagram() async {
-    var nativeUrl = "instagram://user?username=abdoul_bori";
-    var webUrl = "https://www.instagram.com/abdoul_bori";
+    var nativeUrl = "instagram://user?username=boride_ng";
+    var webUrl = "https://www.instagram.com/boride_ng";
 
     try {
       await launchUrlString(nativeUrl, mode: LaunchMode.externalApplication);
     } catch (e) {
-      print(e);
       await launchUrlString(webUrl, mode: LaunchMode.platformDefault);
     }
   }

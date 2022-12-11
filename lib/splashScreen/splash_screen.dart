@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:boride/assistants/assistant_methods.dart';
 import 'package:boride/assistants/global.dart';
 import 'package:boride/authentication/login_screen.dart';
+import 'package:boride/mainScreens/edit_page.dart';
 import 'package:boride/mainScreens/main_screen.dart';
 import 'package:boride/splashScreen/retry_screen.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -26,14 +28,27 @@ class MySplashScreenState extends State<MySplashScreen> {
   }
 
   startTimer() {
+
     Timer(const Duration(seconds: 3), () {
       checkInternetAccess();
 
       if (fAuth.currentUser != null) {
-        AssistantMethods.readCurrentOnlineUserInfo();
-        AssistantMethods.getTripsKeys(context);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (c) => const MainScreen()));
+        DatabaseReference nameRef = FirebaseDatabase.instance
+            .ref()
+            .child("users")
+            .child(fAuth.currentUser!.uid)
+            .child("name");
+        nameRef.once().then((snap) {
+          if (snap.snapshot.value != null) {
+            AssistantMethods.readCurrentOnlineUserInfo();
+            AssistantMethods.getTripsKeys(context);
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (c) => const MainScreen()));
+          } else {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (c) => const EditPage()));
+          }
+        });
       } else {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (c) => LoginScreen()));

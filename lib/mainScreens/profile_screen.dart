@@ -1,4 +1,6 @@
 import 'package:boride/assistants/global.dart';
+import 'package:boride/authentication/email_verify.dart';
+import 'package:boride/mainScreens/add_favorite.dart';
 import 'package:boride/mainScreens/edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -42,8 +44,8 @@ class _ProfileState extends State<Profile> {
           Padding(
             padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.06,
-                left: MediaQuery.of(context).size.width * 0.02,
-                right: MediaQuery.of(context).size.width * 0.02),
+                left: MediaQuery.of(context).size.width * 0.01,
+                right: MediaQuery.of(context).size.width * 0.01),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -157,7 +159,7 @@ class _ProfileState extends State<Profile> {
                           width: 385,
                           child: Divider(
                             color: Colors.grey.shade200,
-                            thickness: 8,
+                            thickness: 4,
                           ),
                         ),
                         const SizedBox(
@@ -166,42 +168,48 @@ class _ProfileState extends State<Profile> {
                         Row(
                           children: [
                             Container(
-                                margin: const EdgeInsets.only(left: 18),
+                                margin: const EdgeInsets.only(left: 15),
                                 child: const Icon(Icons.email_outlined)),
                             Container(
-                              margin: const EdgeInsets.only(left: 15),
-                              child: Text(email,
+                              margin: const EdgeInsets.only(left: 5),
+                              child: Text(
+                                  email.length > 28
+                                      ? "${email.substring(0, 28)} ..."
+                                      : email,
                                   style: const TextStyle(
                                     fontFamily: "Brand-Regular",
-                                    fontSize: 16.0,
+                                    fontSize: 15.0,
                                     color: Colors.black54,
                                     //fontWeight: FontWeight.bold,
                                   )),
                             ),
-                            const Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: SizedBox(
-                                height: 30,
-                                width: 75,
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                  ),
-                                  child: const Text(
-                                    "Verify",
-                                    style: TextStyle(
-                                        fontFamily: "Brand-Regular",
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            Spacer(),
+                            !fAuth.currentUser!.emailVerified
+                                ? Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: SizedBox(
+                                      height: 30,
+                                      width: 50,
+                                      child: TextButton(
+                                        onPressed: () {
+                                          _verifyEmail();
+                                        },
+                                        child: const Text(
+                                          "Verify",
+                                          style: TextStyle(
+                                              color: Colors.green,
+                                              fontSize: 12,
+                                              fontFamily: "Brand-Regular",
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox()
                           ],
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
                         Row(
                           children: [
@@ -226,7 +234,8 @@ class _ProfileState extends State<Profile> {
                           height: 10,
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -238,9 +247,12 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontFamily: "Brand-Bold",
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 15,
+                                    fontSize: 18,
                                   ),
                                 ),
+                              ),
+                              const SizedBox(
+                                height: 10,
                               ),
                               Row(
                                 children: [
@@ -300,51 +312,47 @@ class _ProfileState extends State<Profile> {
                                           ],
                                         ),
                                       ]),
-                                  const Spacer(),
-                                  Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: SizedBox(
-                                        height: 50,
-                                        width: 50,
-                                        child: GestureDetector(
-                                          child: Container(
-                                              height: 40,
-                                              width: 40,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50)),
-                                              child: const Icon(
-                                                Icons.edit_outlined,
-                                                size: 15,
-                                              )),
-                                          onTap: () {},
+                                  Spacer(),
+                                  GestureDetector(
+                                    child: Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                50)),
+                                        child: const Icon(
+                                          Icons.edit_outlined,
+                                          size: 15,
                                         )),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                              const AddFavorite()));
+                                    },
                                   )
                                 ],
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 370,
                                 child: Divider(
                                   thickness: 0.2,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.08,
                                   color: Colors.black,
                                 ),
                               ),
                             ],
                           ),
                         ),
-
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.03,
-                        ),
-
-                        const SizedBox(
-                          height: 15,
-                        ),
                         GestureDetector(
-                          onTap:  () {
-                            Phoenix.rebirth(context);
+                          onTap: () {
+                            fAuth.signOut().whenComplete(() {
+                              Phoenix.rebirth(context);
+                            });
                           },
                           child: Container(
                             margin: const EdgeInsets.symmetric(horizontal: 40),
@@ -413,5 +421,12 @@ class _ProfileState extends State<Profile> {
         ]),
       ),
     );
+  }
+
+  _verifyEmail() {
+    fAuth.currentUser!.verifyBeforeUpdateEmail(email).then((value) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => EmailVerify(email)));
+    });
   }
 }

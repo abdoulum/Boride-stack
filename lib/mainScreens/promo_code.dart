@@ -170,22 +170,6 @@ class _PromoCodeState extends State<PromoCode> {
               msg: "Redeem failed. Discount code is not valid");
           Navigator.pop(context);
         }
-
-        // for (String key in promoKeys) {
-        //   FirebaseDatabase.instance
-        //       .ref()
-        //       .child("promo")
-        //       .child(key)
-        //       .once()
-        //       .then((snapshot) {
-        //     if (snapshot.snapshot.value != null) {
-        //       print(key);
-        //       print(snapshot.snapshot.value);
-        //
-        //     }
-        //
-        //   });
-        // }
       }
     });
   }

@@ -19,11 +19,7 @@ class PayFareAmountDialog extends StatefulWidget {
 }
 
 class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
-
-
   bool isTestMode = true;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +85,7 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
                 onPressed: () async {
                   if (paymentMtd == "Cash") {
                     Navigator.pop(context, "cashPayed");
-                  }
-                  else if(paymentMtd == "Card"){
+                  } else if (paymentMtd == "Card") {
                     _handlePaymentInitialization();
                   }
                 },
@@ -127,8 +122,6 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
   }
 
   _handlePaymentInitialization() async {
-
-
     final Customer customer = Customer(
         name: userModelCurrentInfo!.name!,
         phoneNumber: userModelCurrentInfo!.phone!,
@@ -143,13 +136,23 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
         amount: widget.fareAmount.toString(),
         customer: customer,
         paymentOptions: "card, bank transfer",
-        customization: Customization(title: "Test Payment"),
+        customization:
+            Customization(title: "Test Payment", description: "iuytfgvhb"),
         isTestMode: isTestMode);
-    final ChargeResponse response = await flutterWave.charge().whenComplete(() {
-      Fluttertoast.showToast(msg: "Success///");
-      Navigator.pop(context, "CardPaymentSuccessful");
-    });
-
+    final ChargeResponse response = await flutterWave.charge();
+    if (response != null) {
+      if (response.status == "Transaction successful") {
+        Fluttertoast.showToast(msg: response.status!);
+        Future.delayed(const Duration(milliseconds: 4000), () {
+          Navigator.pop(context, "CardPaymentSuccessful");
+        });
+      } else {
+        Fluttertoast.showToast(msg: response.status!);
+        Future.delayed(const Duration(milliseconds: 4000), () {
+          Navigator.pop(context, "cancelled");
+        });
+      }
+    }
   }
 
   String getPublicKey() {

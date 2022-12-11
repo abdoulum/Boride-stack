@@ -123,7 +123,7 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                             double.parse(snap.snapshot.value.toString());
                         double newAverageRatings =
                             (pastRatings + countRatingStars) / 2;
-                        rateDriverRef.set(newAverageRatings.toString());
+                        rateDriverRef.set(newAverageRatings.toStringAsFixed(2));
 
                         Navigator.pop(context);
                       }

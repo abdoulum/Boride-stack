@@ -56,7 +56,6 @@ class AssistantMethods {
         prefs.setString('my_phone', fAuth.currentUser!.phoneNumber!);
       }
     });
-
   }
 
   static Future<DirectionDetailsInfo?>
@@ -88,9 +87,6 @@ class AssistantMethods {
 
     return directionDetailsInfo;
   }
-
-
-
 
   static sendNotificationToDriverNow(
       String deviceRegistrationToken, String userRideRequestId, context) async {
@@ -169,20 +165,6 @@ class AssistantMethods {
     return formattedDate;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   static int calculateFareAmountFromOriginToDestination(
       DirectionDetailsInfo directionDetailsInfo, String type) {
     // per km = ₦70,
@@ -207,31 +189,30 @@ class AssistantMethods {
     }
   }
 
-
-
-  static calculateFareAmountFromOriginToDestinationDiscount(DirectionDetailsInfo directionDetailsInfo, String s, int percentageDiscount) {
+  static calculateFareAmountFromOriginToDestinationDiscount(
+      DirectionDetailsInfo directionDetailsInfo,
+      String s,
+      int percentageDiscount) {
     // per km = ₦70,
     // per min = ₦10
     // base fare = ₦250
-
 
     double baseFare = 250;
     double distanceFare = (directionDetailsInfo.distance_value! / 1000) * 70;
     double timeFare = (directionDetailsInfo.duration_value! / 60) * 10;
     var totalFare = baseFare + distanceFare + timeFare;
 
-
-    if(s == "corp") {
+    if (s == "corp") {
       var nTotalFare = totalFare + 300;
       var dTotalFare = nTotalFare - ((percentageDiscount / 100) * totalFare);
-      return (((dTotalFare - 0) ~/ 100) * 100).toInt();
-    }
-    else{
-
+      return (((dTotalFare - 50) ~/ 100) * 100).toInt();
+    } else {
       var dTotalFare;
       dTotalFare = totalFare - ((percentageDiscount / 100) * totalFare);
+      if (dTotalFare < 300) {
+        dTotalFare = 300;
+      }
       return (((dTotalFare - 0) ~/ 100) * 100).toInt();
     }
-
   }
 }
