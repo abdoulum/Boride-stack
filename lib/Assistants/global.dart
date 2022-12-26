@@ -25,6 +25,7 @@ String userFavoriteAddress2Id= "";
 String driverCarColor = "";
 String driverCarPlate = "";
 String driverCarModel = "";
+String driverCarBrand = "";
 String driverPhotoUrl = "";
 String driverName="";
 String driverPhone="";

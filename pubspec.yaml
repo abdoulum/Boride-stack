@@ -48,6 +48,8 @@ dependencies:
   webview_flutter: ^3.0.4
   flutter_polyline_points: ^1.0.0
   font_awesome_flutter: ^10.2.1
+  flutter_onboarding_slider: ^1.0.8
+  flutter_svg: ^1.1.6
   google_maps_flutter: ^2.1.5
 
   once: ^1.5.0

@@ -58,8 +58,6 @@ class _SearchFavoriteState extends State<SearchFavorite>
   @override
   void initState() {
     super.initState();
-
-    Fluttertoast.showToast(msg: widget.from!);
   }
 
 

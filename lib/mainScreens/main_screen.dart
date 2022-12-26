@@ -12,6 +12,7 @@ import 'package:boride/mainScreens/rate_driver_screen.dart';
 import 'package:boride/mainScreens/search_places_screen.dart';
 import 'package:boride/models/active_nearby_available_drivers.dart';
 import 'package:boride/models/directions.dart';
+import 'package:boride/testui.dart';
 import 'package:boride/widgets/my_drawer.dart';
 import 'package:boride/widgets/noDriverAvailableDialog.dart';
 import 'package:boride/widgets/pay_fare_amount_dialog.dart';
@@ -195,8 +196,8 @@ class MainScreenState extends State<MainScreen> {
             bottom: locateUiPadding,
             child: GestureDetector(
               onTap: () async {
-                locateUserPosition();
-                //Navigator.push(context, MaterialPageRoute(builder: (context) => RateDriverScreen()));
+                // locateUserPosition();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const TestUI()));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -463,10 +464,10 @@ class MainScreenState extends State<MainScreen> {
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
-                    bottomLeft: Radius.circular(15),
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -879,216 +880,347 @@ class MainScreenState extends State<MainScreen> {
                   ),
                 ],
               ),
+              // child: Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     const SizedBox(
+              //       height: 5.0,
+              //     ),
+              //     Row(
+              //       mainAxisAlignment: MainAxisAlignment.start,
+              //       children: [
+              //         Text(
+              //           driverRideStatus,
+              //           textAlign: TextAlign.center,
+              //           style: const TextStyle(
+              //             fontSize: 20.0,
+              //             color: Colors.black87,
+              //             fontWeight: FontWeight.bold,
+              //             fontFamily: "Brand-Bold",
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //     const Divider(
+              //       height: 15,
+              //       thickness: 0.2,
+              //       color: Colors.black,
+              //     ),
+              //     const SizedBox(
+              //       height: 2.0,
+              //     ),
+              //     Row(
+              //       mainAxisAlignment: MainAxisAlignment.start,
+              //       children: [
+              //         Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Text(
+              //               driverName,
+              //               style: const TextStyle(
+              //                   fontSize: 20, fontFamily: "Brand-Regular"),
+              //             ),
+              //             const SizedBox(
+              //               height: 5,
+              //             ),
+              //             Text(
+              //               "$driverCarColor  $driverCarModel,   $driverCarPlate",
+              //               style: const TextStyle(
+              //                   fontSize: 14,
+              //                   color: Colors.black,
+              //                   fontFamily: "Brand-Regular"),
+              //             ),
+              //           ],
+              //         ),
+              //         const Spacer(),
+              //         userRideRequestStatus != "onride"
+              //             ? Column(
+              //                 children: [
+              //                   Container(
+              //                     decoration: BoxDecoration(
+              //                         color: const Color.fromARGB(
+              //                             255, 243, 245, 247),
+              //                         borderRadius:
+              //                             BorderRadius.circular(30)),
+              //                     child: CircleAvatar(
+              //                       backgroundColor: Colors.grey.shade200,
+              //                       radius: 24.0,
+              //                       child: IconButton(
+              //                         icon: const Icon(Ionicons.call),
+              //                         color: Colors.green,
+              //                         onPressed: () {
+              //                           launch(('tel://$driverPhone'));
+              //                         },
+              //                       ),
+              //                     ),
+              //                   ),
+              //                   const Padding(
+              //                     padding: EdgeInsets.only(top: 5.0),
+              //                     child: Text(
+              //                       "Call driver",
+              //                       style: TextStyle(
+              //                           fontSize: 14,
+              //                           fontFamily: "Brand-Regular"),
+              //                     ),
+              //                   )
+              //                 ],
+              //               )
+              //             : Container(),
+              //       ],
+              //     ),
+              //     const Divider(
+              //       height: 20,
+              //       thickness: 0.2,
+              //       color: Colors.black,
+              //     ),
+              //     Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //       children: [
+              //         Column(
+              //           children: [
+              //             driverPhotoUrl != null
+              //                 ? Container(
+              //                     decoration: BoxDecoration(
+              //                         color: const Color.fromARGB(
+              //                             255, 243, 245, 247),
+              //                         borderRadius:
+              //                             BorderRadius.circular(30)),
+              //                     child: ClipOval(
+              //                       child: Image.network(
+              //                         driverPhotoUrl,
+              //                         height: 40,
+              //                         width: 40,
+              //                         scale: 18,
+              //                       ),
+              //                     ),
+              //                   )
+              //                 : const SizedBox(),
+              //             const SizedBox(
+              //               height: 5,
+              //             ),
+              //             const Text(
+              //               "Driver",
+              //               style: TextStyle(
+              //                   fontSize: 14, fontFamily: "Brand-Regular"),
+              //             )
+              //           ],
+              //         ),
+              //         Column(
+              //           children: [
+              //             Container(
+              //               color: Colors.white,
+              //               child: CircleAvatar(
+              //                 backgroundColor: Colors.grey.shade200,
+              //                 radius: 28.0,
+              //                 child: IconButton(
+              //                   icon: const Icon(Ionicons.shield),
+              //                   color: Colors.blue,
+              //                   onPressed: () {
+              //                     setState(() {
+              //                       safetyContainerHeight =
+              //                           MediaQuery.of(context).size.height *
+              //                               0.31;
+              //                       bottomPaddingOfMap =
+              //                           MediaQuery.of(context).size.height *
+              //                               0.33;
+              //                       locateUiPadding =
+              //                           MediaQuery.of(context).size.height *
+              //                               0.33;
+              //                       rideDetailsContainerHeight = 0;
+              //                       assignedDriverInfoContainerHeight = 0;
+              //                     });
+              //                   },
+              //                 ),
+              //               ),
+              //             ),
+              //             const SizedBox(
+              //               height: 5,
+              //             ),
+              //             const Text(
+              //               "Safety",
+              //               style: TextStyle(
+              //                   fontSize: 14, fontFamily: "Brand-Regular"),
+              //             )
+              //           ],
+              //         ),
+              //         userRideRequestStatus != "onride"
+              //             ? Column(
+              //                 children: [
+              //                   Container(
+              //                     decoration: BoxDecoration(
+              //                         color: const Color.fromARGB(
+              //                             255, 243, 245, 247),
+              //                         borderRadius:
+              //                             BorderRadius.circular(30)),
+              //                     child: CircleAvatar(
+              //                       backgroundColor: Colors.grey.shade200,
+              //                       radius: 28.0,
+              //                       child: IconButton(
+              //                         icon: const Icon(Ionicons.car_sport),
+              //                         color: Colors.red,
+              //                         onPressed: () {
+              //                           if (userRideRequestStatus !=
+              //                               "onride") {
+              //                             cancelRide();
+              //                             cancelRideRequest();
+              //                             resetApp();
+              //                           }
+              //                         },
+              //                       ),
+              //                     ),
+              //                   ),
+              //                   const SizedBox(
+              //                     height: 5,
+              //                   ),
+              //                   const Text(
+              //                     "Cancel",
+              //                     style: TextStyle(
+              //                         fontSize: 14,
+              //                         fontFamily: "Brand-Regular"),
+              //                   )
+              //                 ],
+              //               )
+              //             : Container()
+              //       ],
+              //     ),
+              //   ],
+              // ),
               height: assignedDriverInfoContainerHeight,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 5.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          driverRideStatus,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Brand-Bold",
-                          ),
+              child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(0)),
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Column(
+                    children: [
+
+                       Center(
+                        child: Text(
+                          "$driverRideStatus, 1.6Km away",
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "Brand-Bold"),
                         ),
-                      ],
-                    ),
-                    const Divider(
-                      height: 15,
-                      thickness: 0.2,
-                      color: Colors.black,
-                    ),
-                    const SizedBox(
-                      height: 2.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              driverName,
-                              style: const TextStyle(
-                                  fontSize: 20, fontFamily: "Brand-Regular"),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "$driverCarColor  $driverCarModel,   $driverCarPlate",
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                  fontFamily: "Brand-Regular"),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        userRideRequestStatus != "onride"
-                            ? Column(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            255, 243, 245, 247),
-                                        borderRadius:
-                                            BorderRadius.circular(30)),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.grey.shade200,
-                                      radius: 24.0,
-                                      child: IconButton(
-                                        icon: const Icon(Ionicons.call),
-                                        color: Colors.green,
-                                        onPressed: () {
-                                          launch(('tel://$driverPhone'));
-                                        },
-                                      ),
-                                    ),
+                      ),
+                      const Divider(height: 10,
+                        thickness: 1,),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius:
+                                  BorderRadius.circular(5),
+                                  border: Border.all(
+                                    width: 1,
+                                    color: Colors.grey.shade400,
                                   ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(top: 5.0),
-                                    child: Text(
-                                      "Call driver",
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(3.0),
+                                  child: Text(
+                                      driverCarPlate,
                                       style: TextStyle(
-                                          fontSize: 14,
-                                          fontFamily: "Brand-Regular"),
-                                    ),
-                                  )
-                                ],
-                              )
-                            : Container(),
-                      ],
-                    ),
-                    const Divider(
-                      height: 20,
-                      thickness: 0.2,
-                      color: Colors.black,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          children: [
-                            driverPhotoUrl != null
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            255, 243, 245, 247),
-                                        borderRadius:
-                                            BorderRadius.circular(30)),
-                                    child: ClipOval(
-                                      child: Image.network(
-                                        driverPhotoUrl,
-                                        height: 40,
-                                        width: 40,
-                                        scale: 18,
-                                      ),
-                                    ),
-                                  )
-                                : const SizedBox(),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            const Text(
-                              "Driver",
-                              style: TextStyle(
-                                  fontSize: 14, fontFamily: "Brand-Regular"),
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              color: Colors.white,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey.shade200,
-                                radius: 28.0,
-                                child: IconButton(
-                                  icon: const Icon(Ionicons.shield),
-                                  color: Colors.blue,
-                                  onPressed: () {
-                                    setState(() {
-                                      safetyContainerHeight =
-                                          MediaQuery.of(context).size.height *
-                                              0.31;
-                                      bottomPaddingOfMap =
-                                          MediaQuery.of(context).size.height *
-                                              0.33;
-                                      locateUiPadding =
-                                          MediaQuery.of(context).size.height *
-                                              0.33;
-                                      rideDetailsContainerHeight = 0;
-                                      assignedDriverInfoContainerHeight = 0;
-                                    });
-                                  },
+                                          fontFamily: "Brand-bold", fontSize: 18)
+                                  ),
                                 ),
                               ),
+                              const SizedBox(
+                                height: 7,
+                              ),
+                              Text("$driverCarBrand $driverCarModel $driverCarColor",
+                                style: TextStyle(fontFamily: "Brand-regular"),)
+                            ],
+                          ),
+                          const Spacer(),
+                          Transform.scale(
+                            scaleX: -1,
+                            child: Image.asset(
+                              "images/uber-x.png",
+                              scale: 8,
                             ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            const Text(
-                              "Safety",
-                              style: TextStyle(
-                                  fontSize: 14, fontFamily: "Brand-Regular"),
-                            )
-                          ],
-                        ),
-                        userRideRequestStatus != "onride"
-                            ? Column(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            255, 243, 245, 247),
-                                        borderRadius:
-                                            BorderRadius.circular(30)),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.grey.shade200,
-                                      radius: 28.0,
-                                      child: IconButton(
-                                        icon: const Icon(Ionicons.car_sport),
-                                        color: Colors.red,
-                                        onPressed: () {
-                                          if (userRideRequestStatus !=
-                                              "onride") {
-                                            cancelRide();
-                                            cancelRideRequest();
-                                            resetApp();
-                                          }
-                                        },
-                                      ),
-                                    ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                           ClipOval(
+                                            child: Image.network(
+                                              driverPhotoUrl,
+                                              height: 50,
+                                              width: 50,
+                                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Column(
+                            children: [
+                              GestureDetector(
+                                  onTap: () {},
+                                  child: Text(
+                                      driverName,
+                                      style: TextStyle(fontFamily: "Brand-bold", fontSize: 16)
+                                  )),
+                              Row(
+                                children: const [
+                                  Icon(
+                                    Icons.star,
+                                    size: 14,
                                   ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  const Text(
-                                    "Cancel",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: "Brand-Regular"),
-                                  )
+                                  Text("4.5, ",
+                                      style: TextStyle(fontFamily: "Brand-regular")),
+                                  Text("100+ trips",
+                                      style: TextStyle(fontFamily: "Brand-regular"))
                                 ],
-                              )
-                            : Container()
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          Container(
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(50)),
+                            child: IconButton(
+                              icon: const Icon(Icons.phone),
+                              onPressed: () {
+                                launch(('tel://$driverPhone'));
+
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          Container(
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(50)),
+                            child: IconButton(
+                              icon: const Icon(Ionicons.car_sport),
+                              color: Colors.red,
+                              onPressed: () {
+                                if (userRideRequestStatus !=
+                                    "onride") {
+                                  cancelRide();
+                                  cancelRideRequest();
+                                  resetApp();
+                                }
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  )),
             ),
           ),
 
@@ -1368,6 +1500,8 @@ class MainScreenState extends State<MainScreen> {
             (eventSnap.snapshot.value as dynamic)["car_number"].toString();
         driverCarModel =
             (eventSnap.snapshot.value as dynamic)["car_model"].toString();
+        driverCarBrand =
+            (eventSnap.snapshot.value as dynamic)["car_brand"].toString();
       });
 
       if ((eventSnap.snapshot.value as Map)["driverPhone"] != null) {
@@ -1639,14 +1773,14 @@ class MainScreenState extends State<MainScreen> {
           0; //Platform.isAndroid ? MediaQuery.of(context).size.height * 0.37 : MediaQuery.of(context).size.height * 0.32;
 
       bottomPaddingOfMap = Platform.isAndroid
-          ? MediaQuery.of(context).size.height * 0.37
+          ? MediaQuery.of(context).size.height * 0.32
           : MediaQuery.of(context).size.height * 0.30;
       locateUiPadding = Platform.isAndroid
-          ? MediaQuery.of(context).size.height * 0.37
+          ? MediaQuery.of(context).size.height * 0.33
           : MediaQuery.of(context).size.height * 0.30;
       assignedDriverInfoContainerHeight = Platform.isAndroid
-          ? MediaQuery.of(context).size.height * 0.35
-          : MediaQuery.of(context).size.height * 0.32;
+          ? MediaQuery.of(context).size.height * 0.30
+          : MediaQuery.of(context).size.height * 0.30;
     });
   }
 
@@ -2025,6 +2159,7 @@ class MainScreenState extends State<MainScreen> {
       driverPhone = "";
       driverCarColor = "";
       driverCarModel = "";
+      driverCarBrand = "";
       driverPhotoUrl = "";
       driverCarPlate = "";
       driverRideStatus = "Driver is Coming";

@@ -1,5 +1,6 @@
 import 'package:boride/assistants/global.dart';
 import 'package:boride/authentication/email_verify.dart';
+import 'package:boride/mainScreens/add_favorite.dart';
 import 'package:boride/mainScreens/edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -444,32 +445,37 @@ class _ProfileState extends State<Profile> {
                               Row(
                                 children: [
                                   const Spacer(),
-                                  Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade100,
-                                        borderRadius:
-                                        BorderRadius.circular(5),
-                                        border: Border.all(
-                                          width: 1,
-                                          color: Colors.grey.shade400,
-                                        ),
-                                      ),
-                                      child: const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        child: Text(
-                                          "Edit",
-                                          style: TextStyle(
-                                            fontFamily: "Brand-regular",
-                                            color: Colors.grey,
-                                            fontSize: 14,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (
+                                          context) => const AddFavorite()));
+                                      },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade100,
+                                          borderRadius:
+                                          BorderRadius.circular(5),
+                                          border: Border.all(
+                                            width: 1,
+                                            color: Colors.grey.shade400,
                                           ),
                                         ),
-                                      ))
+                                        child: const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Text(
+                                            "Edit",
+                                            style: TextStyle(
+                                              fontFamily: "Brand-regular",
+                                              color: Colors.grey,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        )),
+                                  )
                                 ],
                               ),
                               const SizedBox(
-                                width: 370,
                                 child: Divider(
                                   thickness: 0.1,
                                   color: Colors.black,
@@ -481,7 +487,7 @@ class _ProfileState extends State<Profile> {
 
                         GestureDetector(
                           onTap: () {
-                            fAuth.signOut().whenComplete(() {
+                            fAuth.signOut().then((value) {
                               Phoenix.rebirth(context);
                             });
                           },
