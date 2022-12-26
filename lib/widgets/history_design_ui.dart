@@ -10,53 +10,44 @@ class HistoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: const Color.fromARGB(150, 200, 200, 250),
-      ),
+      color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //driver name + Fare Amount
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 6.0),
                   child: Text(
-                    "Rider: ${history!.driverName}",
+                    "Driver: ${history!.driverName}",
                     style: const TextStyle(
-                      fontSize: 18,
-                      fontFamily: "Brand-Regular",
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontFamily: "Brand-Bold",
                     ),
                   ),
-                ),
-                const SizedBox(
-                  width: 12,
                 ),
                 Text(
                   "\$ ${history!.fareAmount!}",
                   style: const TextStyle(
-                    fontSize: 25,
-                    fontFamily: "Brand-Regular",
+                    fontSize: 20,
+                    fontFamily: "Brand-Bold",
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
-
             Row(
               children: [
                 const Icon(
                   Ionicons.pin,
                   color: Colors.indigo,
+                  size: 18,
                 ),
                 const SizedBox(
                   width: 12,
@@ -66,22 +57,19 @@ class HistoryTile extends StatelessWidget {
                     history!.pickup!,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 12,
                       fontFamily: "Brand-Regular",
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 5,
-            ),
-
             Row(
               children: [
                 Icon(
                   Ionicons.location,
                   color: Colors.greenAccent.shade700,
+                  size: 18,
                 ),
                 const SizedBox(
                   width: 12,
@@ -92,7 +80,7 @@ class HistoryTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontFamily: "Brand-Regular",
-                      fontSize: 16,
+                      fontSize: 12,
                     ),
                   ),
                 ),

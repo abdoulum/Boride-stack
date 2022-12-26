@@ -1,6 +1,5 @@
 import 'package:boride/assistants/global.dart';
 import 'package:boride/authentication/email_verify.dart';
-import 'package:boride/mainScreens/add_favorite.dart';
 import 'package:boride/mainScreens/edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -119,30 +118,37 @@ class _ProfileState extends State<Profile> {
                                   const SizedBox(),
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
-                                    child: SizedBox(
-                                        height: 30,
-                                        width: 30,
-                                        child: GestureDetector(
-                                          child: Container(
-                                              height: 40,
-                                              width: 40,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50)),
-                                              child: const Icon(
-                                                Icons.edit_outlined,
-                                                size: 15,
-                                              )),
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const EditPage()));
-                                          },
-                                        )),
+                                    child: GestureDetector(
+                                      child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade100,
+                                        borderRadius:
+                                            BorderRadius.circular(5),
+                                        border: Border.all(
+                                          width: 1,
+                                          color: Colors.grey.shade400,
+                                        ),
+                                      ),
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: Text(
+                                          "Edit",
+                                          style: TextStyle(
+                                            fontFamily: "Brand-regular",
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      )),
+                                      onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const EditPage()));
+                                      },
+                                    ),
                                   )
                                 ],
                               ),
@@ -183,7 +189,7 @@ class _ProfileState extends State<Profile> {
                                     //fontWeight: FontWeight.bold,
                                   )),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             !fAuth.currentUser!.emailVerified
                                 ? Padding(
                                     padding: const EdgeInsets.all(2.0),
@@ -233,9 +239,124 @@ class _ProfileState extends State<Profile> {
                         const SizedBox(
                           height: 10,
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(
+                        //       horizontal: 15, vertical: 10),
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       const Padding(
+                        //         padding: EdgeInsets.only(
+                        //             left: 14.0, bottom: 10, top: 10),
+                        //         child: Text(
+                        //           "Favorite Places",
+                        //           style: TextStyle(
+                        //             fontFamily: "Brand-Bold",
+                        //             fontWeight: FontWeight.bold,
+                        //             fontSize: 18,
+                        //           ),
+                        //         ),
+                        //       ),
+                        //       const SizedBox(
+                        //         height: 10,
+                        //       ),
+                        //       Row(
+                        //         children: [
+                        //           Column(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.start,
+                        //               children: [
+                        //                 Row(
+                        //                   children: const [
+                        //                     Icon(Ionicons.home_outline),
+                        //                     SizedBox(
+                        //                       width: 20,
+                        //                     ),
+                        //                     Text("Work",
+                        //                         style: TextStyle(
+                        //                           fontFamily: "Brand-Regular",
+                        //                           fontSize: 16.0,
+                        //                           color: Colors.black,
+                        //                           //fontWeight: FontWeight.bold,
+                        //                         )),
+                        //                   ],
+                        //                 ),
+                        //                 const SizedBox(
+                        //                   height: 15,
+                        //                 ),
+                        //                 Row(
+                        //                   children: const [
+                        //                     Icon(Ionicons.briefcase_outline),
+                        //                     SizedBox(
+                        //                       width: 20,
+                        //                     ),
+                        //                     Text("Favorite ",
+                        //                         style: TextStyle(
+                        //                           fontFamily: "Brand-Regular",
+                        //                           fontSize: 16.0,
+                        //                           color: Colors.black,
+                        //                           //fontWeight: FontWeight.bold,
+                        //                         )),
+                        //                   ],
+                        //                 ),
+                        //                 const SizedBox(
+                        //                   height: 15,
+                        //                 ),
+                        //                 Row(
+                        //                   children: const [
+                        //                     Icon(Ionicons.location_outline),
+                        //                     SizedBox(
+                        //                       width: 20,
+                        //                     ),
+                        //                     Text("Favorite",
+                        //                         style: TextStyle(
+                        //                           fontFamily: "Brand-Regular",
+                        //                           fontSize: 16.0,
+                        //                           color: Colors.black,
+                        //                           //fontWeight: FontWeight.bold,
+                        //                         )),
+                        //                   ],
+                        //                 ),
+                        //               ]),
+                        //           Spacer(),
+                        //           GestureDetector(
+                        //             child: Container(
+                        //                 height: 40,
+                        //                 width: 40,
+                        //                 decoration: BoxDecoration(
+                        //                     color: Colors.grey.shade100,
+                        //                     borderRadius:
+                        //                     BorderRadius.circular(
+                        //                         50)),
+                        //                 child: const Icon(
+                        //                   Icons.edit_outlined,
+                        //                   size: 15,
+                        //                 )),
+                        //             onTap: () {
+                        //               Navigator.push(
+                        //                   context,
+                        //                   MaterialPageRoute(
+                        //                       builder: (context) =>
+                        //                       const AddFavorite()));
+                        //             },
+                        //           )
+                        //         ],
+                        //       ),
+                        //       SizedBox(
+                        //         width: 370,
+                        //         child: Divider(
+                        //           thickness: 0.2,
+                        //           height:
+                        //               MediaQuery.of(context).size.height * 0.08,
+                        //           color: Colors.black,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
+                          padding: const EdgeInsets.all(6),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -247,107 +368,117 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontFamily: "Brand-Bold",
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                                    fontSize: 15,
                                   ),
                                 ),
                               ),
-                              const SizedBox(
-                                height: 10,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        margin: const EdgeInsets.only(left: 10),
+                                        child:
+                                            const Icon(Ionicons.home_outline)),
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 15),
+                                      child: const Text("Home",
+                                          style: TextStyle(
+                                            fontFamily: "Brand-Regular",
+                                            fontSize: 16.0,
+                                            color: Colors.black,
+                                            //fontWeight: FontWeight.bold,
+                                          )),
+                                    ),
+                                    const Spacer(),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        margin: const EdgeInsets.only(left: 10),
+                                        child: const Icon(
+                                            Ionicons.briefcase_outline)),
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 15),
+                                      child: const Text("Work",
+                                          style: TextStyle(
+                                            fontFamily: "Brand-Regular",
+                                            fontSize: 16.0,
+                                            color: Colors.black,
+                                            //fontWeight: FontWeight.bold,
+                                          )),
+                                    ),
+                                    const Spacer(),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        margin: const EdgeInsets.only(left: 10),
+                                        child: const Icon(
+                                            Ionicons.location_outline)),
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 15),
+                                      child: const Text("Favorite",
+                                          style: TextStyle(
+                                            fontFamily: "Brand-Regular",
+                                            fontSize: 16.0,
+                                            color: Colors.black,
+                                            //fontWeight: FontWeight.bold,
+                                          )),
+                                    ),
+                                    const Spacer(),
+                                  ],
+                                ),
                               ),
                               Row(
                                 children: [
-                                  Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(Ionicons.home_outline),
-                                            SizedBox(
-                                              width: 20,
-                                            ),
-                                            Text("Work",
-                                                style: TextStyle(
-                                                  fontFamily: "Brand-Regular",
-                                                  fontSize: 16.0,
-                                                  color: Colors.black,
-                                                  //fontWeight: FontWeight.bold,
-                                                )),
-                                          ],
+                                  const Spacer(),
+                                  Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade100,
+                                        borderRadius:
+                                        BorderRadius.circular(5),
+                                        border: Border.all(
+                                          width: 1,
+                                          color: Colors.grey.shade400,
                                         ),
-                                        const SizedBox(
-                                          height: 15,
+                                      ),
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: Text(
+                                          "Edit",
+                                          style: TextStyle(
+                                            fontFamily: "Brand-regular",
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                          ),
                                         ),
-                                        Row(
-                                          children: const [
-                                            Icon(Ionicons.briefcase_outline),
-                                            SizedBox(
-                                              width: 20,
-                                            ),
-                                            Text("Favorite ",
-                                                style: TextStyle(
-                                                  fontFamily: "Brand-Regular",
-                                                  fontSize: 16.0,
-                                                  color: Colors.black,
-                                                  //fontWeight: FontWeight.bold,
-                                                )),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 15,
-                                        ),
-                                        Row(
-                                          children: const [
-                                            Icon(Ionicons.location_outline),
-                                            SizedBox(
-                                              width: 20,
-                                            ),
-                                            Text("Favorite",
-                                                style: TextStyle(
-                                                  fontFamily: "Brand-Regular",
-                                                  fontSize: 16.0,
-                                                  color: Colors.black,
-                                                  //fontWeight: FontWeight.bold,
-                                                )),
-                                          ],
-                                        ),
-                                      ]),
-                                  Spacer(),
-                                  GestureDetector(
-                                    child: Container(
-                                        height: 40,
-                                        width: 40,
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                50)),
-                                        child: const Icon(
-                                          Icons.edit_outlined,
-                                          size: 15,
-                                        )),
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                              const AddFavorite()));
-                                    },
-                                  )
+                                      ))
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 370,
                                 child: Divider(
-                                  thickness: 0.2,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.08,
+                                  thickness: 0.1,
                                   color: Colors.black,
                                 ),
                               ),
                             ],
                           ),
                         ),
+
                         GestureDetector(
                           onTap: () {
                             fAuth.signOut().whenComplete(() {

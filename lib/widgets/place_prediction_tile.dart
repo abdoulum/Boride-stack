@@ -7,7 +7,6 @@ import 'package:boride/assistants/map_key.dart';
 import 'package:boride/assistants/app_info.dart';
 import 'package:boride/models/directions.dart';
 import 'package:boride/models/predicted_places.dart';
-import 'package:boride/widgets/progress_dialog.dart';
 
 
 class PlacePredictionTileDesign extends StatefulWidget
@@ -25,9 +24,11 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
   {
     showDialog(
         context: context,
-        builder: (BuildContext context) => ProgressDialog(
-          message: "Setting Up Dropoff...",
-        ),
+        builder: (BuildContext context) => const Center(
+          child: CircularProgressIndicator(
+            color: Colors.indigo,
+          ),
+        )
     );
 
     String placeDirectionDetailsUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$mapKey";
@@ -65,7 +66,7 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
   Widget build(BuildContext context)
   {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 3, vertical: 1.5),
+      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 1.5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.grey.shade100,

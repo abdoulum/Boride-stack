@@ -1,5 +1,4 @@
 import 'package:boride/assistants/global.dart';
-import 'package:boride/widgets/progress_dialog.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -125,8 +124,10 @@ class _PromoCodeState extends State<PromoCode> {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (BuildContext context) => ProgressDialog(
-        message: "Please wait...",
+      builder: (BuildContext context) => Center(
+        child: const CircularProgressIndicator(
+          color: Colors.indigo,
+        ),
       ),
     );
 

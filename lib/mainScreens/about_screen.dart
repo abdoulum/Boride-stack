@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-
 class AboutScreen extends StatefulWidget {
   @override
   State<AboutScreen> createState() => _AboutScreenState();
@@ -83,7 +82,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                   horizontal: 15.0, vertical: 8),
                               child: Container(
                                 height: 40,
-                                width: MediaQuery.of(context).size.width * 1 ,
+                                width: MediaQuery.of(context).size.width * 1,
                                 color: Colors.transparent,
                                 child: const Center(
                                   child: Text(
@@ -110,7 +109,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                 },
                                 child: Container(
                                   height: 40,
-                                  width: MediaQuery.of(context).size.width * 1 ,
+                                  width: MediaQuery.of(context).size.width * 1,
                                   color: Colors.transparent,
                                   child: const Center(
                                     child: Text(
@@ -134,11 +133,15 @@ class _AboutScreenState extends State<AboutScreen> {
                                   horizontal: 15.0, vertical: 8),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => WebPage("https://boride.app/?page_id=262")));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => WebPage(
+                                              "https://boride.app/?page_id=262")));
                                 },
                                 child: Container(
                                   height: 40,
-                                  width: MediaQuery.of(context).size.width * 1 ,
+                                  width: MediaQuery.of(context).size.width * 1,
                                   color: Colors.transparent,
                                   child: const Center(
                                     child: Text(
@@ -157,19 +160,23 @@ class _AboutScreenState extends State<AboutScreen> {
                               thickness: 1,
                               color: Colors.grey.shade300,
                             ),
-                             Padding(
+                            Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 15.0, vertical: 8),
                               child: GestureDetector(
                                 onTap: () {
-                                 Navigator.push(context, MaterialPageRoute(builder: (context) => WebPage("https://boride.app/?page_id=3")));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => WebPage(
+                                              "https://boride.app/?page_id=3")));
                                 },
                                 child: Container(
                                   height: 40,
-                                  width: MediaQuery.of(context).size.width * 1 ,
+                                  width: MediaQuery.of(context).size.width * 1,
                                   color: Colors.transparent,
-                                  child: Center(
-                                    child: const Text(
+                                  child: const Center(
+                                    child: Text(
                                       "Privacy Policy",
                                       style: TextStyle(
                                           fontSize: 16,
@@ -204,7 +211,7 @@ class _AboutScreenState extends State<AboutScreen> {
               "\nNigeria",
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: BrandColors.colorTextp,
+                  color: BrandColors.colorTextP,
                   fontSize: 15,
                   fontFamily: "Brand-Regular"),
             ),

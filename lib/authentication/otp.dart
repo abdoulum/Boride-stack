@@ -1,7 +1,5 @@
 import 'package:boride/assistants/assistant_methods.dart';
 import 'package:boride/mainScreens/edit_page.dart';
-import 'package:boride/mainScreens/main_screen.dart';
-import 'package:boride/widgets/progress_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +115,7 @@ class _MyVerifyState extends State<MyVerify> {
                 height: 45,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade600,
+                        backgroundColor: Colors.indigo,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     onPressed: () {
@@ -164,8 +162,10 @@ class _MyVerifyState extends State<MyVerify> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext c) {
-          return ProgressDialog(
-            message: "Processing, Please wait...",
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.indigo,
+            ),
           );
         });
 

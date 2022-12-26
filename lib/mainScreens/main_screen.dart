@@ -15,7 +15,6 @@ import 'package:boride/models/directions.dart';
 import 'package:boride/widgets/my_drawer.dart';
 import 'package:boride/widgets/noDriverAvailableDialog.dart';
 import 'package:boride/widgets/pay_fare_amount_dialog.dart';
-import 'package:boride/widgets/progress_dialog.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -135,32 +134,14 @@ class MainScreenState extends State<MainScreen> {
 
               setState(() {
                 locateUiPadding = Platform.isAndroid
-                    ? MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.36
-                    : MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.32;
+                    ? MediaQuery.of(context).size.height * 0.36
+                    : MediaQuery.of(context).size.height * 0.32;
                 bottomPaddingOfMap = Platform.isAndroid
-                    ? MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.36
-                    : MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.32;
+                    ? MediaQuery.of(context).size.height * 0.36
+                    : MediaQuery.of(context).size.height * 0.32;
                 searchLocationContainerHeight = Platform.isAndroid
-                    ? MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.34
-                    : MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.30;
+                    ? MediaQuery.of(context).size.height * 0.32
+                    : MediaQuery.of(context).size.height * 0.30;
               });
 
               locateUserPosition();
@@ -215,6 +196,7 @@ class MainScreenState extends State<MainScreen> {
             child: GestureDetector(
               onTap: () async {
                 locateUserPosition();
+                //Navigator.push(context, MaterialPageRoute(builder: (context) => RateDriverScreen()));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -233,9 +215,9 @@ class MainScreenState extends State<MainScreen> {
                   ],
                 ),
                 child: const CircleAvatar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.indigo,
                   radius: 25.0,
-                  child: Icon(Ionicons.locate, color: Colors.indigo),
+                  child: Icon(Ionicons.locate, color: Colors.white),
                 ),
               ),
             ),
@@ -243,9 +225,9 @@ class MainScreenState extends State<MainScreen> {
 
           //ui for searching location
           Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
+            left: 5,
+            right: 5,
+            bottom: 10,
             child: AnimatedSize(
               curve: Curves.bounceIn,
               duration: const Duration(milliseconds: 160),
@@ -256,6 +238,8 @@ class MainScreenState extends State<MainScreen> {
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(25.0),
                     topRight: Radius.circular(25.0),
+                    bottomRight: Radius.circular(25.0),
+                    bottomLeft: Radius.circular(25.0),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -267,17 +251,11 @@ class MainScreenState extends State<MainScreen> {
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0, vertical: 5.0),
+                  padding:
+                      const EdgeInsets.only(left: 24.0, right: 24, top: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Center(
-                        child: Icon(
-                          Icons.maximize_rounded,
-                          size: 25,
-                        ),
-                      ),
                       const Text(
                         "Hi there,",
                         style: TextStyle(
@@ -302,7 +280,7 @@ class MainScreenState extends State<MainScreen> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
+                            color: Colors.grey.shade200,
                             borderRadius: BorderRadius.circular(7.0),
                             boxShadow: const [
                               BoxShadow(
@@ -321,18 +299,18 @@ class MainScreenState extends State<MainScreen> {
                                   height: 30,
                                   width: 30,
                                   decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
+                                      color: Colors.indigo,
                                       borderRadius: BorderRadius.circular(30)),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.search,
                                     size: 20,
-                                    color: Colors.black,
+                                    color: Colors.white,
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 10.0,
                                 ),
-                                Text(
+                                const Text(
                                   "Search Destination",
                                   style: TextStyle(
                                       fontFamily: "Brand-Regular",
@@ -353,9 +331,9 @@ class MainScreenState extends State<MainScreen> {
                               GestureDetector(
                                 onTap: () async {
                                   final prefs =
-                                  await SharedPreferences.getInstance();
+                                      await SharedPreferences.getInstance();
                                   final homeAddressId =
-                                  prefs.getString('my_home_address_id');
+                                      prefs.getString('my_home_address_id');
                                   if (homeAddressId != null) {
                                     getPlaceDirectionDetails(homeAddressId);
                                   } else {
@@ -369,10 +347,11 @@ class MainScreenState extends State<MainScreen> {
                                   width: 55,
                                   height: 55,
                                   decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
+                                      color: Colors.grey.shade200,
                                       borderRadius: BorderRadius.circular(50)),
                                   child: const Icon(
                                     Ionicons.home_outline,
+                                    color: Colors.black,
                                     size: 20,
                                   ),
                                 ),
@@ -390,9 +369,9 @@ class MainScreenState extends State<MainScreen> {
                               GestureDetector(
                                 onTap: () async {
                                   final prefs =
-                                  await SharedPreferences.getInstance();
+                                      await SharedPreferences.getInstance();
                                   final favAddressId =
-                                  prefs.getString('my_favorite_address_id');
+                                      prefs.getString('my_favorite_address_id');
                                   if (favAddressId != null) {
                                     getPlaceDirectionDetails(favAddressId);
                                   } else {
@@ -406,10 +385,11 @@ class MainScreenState extends State<MainScreen> {
                                   width: 55,
                                   height: 55,
                                   decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
+                                      color: Colors.grey.shade200,
                                       borderRadius: BorderRadius.circular(50)),
                                   child: const Icon(
                                     Ionicons.briefcase_outline,
+                                    color: Colors.black,
                                     size: 20,
                                   ),
                                 ),
@@ -427,7 +407,7 @@ class MainScreenState extends State<MainScreen> {
                               GestureDetector(
                                 onTap: () async {
                                   final prefs =
-                                  await SharedPreferences.getInstance();
+                                      await SharedPreferences.getInstance();
                                   final favAddress2Id = prefs
                                       .getString('my_favorite_address2_id');
                                   if (favAddress2Id != null) {
@@ -443,10 +423,11 @@ class MainScreenState extends State<MainScreen> {
                                   width: 55,
                                   height: 55,
                                   decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
+                                      color: Colors.grey.shade200,
                                       borderRadius: BorderRadius.circular(50)),
                                   child: const Icon(
                                     Ionicons.location_outline,
+                                    color: Colors.black,
                                     size: 20,
                                   ),
                                 ),
@@ -471,9 +452,9 @@ class MainScreenState extends State<MainScreen> {
 
           //Ride Details UI
           Positioned(
-            bottom: 0.0,
-            left: 0.0,
-            right: 0.0,
+            left: 5,
+            right: 5,
+            bottom: 10,
             child: AnimatedSize(
               curve: Curves.bounceIn,
               duration: const Duration(milliseconds: 160),
@@ -482,15 +463,17 @@ class MainScreenState extends State<MainScreen> {
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15.0),
-                    topRight: Radius.circular(15.0),
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                    bottomRight: Radius.circular(15),
+                    bottomLeft: Radius.circular(15),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 2.0,
-                      spreadRadius: 0.9,
-                      offset: Offset(0.7, 0.7),
+                      color: Colors.black26,
+                      blurRadius: 10,
+                      spreadRadius: 1,
+                      offset: Offset(0.5, 0.5),
                     ),
                   ],
                 ),
@@ -499,236 +482,237 @@ class MainScreenState extends State<MainScreen> {
                   child: Column(
                     children: [
                       //boride-go
-                     Container(
-                       color: BrandColors.Accent2
-                       ,
-                       child: Column(
-                         children: [
-                           GestureDetector(
-                             onTap: () {
-                               checkPromo();
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                checkPromo();
 
-                               if (hasUnpaidFare) {
-                                 Fluttertoast.showToast(
-                                     msg:
-                                     "you have unpaid fare of $unpaidFareAmount");
-                                 return;
-                               }
+                                if (hasUnpaidFare) {
+                                  Fluttertoast.showToast(
+                                      msg:
+                                          "you have unpaid fare of $unpaidFareAmount");
+                                  return;
+                                }
 
-                               if (selectedPaymentMethod.isEmpty) {
-                                 Fluttertoast.showToast(
-                                     msg: "Please select a payment method");
-                               } else {
-                                 setState(() {
-                                   state = "requesting";
-                                   carRideType = "boride-go";
-                                 });
-                                 displayRequestRideContainer();
-                                 onlineNearByAvailableDriversList = GeoFireAssistant
-                                     .activeNearbyAvailableDriversList;
-                                 searchNearestDriver();
-                               }
-                             },
-                             onDoubleTap: () {},
-                             child: Container(
-                               color: BrandColors.Accent2,
-                               width: MediaQuery
-                                   .of(context)
-                                   .size
-                                   .width * 1,
-                               height: 60,
-                               child: Padding(
-                                 padding:
-                                 const EdgeInsets.symmetric(horizontal: 16.0),
-                                 child: Row(
-                                   children: [
-                                     Image.asset(
-                                       "images/uber-go.png",
-                                       height: 60.0,
-                                       width: 80.0,
-                                     ),
-                                     const SizedBox(
-                                       width: 15.0,
-                                     ),
-                                     Column(
-                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                       mainAxisAlignment: MainAxisAlignment.center,
-                                       children: [
-                                         const Text(
-                                           "Boride-Go",
-                                           style: TextStyle(
-                                             fontSize: 16.0,
-                                             fontFamily: "Brand-Bold",
-                                           ),
-                                         ),
-                                         Text(
-                                           ((tripDirectionDetailsInfo != null)
-                                               ? tripDirectionDetailsInfo!
-                                               .distance_text!
-                                               : ''),
-                                           style: const TextStyle(
-                                             fontSize: 16.0,
-                                             color: Colors.grey,
-                                             fontFamily: "Brand-Regular",
-                                           ),
-                                         ),
-                                       ],
-                                     ),
-                                     Expanded(child: Container()),
-                                     Column(
-                                       mainAxisAlignment: MainAxisAlignment.center,
-                                       children: [
-                                         Text(
-                                           ((tripDirectionDetailsInfo != null)
-                                               ? '\$${AssistantMethods
-                                               .calculateFareAmountFromOriginToDestination(
-                                               tripDirectionDetailsInfo!, "go")}'
-                                               : ''),
-                                           style: TextStyle(
-                                             color: textP,
-                                             fontSize: amountSize,
-                                             fontFamily: "Brand-Bold",
-                                           ),
-                                         ),
-                                         hasDiscount
-                                             ? Text(
-                                           ((tripDirectionDetailsInfo != null)
-                                               ? '\$${AssistantMethods
-                                               .calculateFareAmountFromOriginToDestinationDiscount(
-                                               tripDirectionDetailsInfo!, "go",
-                                               percentageDiscount!)}'
-                                               : ''),
-                                           style: const TextStyle(
-                                             fontSize: 20,
-                                             fontFamily: "Brand-Bold",
-                                           ),
-                                         )
-                                             : Container()
-                                       ],
-                                     ),
-                                   ],
-                                 ),
-                               ),
-                             ),
-                           ),
-                           SizedBox(
-                             width: MediaQuery.of(context).size.width * 0.8,
-                             child: Divider(
-                               height: 1,
-                               thickness: 0.3,
-                               color: Colors.black,
-                             ),
-                           ),
-                           //boride-corporate
-                           GestureDetector(
-                             onTap: () {
-                               checkPromo();
-                               if (hasUnpaidFare) {
-                                 Fluttertoast.showToast(
-                                     msg:
-                                     "you have unpaid fare of $unpaidFareAmount");
-                                 return;
-                               }
+                                if (selectedPaymentMethod.isEmpty) {
+                                  Fluttertoast.showToast(
+                                      msg: "Please select a payment method");
+                                } else {
+                                  setState(() {
+                                    state = "requesting";
+                                    carRideType = "boride-go";
+                                  });
+                                  displayRequestRideContainer();
+                                  onlineNearByAvailableDriversList =
+                                      GeoFireAssistant
+                                          .activeNearbyAvailableDriversList;
+                                  searchNearestDriver();
+                                }
+                              },
+                              onDoubleTap: () {},
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 1,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    width: 1,
+                                    color: BrandColors.accent2,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        "images/uber-go.png",
+                                        height: 60.0,
+                                        width: 80.0,
+                                      ),
+                                      const SizedBox(
+                                        width: 15.0,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            "Boride-Go",
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontFamily: "Brand-Bold",
+                                            ),
+                                          ),
+                                          Text(
+                                            ((tripDirectionDetailsInfo != null)
+                                                ? tripDirectionDetailsInfo!
+                                                    .distance_text!
+                                                : ''),
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.grey,
+                                              fontFamily: "Brand-Regular",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Expanded(child: Container()),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            ((tripDirectionDetailsInfo != null)
+                                                ? '\$${AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!, "go")}'
+                                                : ''),
+                                            style: TextStyle(
+                                              color: textP,
+                                              fontSize: amountSize,
+                                              fontFamily: "Brand-Bold",
+                                            ),
+                                          ),
+                                          hasDiscount
+                                              ? Text(
+                                                  ((tripDirectionDetailsInfo !=
+                                                          null)
+                                                      ? '\$${AssistantMethods.calculateFareAmountFromOriginToDestinationDiscount(tripDirectionDetailsInfo!, "go", percentageDiscount!)}'
+                                                      : ''),
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontFamily: "Brand-Bold",
+                                                  ),
+                                                )
+                                              : Container()
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            //boride-corporate
+                            GestureDetector(
+                              onTap: () {
+                                checkPromo();
+                                if (hasUnpaidFare) {
+                                  Fluttertoast.showToast(
+                                      msg:
+                                          "you have unpaid fare of $unpaidFareAmount");
+                                  return;
+                                }
 
-                               if (selectedPaymentMethod.isEmpty) {
-                                 Fluttertoast.showToast(
-                                     msg: "Please select a payment method");
-                               } else {
-                                 setState(() {
-                                   state = "requesting";
-                                   carRideType = "boride-corporate";
-                                 });
-                                 displayRequestRideContainer();
-                                 onlineNearByAvailableDriversList = GeoFireAssistant
-                                     .activeNearbyAvailableDriversList;
-                                 searchNearestDriver();
-                               }
-                             },
-                             onDoubleTap: () {},
-                             child: Container(
-                               color: BrandColors.Accent2,
-                               width: MediaQuery
-                                   .of(context)
-                                   .size
-                                   .width * 1,
-                               height: 60,
-                               child: Padding(
-                                 padding:
-                                 const EdgeInsets.symmetric(horizontal: 16.0),
-                                 child: Row(
-                                   children: [
-                                     Image.asset(
-                                       "images/uber-x.png",
-                                       height: 60.0,
-                                       width: 80.0,
-                                     ),
-                                     const SizedBox(
-                                       width: 15.0,
-                                     ),
-                                     Column(
-                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                       mainAxisAlignment: MainAxisAlignment.center,
-                                       children: [
-                                         const Text(
-                                           "Boride-Corporate",
-                                           style: TextStyle(
-                                             fontSize: 16.0,
-                                             fontFamily: "Brand-Bold",
-                                           ),
-                                         ),
-                                         Text(
-                                           ((tripDirectionDetailsInfo != null)
-                                               ? tripDirectionDetailsInfo!
-                                               .distance_text!
-                                               : ''),
-                                           style: const TextStyle(
-                                             fontSize: 16.0,
-                                             color: Colors.grey,
-                                             fontFamily: "Brand-Regular",
-                                           ),
-                                         ),
-                                       ],
-                                     ),
-                                     Expanded(child: Container()),
-                                     Column(
-                                       mainAxisAlignment: MainAxisAlignment.center,
-                                       children: [
-                                         Text(
-                                           ((tripDirectionDetailsInfo != null)
-                                               ? '\$${AssistantMethods
-                                               .calculateFareAmountFromOriginToDestination(
-                                               tripDirectionDetailsInfo!, "corp")}'
-                                               : ''),
-                                           style: TextStyle(
-                                             color: textP,
-                                             fontSize: amountSize,
-                                             fontFamily: "Brand-Bold",
-                                           ),
-                                         ),
-                                         hasDiscount
-                                             ? Text(
-                                           ((tripDirectionDetailsInfo != null)
-                                               ? '\$${AssistantMethods
-                                               .calculateFareAmountFromOriginToDestinationDiscount(
-                                               tripDirectionDetailsInfo!, "corp",
-                                               percentageDiscount!)}'
-                                               : ''),
-                                           style: const TextStyle(
-                                             fontSize: 20,
-                                             fontFamily: "Brand-Bold",
-                                           ),
-                                         )
-                                             : Container()
-                                       ],
-                                     ),
-                                   ],
-                                 ),
-                               ),
-                             ),
-                           ),
-                         ],
-                       ),
-                     ),
+                                if (selectedPaymentMethod.isEmpty) {
+                                  Fluttertoast.showToast(
+                                      msg: "Please select a payment method");
+                                } else {
+                                  setState(() {
+                                    state = "requesting";
+                                    carRideType = "boride-corporate";
+                                  });
+                                  displayRequestRideContainer();
+                                  onlineNearByAvailableDriversList =
+                                      GeoFireAssistant
+                                          .activeNearbyAvailableDriversList;
+                                  searchNearestDriver();
+                                }
+                              },
+                              onDoubleTap: () {},
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 1,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.shade100,
+                                    border: Border.all(
+                                      width: 1,
+                                      color: BrandColors.accent2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        "images/uber-x.png",
+                                        height: 60.0,
+                                        width: 80.0,
+                                      ),
+                                      const SizedBox(
+                                        width: 15.0,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            "Boride-Corporate",
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontFamily: "Brand-Bold",
+                                            ),
+                                          ),
+                                          Text(
+                                            ((tripDirectionDetailsInfo != null)
+                                                ? tripDirectionDetailsInfo!
+                                                    .distance_text!
+                                                : ''),
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.grey,
+                                              fontFamily: "Brand-Regular",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Expanded(child: Container()),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            ((tripDirectionDetailsInfo != null)
+                                                ? '\$${AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!, "corp")}'
+                                                : ''),
+                                            style: TextStyle(
+                                              color: textP,
+                                              fontSize: amountSize,
+                                              fontFamily: "Brand-Bold",
+                                            ),
+                                          ),
+                                          hasDiscount
+                                              ? Text(
+                                                  ((tripDirectionDetailsInfo !=
+                                                          null)
+                                                      ? '\$${AssistantMethods.calculateFareAmountFromOriginToDestinationDiscount(tripDirectionDetailsInfo!, "corp", percentageDiscount!)}'
+                                                      : ''),
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontFamily: "Brand-Bold",
+                                                  ),
+                                                )
+                                              : Container()
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
                       const Divider(
                         color: Colors.black,
@@ -737,14 +721,27 @@ class MainScreenState extends State<MainScreen> {
                       ),
 
                       hasDiscount
-                          ? const Text(
-                        "Promo applied",
-                        style: TextStyle(
-                            fontFamily: "Brand-bold",
-                            color: Colors.green,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
-                      )
+                          ? Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                  width: 1,
+                                  color: Colors.green.shade200,
+                                ),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  "Promo applied",
+                                  style: TextStyle(
+                                    fontFamily: "Brand-regular",
+                                    color: Colors.green,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            )
                           : Container(),
 
                       GestureDetector(
@@ -791,24 +788,18 @@ class MainScreenState extends State<MainScreen> {
 
           //Waiting UI
           Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
+            left: 5,
+            right: 5,
+            bottom: 10,
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15.0),
-                  topRight: Radius.circular(15.0),
+                  topLeft: Radius.circular(25.0),
+                  topRight: Radius.circular(25.0),
+                  bottomRight: Radius.circular(25.0),
+                  bottomLeft: Radius.circular(25.0),
                 ),
                 color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    spreadRadius: 2,
-                    blurRadius: 0.9,
-                    color: Colors.black54,
-                    offset: Offset(0.7, 0.7),
-                  ),
-                ],
               ),
               height: requestingRideContainerHeight,
               child: Padding(
@@ -822,10 +813,10 @@ class MainScreenState extends State<MainScreen> {
                         width: double.infinity,
                         child: Center(
                             child: Text(
-                              "Searching ...",
-                              style: TextStyle(
-                                  fontSize: 25, fontFamily: "Brand-Regular"),
-                            ))),
+                          "Searching ...",
+                          style: TextStyle(
+                              fontSize: 25, fontFamily: "Brand-Regular"),
+                        ))),
                     const SizedBox(
                       height: 20.0,
                     ),
@@ -867,22 +858,24 @@ class MainScreenState extends State<MainScreen> {
 
           //ui for displaying assigned driver information
           Positioned(
-            bottom: 0.0,
-            left: 0.0,
-            right: 0.0,
+            left: 5,
+            right: 5,
+            bottom: 10,
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15.0),
-                  topRight: Radius.circular(15.0),
+                  topLeft: Radius.circular(25.0),
+                  topRight: Radius.circular(25.0),
+                  bottomRight: Radius.circular(25.0),
+                  bottomLeft: Radius.circular(25.0),
                 ),
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    spreadRadius: 2,
-                    blurRadius: 0.9,
-                    color: Colors.black54,
-                    offset: Offset(0.7, 0.7),
+                    color: Colors.black26,
+                    blurRadius: 10,
+                    spreadRadius: 1,
+                    offset: Offset(0.5, 0.5),
                   ),
                 ],
               ),
@@ -945,36 +938,36 @@ class MainScreenState extends State<MainScreen> {
                         const Spacer(),
                         userRideRequestStatus != "onride"
                             ? Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: const Color.fromARGB(
-                                      255, 243, 245, 247),
-                                  borderRadius:
-                                  BorderRadius.circular(30)),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey.shade200,
-                                radius: 24.0,
-                                child: IconButton(
-                                  icon: const Icon(Ionicons.call),
-                                  color: Colors.green,
-                                  onPressed: () {
-                                    launch(('tel://$driverPhone'));
-                                  },
-                                ),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 5.0),
-                              child: Text(
-                                "Call driver",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: "Brand-Regular"),
-                              ),
-                            )
-                          ],
-                        )
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 243, 245, 247),
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.grey.shade200,
+                                      radius: 24.0,
+                                      child: IconButton(
+                                        icon: const Icon(Ionicons.call),
+                                        color: Colors.green,
+                                        onPressed: () {
+                                          launch(('tel://$driverPhone'));
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 5.0),
+                                    child: Text(
+                                      "Call driver",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontFamily: "Brand-Regular"),
+                                    ),
+                                  )
+                                ],
+                              )
                             : Container(),
                       ],
                     ),
@@ -988,20 +981,23 @@ class MainScreenState extends State<MainScreen> {
                       children: [
                         Column(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color:
-                                  const Color.fromARGB(255, 243, 245, 247),
-                                  borderRadius: BorderRadius.circular(30)),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey.shade200,
-                                radius: 28.0,
-                                child: Image.asset(
-                                  "images/uber-x.png",
-                                  width: 40,
-                                ),
-                              ),
-                            ),
+                            driverPhotoUrl != null
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 243, 245, 247),
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                    child: ClipOval(
+                                      child: Image.network(
+                                        driverPhotoUrl,
+                                        height: 40,
+                                        width: 40,
+                                        scale: 18,
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox(),
                             const SizedBox(
                               height: 5,
                             ),
@@ -1025,22 +1021,13 @@ class MainScreenState extends State<MainScreen> {
                                   onPressed: () {
                                     setState(() {
                                       safetyContainerHeight =
-                                          MediaQuery
-                                              .of(context)
-                                              .size
-                                              .height *
+                                          MediaQuery.of(context).size.height *
                                               0.31;
                                       bottomPaddingOfMap =
-                                          MediaQuery
-                                              .of(context)
-                                              .size
-                                              .height *
+                                          MediaQuery.of(context).size.height *
                                               0.33;
                                       locateUiPadding =
-                                          MediaQuery
-                                              .of(context)
-                                              .size
-                                              .height *
+                                          MediaQuery.of(context).size.height *
                                               0.33;
                                       rideDetailsContainerHeight = 0;
                                       assignedDriverInfoContainerHeight = 0;
@@ -1061,41 +1048,41 @@ class MainScreenState extends State<MainScreen> {
                         ),
                         userRideRequestStatus != "onride"
                             ? Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: const Color.fromARGB(
-                                      255, 243, 245, 247),
-                                  borderRadius:
-                                  BorderRadius.circular(30)),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey.shade200,
-                                radius: 28.0,
-                                child: IconButton(
-                                  icon: const Icon(Ionicons.car_sport),
-                                  color: Colors.red,
-                                  onPressed: () {
-                                    if (userRideRequestStatus !=
-                                        "onride") {
-                                      cancelRide();
-                                      cancelRideRequest();
-                                      resetApp();
-                                    }
-                                  },
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            const Text(
-                              "Cancel",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: "Brand-Regular"),
-                            )
-                          ],
-                        )
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 243, 245, 247),
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.grey.shade200,
+                                      radius: 28.0,
+                                      child: IconButton(
+                                        icon: const Icon(Ionicons.car_sport),
+                                        color: Colors.red,
+                                        onPressed: () {
+                                          if (userRideRequestStatus !=
+                                              "onride") {
+                                            cancelRide();
+                                            cancelRideRequest();
+                                            resetApp();
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  const Text(
+                                    "Cancel",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontFamily: "Brand-Regular"),
+                                  )
+                                ],
+                              )
                             : Container()
                       ],
                     ),
@@ -1107,24 +1094,18 @@ class MainScreenState extends State<MainScreen> {
 
           //safety ui
           Positioned(
-            bottom: 0.0,
-            left: 0.0,
-            right: 0.0,
+            left: 5,
+            right: 5,
+            bottom: 10,
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15.0),
-                  topRight: Radius.circular(15.0),
+                  topLeft: Radius.circular(25.0),
+                  topRight: Radius.circular(25.0),
+                  bottomRight: Radius.circular(25.0),
+                  bottomLeft: Radius.circular(25.0),
                 ),
                 color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    spreadRadius: 2,
-                    blurRadius: 0.9,
-                    color: Colors.black54,
-                    offset: Offset(0.7, 0.7),
-                  ),
-                ],
               ),
               height: safetyContainerHeight,
               child: Padding(
@@ -1149,39 +1130,21 @@ class MainScreenState extends State<MainScreen> {
                                   setState(() {
                                     safetyContainerHeight = 0;
                                     assignedDriverInfoContainerHeight = Platform
-                                        .isAndroid
-                                        ? MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height *
-                                        0.35
-                                        : MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height *
-                                        0.32;
+                                            .isAndroid
+                                        ? MediaQuery.of(context).size.height *
+                                            0.35
+                                        : MediaQuery.of(context).size.height *
+                                            0.32;
                                     bottomPaddingOfMap = Platform.isAndroid
-                                        ? MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height *
-                                        0.37
-                                        : MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height *
-                                        0.30;
+                                        ? MediaQuery.of(context).size.height *
+                                            0.37
+                                        : MediaQuery.of(context).size.height *
+                                            0.30;
                                     locateUiPadding = Platform.isAndroid
-                                        ? MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height *
-                                        0.37
-                                        : MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height *
-                                        0.30;
+                                        ? MediaQuery.of(context).size.height *
+                                            0.37
+                                        : MediaQuery.of(context).size.height *
+                                            0.30;
                                   });
                                 },
                                 icon: const Icon(
@@ -1208,9 +1171,7 @@ class MainScreenState extends State<MainScreen> {
                         GestureDetector(
                           onTap: () {
                             Share.share(
-                                'https://www.google.com/maps/search/?api=1&query=${userCurrentPosition!
-                                    .latitude},${userCurrentPosition!
-                                    .longitude}');
+                                'https://www.google.com/maps/search/?api=1&query=${userCurrentPosition!.latitude},${userCurrentPosition!.longitude}');
                           },
                           child: Container(
                             color: Colors.transparent,
@@ -1269,51 +1230,49 @@ class MainScreenState extends State<MainScreen> {
                           onTap: () {
                             reportDriver();
                           },
-                          child: Container(
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Ionicons.radio,
-                                  color: Colors.red,
-                                ),
-                                const SizedBox(
-                                  width: 14.0,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
-                                    SizedBox(
-                                      height: 8.0,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Ionicons.radio,
+                                color: Colors.red,
+                              ),
+                              const SizedBox(
+                                width: 14.0,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  SizedBox(
+                                    height: 8.0,
+                                  ),
+                                  Text(
+                                    "Report driver",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontFamily: "Brand-Regular",
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red,
                                     ),
-                                    Text(
-                                      "Report driver",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontFamily: "Brand-Regular",
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red,
-                                      ),
+                                  ),
+                                  SizedBox(
+                                    height: 2.0,
+                                  ),
+                                  Text(
+                                    "Driver is not the assigned individual",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: "Brand-Regular",
+                                      fontSize: 12.0,
+                                      color: Colors.black,
                                     ),
-                                    SizedBox(
-                                      height: 2.0,
-                                    ),
-                                    Text(
-                                      "Driver is not the assigned individual",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontFamily: "Brand-Regular",
-                                        fontSize: 12.0,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 8.0,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+                                  SizedBox(
+                                    height: 8.0,
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -1340,10 +1299,10 @@ class MainScreenState extends State<MainScreen> {
     userCurrentPosition = cPosition;
 
     LatLng latLngPosition =
-    LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
+        LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
 
     CameraPosition cameraPosition =
-    CameraPosition(target: latLngPosition, zoom: 16);
+        CameraPosition(target: latLngPosition, zoom: 16);
 
     newGoogleMapController!
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
@@ -1363,13 +1322,9 @@ class MainScreenState extends State<MainScreen> {
         FirebaseDatabase.instance.ref().child("Ride Request").push();
 
     var originLocation =
-        Provider
-            .of<AppInfo>(context, listen: false)
-            .userPickUpLocation;
+        Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
     var destinationLocation =
-        Provider
-            .of<AppInfo>(context, listen: false)
-            .userDropOffLocation;
+        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     Map originLocationMap = {
       //"key": value,
@@ -1392,7 +1347,7 @@ class MainScreenState extends State<MainScreen> {
       "pickup_address": originLocation.locationName,
       "dropoff_address": destinationLocation.locationName,
       "driver_id": "waiting",
-      hasDiscount ? "p_discount" : percentageDiscount: null,
+      "p_discount": hasDiscount ? percentageDiscount : null,
       "payment_method": selectedPaymentMethod,
       "ride_type": carRideType,
       "time": DateTime.now().toString(),
@@ -1402,151 +1357,152 @@ class MainScreenState extends State<MainScreen> {
 
     tripRideRequestInfoStreamSubscription =
         referenceRideRequest!.onValue.listen((eventSnap) async {
-          if (eventSnap.snapshot.value == null) {
-            return;
-          }
+      if (eventSnap.snapshot.value == null) {
+        return;
+      }
 
-          setState(() {
-            driverCarColor =
-                (eventSnap.snapshot.value as dynamic)["car_color"].toString();
-            driverCarPlate =
-                (eventSnap.snapshot.value as dynamic)["car_number"].toString();
-            driverCarModel =
-                (eventSnap.snapshot.value as dynamic)["car_model"].toString();
-          });
+      setState(() {
+        driverCarColor =
+            (eventSnap.snapshot.value as dynamic)["car_color"].toString();
+        driverCarPlate =
+            (eventSnap.snapshot.value as dynamic)["car_number"].toString();
+        driverCarModel =
+            (eventSnap.snapshot.value as dynamic)["car_model"].toString();
+      });
 
-          if ((eventSnap.snapshot.value as Map)["driverPhone"] != null) {
-            setState(() {
-              driverPhone =
-                  (eventSnap.snapshot.value as Map)["driverPhone"].toString();
-            });
-          }
+      if ((eventSnap.snapshot.value as Map)["driverPhone"] != null) {
+        setState(() {
+          driverPhone =
+              (eventSnap.snapshot.value as Map)["driverPhone"].toString();
+        });
+      }
+      if ((eventSnap.snapshot.value as Map)["driverPhoto"] != null) {
+        setState(() {
+          driverPhotoUrl =
+              (eventSnap.snapshot.value as Map)["driverPhoto"].toString();
+        });
+      }
 
-          if ((eventSnap.snapshot.value as Map)["driverName"] != null) {
-            setState(() {
-              driverName =
-                  (eventSnap.snapshot.value as Map)["driverName"].toString();
-            });
-          }
-          if ((eventSnap.snapshot.value as Map)["driverId"] != null) {
-            setState(() {
-              driverRId =
-                  (eventSnap.snapshot.value as Map)["driverId"].toString();
-            });
-          }
+      if ((eventSnap.snapshot.value as Map)["driverName"] != null) {
+        setState(() {
+          driverName =
+              (eventSnap.snapshot.value as Map)["driverName"].toString();
+        });
+      }
+      if ((eventSnap.snapshot.value as Map)["driverId"] != null) {
+        setState(() {
+          driverRId = (eventSnap.snapshot.value as Map)["driverId"].toString();
+        });
+      }
 
-          if ((eventSnap.snapshot.value as Map)["status"] != null) {
-            userRideRequestStatus =
-                (eventSnap.snapshot.value as Map)["status"].toString();
-          }
+      if ((eventSnap.snapshot.value as Map)["status"] != null) {
+        userRideRequestStatus =
+            (eventSnap.snapshot.value as Map)["status"].toString();
+      }
 
-          if ((eventSnap.snapshot.value as Map)["driverLocation"] != null) {
-            double driverCurrentPositionLat = double.parse(
-                (eventSnap.snapshot.value as Map)["driverLocation"]["latitude"]
-                    .toString());
-            double driverCurrentPositionLng = double.parse(
-                (eventSnap.snapshot.value as Map)["driverLocation"]["longitude"]
-                    .toString());
+      if ((eventSnap.snapshot.value as Map)["driverLocation"] != null) {
+        double driverCurrentPositionLat = double.parse(
+            (eventSnap.snapshot.value as Map)["driverLocation"]["latitude"]
+                .toString());
+        double driverCurrentPositionLng = double.parse(
+            (eventSnap.snapshot.value as Map)["driverLocation"]["longitude"]
+                .toString());
 
-            LatLng driverCurrentPositionLatLng =
+        LatLng driverCurrentPositionLatLng =
             LatLng(driverCurrentPositionLat, driverCurrentPositionLng);
 
-            //status = accepted
-            if (userRideRequestStatus == "accepted") {
-              showUIForAssignedDriverInfo();
-              updateArrivalTimeToUserPickupLocation(
-                  driverCurrentPositionLatLng);
-            }
+        //status = accepted
+        if (userRideRequestStatus == "accepted") {
+          showUIForAssignedDriverInfo();
+          updateArrivalTimeToUserPickupLocation(driverCurrentPositionLatLng);
+        }
 
-            //status = arrived
-            if (userRideRequestStatus == "arrived") {
-              setState(() {
-                driverRideStatus = "Driver has Arrived";
-              });
-            }
+        //status = arrived
+        if (userRideRequestStatus == "arrived") {
+          setState(() {
+            driverRideStatus = "Driver has Arrived";
+          });
+        }
 
-            //status = onride
-            if (userRideRequestStatus == "onride") {
-              setState(() {
-                updateReachingTimeToUserDropOffLocation(
-                    driverCurrentPositionLatLng);
-              });
-            }
+        //status = onride
+        if (userRideRequestStatus == "onride") {
+          setState(() {
+            updateReachingTimeToUserDropOffLocation(
+                driverCurrentPositionLatLng);
+          });
+        }
 
-            //status = ended
-            if (userRideRequestStatus == "ended") {
-              if ((eventSnap.snapshot.value as Map)["fareAmount"] != null) {
-                String fareAmount =
+        //status = ended
+        if (userRideRequestStatus == "ended") {
+          if ((eventSnap.snapshot.value as Map)["fareAmount"] != null) {
+            String fareAmount =
                 (eventSnap.snapshot.value as Map)["fareAmount"].toString();
 
-                var response = await showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext c) =>
-                      PayFareAmountDialog(
-                        fareAmount: fareAmount,
-                        paymentMtd: selectedPaymentMethod,
-                      ),
-                );
+            var response = await showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext c) => PayFareAmountDialog(
+                fareAmount: fareAmount,
+                paymentMtd: selectedPaymentMethod,
+              ),
+            );
 
-                DatabaseReference tripsHistoryRef = FirebaseDatabase.instance
-                    .ref()
-                    .child("users")
-                    .child(fAuth.currentUser!.uid)
-                    .child("tripsHistory");
+            DatabaseReference tripsHistoryRef = FirebaseDatabase.instance
+                .ref()
+                .child("users")
+                .child(fAuth.currentUser!.uid)
+                .child("tripsHistory");
 
-                tripsHistoryRef.child(referenceRideRequest!.key!).set(true);
+            tripsHistoryRef.child(referenceRideRequest!.key!).set(true);
 
-                if (response == "cashPayed") {
-                  //user can rate the driver now
-                  if ((eventSnap.snapshot.value as Map)["driverId"] != null) {
-                    String assignedDriverId =
+            if (response == "cashPayed") {
+              //user can rate the driver now
+              if ((eventSnap.snapshot.value as Map)["driverId"] != null) {
+                String assignedDriverId =
                     (eventSnap.snapshot.value as Map)["driverId"].toString();
 
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (c) =>
-                                RateDriverScreen(
-                                  assignedDriverId: assignedDriverId,
-                                )));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => RateDriverScreen(
+                              assignedDriverId: assignedDriverId,
+                            )));
 
-                    referenceRideRequest!.onDisconnect();
-                    tripRideRequestInfoStreamSubscription!.cancel();
-                    resetApp();
-                  }
-                } else if (response == "CardPaymentSuccessful") {
-                  if ((eventSnap.snapshot.value as Map)["driverId"] != null) {
-                    String assignedDriverId =
-                    (eventSnap.snapshot.value as Map)["driverId"].toString();
-                    Fluttertoast.showToast(msg: "Card Payment Successful");
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (c) =>
-                                RateDriverScreen(
-                                  assignedDriverId: assignedDriverId,
-                                )));
-                    resetApp();
-                  }
-                } else {
-                  Fluttertoast.showToast(msg: "Payment not successful");
-                  FirebaseDatabase.instance
-                      .ref()
-                      .child('users')
-                      .child(fAuth.currentUser!.uid)
-                      .child("unpaid_fare")
-                      .set(fareAmount)
-                      .whenComplete(() {
-                    Fluttertoast.showToast(
-                        msg: "Fare will be added to your next payment");
-                    resetApp();
-                  });
-                }
+                referenceRideRequest!.onDisconnect();
+                tripRideRequestInfoStreamSubscription!.cancel();
+                resetApp();
               }
+            } else if (response == "CardPaymentSuccessful") {
+              if ((eventSnap.snapshot.value as Map)["driverId"] != null) {
+                String assignedDriverId =
+                    (eventSnap.snapshot.value as Map)["driverId"].toString();
+                Fluttertoast.showToast(msg: "Card Payment Successful");
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => RateDriverScreen(
+                              assignedDriverId: assignedDriverId,
+                            )));
+                resetApp();
+              }
+            } else {
+              Fluttertoast.showToast(msg: "Payment not successful");
+              FirebaseDatabase.instance
+                  .ref()
+                  .child('users')
+                  .child(fAuth.currentUser!.uid)
+                  .child("unpaid_fare")
+                  .set(fareAmount)
+                  .whenComplete(() {
+                Fluttertoast.showToast(
+                    msg: "Fare will be added to your next payment");
+                resetApp();
+              });
             }
           }
-        });
+        }
+      }
+    });
 
     onlineNearByAvailableDriversList =
         GeoFireAssistant.activeNearbyAvailableDriversList;
@@ -1558,10 +1514,10 @@ class MainScreenState extends State<MainScreen> {
       requestPositionInfo = false;
 
       LatLng userPickUpPosition =
-      LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
+          LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
 
       var directionDetailsInfo =
-      await AssistantMethods.obtainOriginToDestinationDirectionDetails(
+          await AssistantMethods.obtainOriginToDestinationDirectionDetails(
         driverCurrentPositionLatLng,
         userPickUpPosition,
       );
@@ -1572,7 +1528,7 @@ class MainScreenState extends State<MainScreen> {
 
       setState(() {
         driverRideStatus =
-        "Driver is Coming: ${directionDetailsInfo.duration_text}";
+            "Driver is Coming: ${directionDetailsInfo.duration_text}";
       });
 
       requestPositionInfo = true;
@@ -1584,16 +1540,14 @@ class MainScreenState extends State<MainScreen> {
       requestPositionInfo = false;
 
       var dropOffLocation =
-          Provider
-              .of<AppInfo>(context, listen: false)
-              .userDropOffLocation;
+          Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
       LatLng userDestinationPosition = LatLng(
           dropOffLocation!.locationLatitude!,
           dropOffLocation.locationLongitude!);
 
       var directionDetailsInfo =
-      await AssistantMethods.obtainOriginToDestinationDirectionDetails(
+          await AssistantMethods.obtainOriginToDestinationDirectionDetails(
         driverCurrentPositionLatLng,
         userDestinationPosition,
       );
@@ -1604,7 +1558,7 @@ class MainScreenState extends State<MainScreen> {
 
       setState(() {
         driverRideStatus =
-        " Trip started: ${directionDetailsInfo.duration_text}";
+            " Trip started: ${directionDetailsInfo.duration_text}";
       });
 
       requestPositionInfo = true;
@@ -1679,38 +1633,20 @@ class MainScreenState extends State<MainScreen> {
   showUIForAssignedDriverInfo() {
     setState(() {
       requestingRideContainerHeight =
-      0; //Platform.isAndroid ? MediaQuery.of(context).size.height * 0.37 : MediaQuery.of(context).size.height * 0.32;
+          0; //Platform.isAndroid ? MediaQuery.of(context).size.height * 0.37 : MediaQuery.of(context).size.height * 0.32;
 
       searchLocationContainerHeight =
-      0; //Platform.isAndroid ? MediaQuery.of(context).size.height * 0.37 : MediaQuery.of(context).size.height * 0.32;
+          0; //Platform.isAndroid ? MediaQuery.of(context).size.height * 0.37 : MediaQuery.of(context).size.height * 0.32;
 
       bottomPaddingOfMap = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.37
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.30;
+          ? MediaQuery.of(context).size.height * 0.37
+          : MediaQuery.of(context).size.height * 0.30;
       locateUiPadding = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.37
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.30;
+          ? MediaQuery.of(context).size.height * 0.37
+          : MediaQuery.of(context).size.height * 0.30;
       assignedDriverInfoContainerHeight = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.35
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.32;
+          ? MediaQuery.of(context).size.height * 0.35
+          : MediaQuery.of(context).size.height * 0.32;
     });
   }
 
@@ -1722,32 +1658,14 @@ class MainScreenState extends State<MainScreen> {
       requestingRideContainerHeight = 0;
 
       rideDetailsContainerHeight = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.34
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.29;
+          ? MediaQuery.of(context).size.height * 0.34
+          : MediaQuery.of(context).size.height * 0.29;
       bottomPaddingOfMap = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.35
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.30;
+          ? MediaQuery.of(context).size.height * 0.35
+          : MediaQuery.of(context).size.height * 0.30;
       locateUiPadding = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.36
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.30;
+          ? MediaQuery.of(context).size.height * 0.36
+          : MediaQuery.of(context).size.height * 0.30;
       openNavigationDrawer = false;
     });
   }
@@ -1758,32 +1676,14 @@ class MainScreenState extends State<MainScreen> {
       searchLocationContainerHeight = 0;
 
       requestingRideContainerHeight = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.30
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.30;
+          ? MediaQuery.of(context).size.height * 0.30
+          : MediaQuery.of(context).size.height * 0.30;
       bottomPaddingOfMap = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.33
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.30;
+          ? MediaQuery.of(context).size.height * 0.33
+          : MediaQuery.of(context).size.height * 0.30;
       locateUiPadding = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.33
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.30;
+          ? MediaQuery.of(context).size.height * 0.33
+          : MediaQuery.of(context).size.height * 0.30;
       openNavigationDrawer = true;
     });
 
@@ -1794,17 +1694,18 @@ class MainScreenState extends State<MainScreen> {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (BuildContext context) =>
-          ProgressDialog(
-            message: "Setting Up Dropoff...",
-          ),
+      builder: (BuildContext context) => const Center(
+        child: CircularProgressIndicator(
+          color: Colors.indigo,
+        ),
+      ),
     );
 
     String placeDirectionDetailsUrl =
         "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$mapKey";
 
     var responseApi =
-    await RequestAssistant.receiveRequest(placeDirectionDetailsUrl);
+        await RequestAssistant.receiveRequest(placeDirectionDetailsUrl);
 
     Navigator.pop(context);
 
@@ -1817,9 +1718,9 @@ class MainScreenState extends State<MainScreen> {
       directions.locationName = responseApi["result"]["name"];
       directions.locationId = placeId;
       directions.locationLatitude =
-      responseApi["result"]["geometry"]["location"]["lat"];
+          responseApi["result"]["geometry"]["location"]["lat"];
       directions.locationLongitude =
-      responseApi["result"]["geometry"]["location"]["lng"];
+          responseApi["result"]["geometry"]["location"]["lng"];
 
       Provider.of<AppInfo>(context, listen: false)
           .updateDropOffLocationAddress(directions);
@@ -1834,13 +1735,9 @@ class MainScreenState extends State<MainScreen> {
 
   Future<void> drawPolyLineFromOriginToDestination() async {
     var originPosition =
-        Provider
-            .of<AppInfo>(context, listen: false)
-            .userPickUpLocation;
+        Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
     var destinationPosition =
-        Provider
-            .of<AppInfo>(context, listen: false)
-            .userDropOffLocation;
+        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     var originLatLng = LatLng(
         originPosition!.locationLatitude!, originPosition.locationLongitude!);
@@ -1849,15 +1746,16 @@ class MainScreenState extends State<MainScreen> {
 
     showDialog(
       context: context,
-      builder: (BuildContext context) =>
-          ProgressDialog(
-            message: "Please wait...",
-          ),
+      builder: (BuildContext context) => const Center(
+        child: CircularProgressIndicator(
+          color: Colors.indigo,
+        ),
+      ),
     );
 
     var directionDetailsInfo =
-    await AssistantMethods.obtainOriginToDestinationDirectionDetails(
-        originLatLng, destinationLatLng);
+        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
+            originLatLng, destinationLatLng);
     setState(() {
       tripDirectionDetailsInfo = directionDetailsInfo;
     });
@@ -1866,7 +1764,7 @@ class MainScreenState extends State<MainScreen> {
 
     PolylinePoints pPoints = PolylinePoints();
     List<PointLatLng> decodedPolyLinePointsResultList =
-    pPoints.decodePolyline(directionDetailsInfo!.e_points!);
+        pPoints.decodePolyline(directionDetailsInfo!.e_points!);
 
     pLineCoOrdinatesList.clear();
 
@@ -1920,7 +1818,7 @@ class MainScreenState extends State<MainScreen> {
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
       infoWindow:
-      InfoWindow(title: originPosition.locationName, snippet: "Origin"),
+          InfoWindow(title: originPosition.locationName, snippet: "Origin"),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
     );
@@ -1969,7 +1867,7 @@ class MainScreenState extends State<MainScreen> {
     onlineNearByAvailableDriversList.clear();
 
     Geofire.queryAtLocation(
-        userCurrentPosition!.latitude, userCurrentPosition!.longitude, 10)!
+            userCurrentPosition!.latitude, userCurrentPosition!.longitude, 10)!
         .listen((map) {
       if (map != null) {
         var callBack = map['callBack'];
@@ -1978,10 +1876,10 @@ class MainScreenState extends State<MainScreen> {
         //longitude will be retrieved from map['longitude']
 
         switch (callBack) {
-        //whenever any driver become active/online
+          //whenever any driver become active/online
           case Geofire.onKeyEntered:
             ActiveNearbyAvailableDrivers activeNearbyAvailableDriver =
-            ActiveNearbyAvailableDrivers();
+                ActiveNearbyAvailableDrivers();
             activeNearbyAvailableDriver.locationLatitude = map['latitude'];
             activeNearbyAvailableDriver.locationLongitude = map['longitude'];
             activeNearbyAvailableDriver.driverId = map['key'];
@@ -1992,16 +1890,16 @@ class MainScreenState extends State<MainScreen> {
             }
             break;
 
-        //whenever any driver become non-active/offline
+          //whenever any driver become non-active/offline
           case Geofire.onKeyExited:
             GeoFireAssistant.deleteOfflineDriverFromList(map['key']);
             displayActiveDriversOnUsersMap();
             break;
 
-        //whenever driver moves - update driver location
+          //whenever driver moves - update driver location
           case Geofire.onKeyMoved:
             ActiveNearbyAvailableDrivers activeNearbyAvailableDriver =
-            ActiveNearbyAvailableDrivers();
+                ActiveNearbyAvailableDrivers();
             activeNearbyAvailableDriver.locationLatitude = map['latitude'];
             activeNearbyAvailableDriver.locationLongitude = map['longitude'];
             activeNearbyAvailableDriver.driverId = map['key'];
@@ -2010,29 +1908,24 @@ class MainScreenState extends State<MainScreen> {
             displayActiveDriversOnUsersMap();
             break;
 
-        //display those online/active drivers on user's map
+          //display those online/active drivers on user's map
           case Geofire.onGeoQueryReady:
             activeNearbyDriverKeysLoaded = true;
             displayActiveDriversOnUsersMap();
             break;
         }
       }
-
-      setState(() {});
     });
   }
 
   displayActiveDriversOnUsersMap() {
     setState(() {
-      markersSet.clear();
-      circlesSet.clear();
-
       Set<Marker> driversMarkerSet = <Marker>{};
 
       for (ActiveNearbyAvailableDrivers eachDriver
-      in GeoFireAssistant.activeNearbyAvailableDriversList) {
+          in GeoFireAssistant.activeNearbyAvailableDriversList) {
         LatLng eachDriverActivePosition =
-        LatLng(eachDriver.locationLatitude!, eachDriver.locationLongitude!);
+            LatLng(eachDriver.locationLatitude!, eachDriver.locationLongitude!);
 
         Marker marker = Marker(
           markerId: MarkerId("driver${eachDriver.driverId!}"),
@@ -2053,7 +1946,7 @@ class MainScreenState extends State<MainScreen> {
   createActiveNearByDriverIconMarker() {
     if (activeNearbyIcon == null) {
       ImageConfiguration imageConfiguration =
-      createLocalImageConfiguration(context, size: const Size(2, 2));
+          createLocalImageConfiguration(context, size: const Size(2, 2));
       BitmapDescriptor.fromAssetImage(imageConfiguration, "images/car_ios.png")
           .then((value) {
         activeNearbyIcon = value;
@@ -2112,32 +2005,14 @@ class MainScreenState extends State<MainScreen> {
       assignedDriverInfoContainerHeight = 0;
 
       locateUiPadding = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.36
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.32;
+          ? MediaQuery.of(context).size.height * 0.36
+          : MediaQuery.of(context).size.height * 0.32;
       bottomPaddingOfMap = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.36
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.32;
+          ? MediaQuery.of(context).size.height * 0.36
+          : MediaQuery.of(context).size.height * 0.32;
       searchLocationContainerHeight = Platform.isAndroid
-          ? MediaQuery
-          .of(context)
-          .size
-          .height * 0.34
-          : MediaQuery
-          .of(context)
-          .size
-          .height * 0.30;
+          ? MediaQuery.of(context).size.height * 0.34
+          : MediaQuery.of(context).size.height * 0.30;
 
       selectedPaymentMethod == "";
       polyLineSet.clear();
@@ -2150,6 +2025,7 @@ class MainScreenState extends State<MainScreen> {
       driverPhone = "";
       driverCarColor = "";
       driverCarModel = "";
+      driverPhotoUrl = "";
       driverCarPlate = "";
       driverRideStatus = "Driver is Coming";
     });
@@ -2176,7 +2052,7 @@ class MainScreenState extends State<MainScreen> {
         if (state != "requesting") {
           driversRef.child(driver.driverId!).child("newRide").set("cancelled");
           driversRef.child(driver.driverId!).child("newRide").onDisconnect();
-          driverRequestTimeOut = 10;
+          driverRequestTimeOut = 30;
           timer.cancel();
         }
 
@@ -2190,13 +2066,13 @@ class MainScreenState extends State<MainScreen> {
           if (event.snapshot.value.toString() == "accepted") {
             driversRef.child(driver.driverId!).child("newRide").onDisconnect();
             timer.cancel();
-            driverRequestTimeOut = 10;
+            driverRequestTimeOut = 30;
           }
         });
         if (driverRequestTimeOut == 0) {
           driversRef.child(driver.driverId!).child("newRide").set("timeout");
           driversRef.child(driver.driverId!).child("newRide").onDisconnect();
-          driverRequestTimeOut = 10;
+          driverRequestTimeOut = 30;
           timer.cancel();
           searchNearestDriver();
         }
@@ -2232,7 +2108,7 @@ class MainScreenState extends State<MainScreen> {
         hasDiscount = true;
         amountSize = 14;
         percentageDiscount = int.parse(snap.snapshot.value.toString());
-        textP = BrandColors.colorTextp;
+        textP = BrandColors.colorTextP;
       }
     });
   }
@@ -2284,22 +2160,21 @@ class MainScreenState extends State<MainScreen> {
       color: Colors.white,
       child: ListView(
         children: paymentMethods
-            .map((paymentMethod) =>
-            ListTile(
-              onTap: () => {_handleCurrencyTap(paymentMethod)},
-              title: Column(
-                children: [
-                  Text(
-                    paymentMethod,
-                    textAlign: TextAlign.start,
-                    style: const TextStyle(
-                        color: Colors.black, fontFamily: "Brand-Regular"),
+            .map((paymentMethod) => ListTile(
+                  onTap: () => {_handleCurrencyTap(paymentMethod)},
+                  title: Column(
+                    children: [
+                      Text(
+                        paymentMethod,
+                        textAlign: TextAlign.start,
+                        style: const TextStyle(
+                            color: Colors.black, fontFamily: "Brand-Regular"),
+                      ),
+                      const SizedBox(height: 4),
+                      const Divider(height: 1)
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  const Divider(height: 1)
-                ],
-              ),
-            ))
+                ))
             .toList(),
       ),
     );

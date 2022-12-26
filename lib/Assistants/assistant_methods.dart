@@ -7,6 +7,7 @@ import 'package:boride/assistants/map_key.dart';
 import 'package:boride/assistants/request_assistant.dart';
 import 'package:boride/models/direction_details_info.dart';
 import 'package:boride/models/directions.dart';
+import 'package:boride/models/history.dart';
 import 'package:boride/models/user_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
@@ -141,6 +142,7 @@ class AssistantMethods {
         //update tripKeys to data provider
         Provider.of<AppInfo>(context, listen: false)
             .updateTripKeys(tripsIdKeys);
+
         getTripsData(context);
       }
     });
@@ -148,6 +150,22 @@ class AssistantMethods {
 
   static void getTripsData(context) {
     var keys = Provider.of<AppInfo>(context, listen: false).tripsKeys;
+    for (String eachKey in keys) {
+      FirebaseDatabase.instance
+          .ref()
+          .child("Ride Request")
+          .child(eachKey)
+          .once()
+          .then((snaps) {
+        var eachTripHistory = TripsHistoryModel.fromSnapshot(snaps.snapshot);
+
+        if ((snaps.snapshot.value as Map)["status"] == "Completed") {
+          //update-add each history to OverAllTrips History Data List
+          Provider.of<AppInfo>(context, listen: false)
+              .updateTripsData(eachTripHistory);
+        }
+      });
+    }
   }
 
   static double generateRandomNumber(int max) {

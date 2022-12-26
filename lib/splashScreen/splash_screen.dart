@@ -10,6 +10,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:once/once.dart';
 
 class MySplashScreen extends StatefulWidget {
   const MySplashScreen({Key? key}) : super(key: key);
@@ -28,10 +29,7 @@ class MySplashScreenState extends State<MySplashScreen> {
   }
 
   startTimer() {
-
     Timer(const Duration(seconds: 3), () {
-      checkInternetAccess();
-
       if (fAuth.currentUser != null) {
         DatabaseReference nameRef = FirebaseDatabase.instance
             .ref()
@@ -42,6 +40,7 @@ class MySplashScreenState extends State<MySplashScreen> {
           if (snap.snapshot.value != null) {
             AssistantMethods.readCurrentOnlineUserInfo();
             AssistantMethods.getTripsKeys(context);
+            Once.runOnce("first_time", callback: checkInternetAccess);
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (c) => const MainScreen()));
           } else {

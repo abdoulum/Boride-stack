@@ -1,6 +1,5 @@
 import 'package:boride/assistants/global.dart';
 import 'package:boride/mainScreens/search_favorite_screen.dart';
-import 'package:boride/mainScreens/search_places_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,7 +71,7 @@ class _AddFavoriteState extends State<AddFavorite> {
                               padding: const EdgeInsets.all(8),
                               child: Text(userHomeAddress.isNotEmpty
                                   ? userHomeAddress
-                                  : "Home ", style: const TextStyle(
+                                  : "Home location ", style: const TextStyle(
                                 fontFamily: "Brand-Regular",
                                 fontSize: 14,
 
@@ -110,7 +109,7 @@ class _AddFavoriteState extends State<AddFavorite> {
                               padding: const EdgeInsets.all(8),
                               child: Text(userFavoriteAddress.isNotEmpty
                                   ? userFavoriteAddress
-                                  : "Favorite 1", style: const TextStyle(
+                                  : "Favorite location", style: const TextStyle(
                                 fontFamily: "Brand-Regular",
                                 fontSize: 14,
 
@@ -148,7 +147,7 @@ class _AddFavoriteState extends State<AddFavorite> {
                               padding: const EdgeInsets.all(8),
                               child: Text(userFavoriteAddress2.isNotEmpty
                                   ? userFavoriteAddress2
-                                  : "Favorite 2", style: const TextStyle(
+                                  : "Favorite location 2", style: const TextStyle(
                                 fontFamily: "Brand-Regular",
                                 fontSize: 14,
 
@@ -172,17 +171,29 @@ class _AddFavoriteState extends State<AddFavorite> {
                   ),
 
                   const SizedBox(height: 40,),
-                  ElevatedButton(
-                      onPressed: () async {
-                        saveFavoriteLocations();
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
+                  GestureDetector(
+                    onTap: () {
+                      saveFavoriteLocations();
 
-                      child: const Text("Update",
-                        style: TextStyle(fontFamily: "Brand-Regular"),)),
+                    },
+                    child: Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      decoration: BoxDecoration(
+                          color: Colors.indigo,
+                          borderRadius: BorderRadius.circular(30)),
+                      child: const Center(
+                        child: Text(
+                          "Update",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontFamily: "Brand-Regular",
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

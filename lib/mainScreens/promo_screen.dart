@@ -101,7 +101,6 @@ class _DiscountScreenState extends State<DiscountScreen> {
               ),
               hasDiscount
                   ? Container(
-                      height: MediaQuery.of(context).size.height * 0.24,
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topRight,

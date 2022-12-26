@@ -5,10 +5,7 @@ import 'package:boride/mainScreens/promo_screen.dart';
 import 'package:boride/mainScreens/profile_screen.dart';
 import 'package:boride/mainScreens/support_screen.dart';
 import 'package:boride/mainScreens/trip_history_screen.dart';
-import 'package:boride/splashScreen/splash_screen.dart';
-import 'package:boride/testui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -114,7 +111,7 @@ class _MyDrawerState extends State<MyDrawer> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (c) =>  HistoryPage()));
+                      builder: (c) =>  const TripsHistoryScreen()));
             },
             child: const ListTile(
               leading: Icon(Ionicons.reload, color: BrandColors.colorTextDark),

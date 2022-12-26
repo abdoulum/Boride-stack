@@ -1,4 +1,5 @@
 import 'package:boride/assistants/assistant_methods.dart';
+import 'package:boride/assistants/global.dart';
 import 'package:boride/mainScreens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -14,16 +15,12 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-
   String fullName = "";
   String email = "";
 
   String? sName;
   String? sEmail;
   String? sPhone;
-
-  final Future<SharedPreferences> _sharedPreferences = SharedPreferences.getInstance();
-
 
   @override
   Widget build(BuildContext context) {
@@ -102,33 +99,35 @@ class _EditPageState extends State<EditPage> {
                         ),
                       ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.all(12),
-                      height: 55,
-                      width: 350,
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 243, 245, 247),
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: TextFormField(
-
-                          keyboardType: TextInputType.emailAddress,
-                          textCapitalization: TextCapitalization.words,
-                          onChanged: (value) {
-                            setState(() {
-                              email = value;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            hintText: "Email",
-                            hintStyle: TextStyle(fontFamily: "Brand-Regular"),
-                            //  prefixIcon: Icon(Icons.person),
-                            border: InputBorder.none,
+                    fAuth.currentUser!.emailVerified
+                        ? Container()
+                        : Container(
+                            margin: const EdgeInsets.all(12),
+                            height: 55,
+                            width: 350,
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 243, 245, 247),
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: TextFormField(
+                                keyboardType: TextInputType.emailAddress,
+                                textCapitalization: TextCapitalization.words,
+                                onChanged: (value) {
+                                  setState(() {
+                                    email = value;
+                                  });
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: "Email",
+                                  hintStyle:
+                                      TextStyle(fontFamily: "Brand-Regular"),
+                                  //  prefixIcon: Icon(Icons.person),
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
                     const SizedBox(
                       width: 370,
                       child: Padding(
@@ -144,23 +143,22 @@ class _EditPageState extends State<EditPage> {
                         ),
                       ),
                     ),
-
                     const Spacer(),
-
                     Padding(
-                      padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.2),
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).size.height * 0.2),
                       child: ElevatedButton(
                           onPressed: () async {
-
                             updateProfile();
-
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10))),
-
-                          child: const Text("Submit", style: TextStyle(fontFamily: "Brand-Regular"),)),
+                          child: const Text(
+                            "Submit",
+                            style: TextStyle(fontFamily: "Brand-Regular"),
+                          )),
                     ),
                   ],
                 ),
@@ -172,12 +170,17 @@ class _EditPageState extends State<EditPage> {
     );
   }
 
-  updateProfile() async{
+  updateProfile() async {
     final prefs = await SharedPreferences.getInstance();
-    DatabaseReference profileRef = FirebaseDatabase.instance.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid);
+    DatabaseReference profileRef = FirebaseDatabase.instance
+        .ref()
+        .child("users")
+        .child(FirebaseAuth.instance.currentUser!.uid);
     profileRef.child("name").set(fullName);
     profileRef.child("email").set(email);
-    profileRef.child("phone").set(FirebaseAuth.instance.currentUser!.phoneNumber);
+    profileRef
+        .child("phone")
+        .set(FirebaseAuth.instance.currentUser!.phoneNumber);
     profileRef.child("id").set(FirebaseAuth.instance.currentUser!.uid);
 
     prefs.setString('my_name', fullName);
@@ -186,8 +189,7 @@ class _EditPageState extends State<EditPage> {
 
     await AssistantMethods.readCurrentOnlineUserInfo();
 
-
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainScreen()));
-
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const MainScreen()));
   }
 }

@@ -54,11 +54,7 @@ class Support extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height:20
-                  ),
-
-
+                  const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -66,16 +62,19 @@ class Support extends StatelessWidget {
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(17),
-                            gradient:  LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
                               // Add one stop for each color. Stops should increase from 0 to 1
-                              // stops: const [0.1, 0.3, 0.2, 1.5],
-                              colors: [Colors.blueAccent.shade700, Colors.indigo.shade600],
+                              stops: const [0.5, 0.7, 0.9],
+                              colors: [
+                                Colors.indigo.shade600,
+                                Colors.indigo.shade800,
+                                Colors.indigo.shade900,
+                              ],
                             ),
                           ),
                           width: MediaQuery.of(context).size.width * 1,
-                          height: MediaQuery.of(context).size.height * 0.18,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -123,15 +122,19 @@ class Support extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(17),
                             gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
                               // Add one stop for each color. Stops should increase from 0 to 1
-                              // stops: const [0.1, 0.3, 0.2, 1.5],
-                              colors: [Colors.blueAccent.shade700, Colors.indigo.shade600],
+                              stops: const [0.1, 0.5, 0.7, 0.9],
+                              colors: [
+                                Colors.indigo.shade500,
+                                Colors.indigo.shade600,
+                                Colors.indigo.shade800,
+                                Colors.indigo.shade900,
+                              ],
                             ),
                           ),
                           width: MediaQuery.of(context).size.width * 1,
-                          height: MediaQuery.of(context).size.height * 0.18,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -145,7 +148,6 @@ class Support extends StatelessWidget {
                                           fontSize: 20,
                                           fontFamily: "Brand-Bold",
                                           color: Colors.white
-                                          //color: Color.fromARGB(228, 255, 255, 255),
                                           ),
                                     ),
                                   ],
@@ -185,8 +187,6 @@ class Support extends StatelessWidget {
                       ],
                     ),
                   ),
-
-
                   const SizedBox(
                     height: 50,
                   ),
