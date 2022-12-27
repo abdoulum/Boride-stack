@@ -50,6 +50,7 @@ class _TripHistoryDisplayState extends State<TripHistoryDisplay> {
           onPressed: () {
             Navigator.pop(context);
           },
+
           icon: const Icon(Icons.arrow_back),
         ),
       ),

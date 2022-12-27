@@ -35,7 +35,6 @@ class _DiscountScreenState extends State<DiscountScreen> {
         setState(() {
           percentageDiscount = snap.snapshot.value.toString();
           hasDiscount = true;
-
         });
       }
     });

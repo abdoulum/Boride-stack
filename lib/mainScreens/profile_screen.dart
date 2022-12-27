@@ -121,33 +121,33 @@ class _ProfileState extends State<Profile> {
                                     padding: const EdgeInsets.all(2.0),
                                     child: GestureDetector(
                                       child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade100,
-                                        borderRadius:
-                                            BorderRadius.circular(5),
-                                        border: Border.all(
-                                          width: 1,
-                                          color: Colors.grey.shade400,
-                                        ),
-                                      ),
-                                      child: const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        child: Text(
-                                          "Edit",
-                                          style: TextStyle(
-                                            fontFamily: "Brand-regular",
-                                            color: Colors.grey,
-                                            fontSize: 14,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                              width: 1,
+                                              color: Colors.grey.shade400,
+                                            ),
                                           ),
-                                        ),
-                                      )),
+                                          child: const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            child: Text(
+                                              "Edit",
+                                              style: TextStyle(
+                                                fontFamily: "Brand-regular",
+                                                color: Colors.grey,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          )),
                                       onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const EditPage()));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const EditPage()));
                                       },
                                     ),
                                   )
@@ -447,14 +447,17 @@ class _ProfileState extends State<Profile> {
                                   const Spacer(),
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (
-                                          context) => const AddFavorite()));
-                                      },
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AddFavorite()));
+                                    },
                                     child: Container(
                                         decoration: BoxDecoration(
                                           color: Colors.grey.shade100,
                                           borderRadius:
-                                          BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                           border: Border.all(
                                             width: 1,
                                             color: Colors.grey.shade400,

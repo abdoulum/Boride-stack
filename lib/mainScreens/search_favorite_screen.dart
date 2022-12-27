@@ -1,19 +1,12 @@
+import 'package:boride/assistants/map_key.dart';
+import 'package:boride/assistants/request_assistant.dart';
 import 'package:boride/brand_colors.dart';
-import 'package:boride/assistants/app_info.dart';
+import 'package:boride/models/predicted_places.dart';
 import 'package:boride/widgets/favorite_prediction_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:boride/assistants/request_assistant.dart';
-import 'package:boride/assistants/map_key.dart';
-import 'package:boride/models/predicted_places.dart';
-import 'package:boride/widgets/place_prediction_tile.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:provider/provider.dart';
 
-
-class SearchFavorite extends StatefulWidget
-{
-
+class SearchFavorite extends StatefulWidget {
   String? from;
 
   SearchFavorite({this.from});
@@ -22,31 +15,29 @@ class SearchFavorite extends StatefulWidget
   _SearchFavoriteState createState() => _SearchFavoriteState();
 }
 
-
-
-
-class _SearchFavoriteState extends State<SearchFavorite>
-{
+class _SearchFavoriteState extends State<SearchFavorite> {
   List<PredictedPlaces> favoritePredictedList = [];
 
-  void findPlaceAutoCompleteSearch(String inputText) async
-  {
-    if(inputText.length > 2) //2 or more than 2 input characters
+  void findPlaceAutoCompleteSearch(String inputText) async {
+    if (inputText.length > 2) //2 or more than 2 input characters
     {
-      String urlAutoCompleteSearch = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputText&key=$mapKey&components=country:NG";
+      String urlAutoCompleteSearch =
+          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputText&key=$mapKey&components=country:NG";
 
-      var responseAutoCompleteSearch = await RequestAssistant.receiveRequest(urlAutoCompleteSearch);
+      var responseAutoCompleteSearch =
+          await RequestAssistant.receiveRequest(urlAutoCompleteSearch);
 
-      if(responseAutoCompleteSearch == "Error Occurred, Failed. No Response.")
-      {
+      if (responseAutoCompleteSearch ==
+          "Error Occurred, Failed. No Response.") {
         return;
       }
 
-      if(responseAutoCompleteSearch["status"] == "OK")
-      {
+      if (responseAutoCompleteSearch["status"] == "OK") {
         var placePredictions = responseAutoCompleteSearch["predictions"];
 
-        var placePredictionsList = (placePredictions as List).map((jsonData) => PredictedPlaces.fromJson(jsonData)).toList();
+        var placePredictionsList = (placePredictions as List)
+            .map((jsonData) => PredictedPlaces.fromJson(jsonData))
+            .toList();
 
         setState(() {
           favoritePredictedList = placePredictionsList;
@@ -60,11 +51,8 @@ class _SearchFavoriteState extends State<SearchFavorite>
     super.initState();
   }
 
-
   @override
-  Widget build(BuildContext context)
-  {
-
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -131,16 +119,14 @@ class _SearchFavoriteState extends State<SearchFavorite>
                             child: TextField(
                               keyboardType: TextInputType.name,
                               textCapitalization: TextCapitalization.words,
-
                               onChanged: (valueTyped) {
                                 findPlaceAutoCompleteSearch(valueTyped);
                               },
                               decoration: const InputDecoration(
                                 hintText: "Search...",
                                 hintStyle: TextStyle(
-                                  fontFamily: "Brand-Regular",
+                                    fontFamily: "Brand-Regular",
                                     color: BrandColors.colorTextSemiLight),
-
                                 border: InputBorder.none,
                                 isDense: true,
                                 contentPadding: EdgeInsets.only(
@@ -160,27 +146,24 @@ class _SearchFavoriteState extends State<SearchFavorite>
             ),
           ),
           Expanded(
-                  child: ListView.separated(
-                    itemCount: favoritePredictedList.length,
-                    physics: const ClampingScrollPhysics(),
-                    itemBuilder: (context, index)
-                    {
-                      return FavoritePredictionTileDesign(
-                        favoritePlaces: favoritePredictedList[index],
-                        from : widget.from,
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index)
-                    {
-                      return const Divider(
-                        height: 1,
-                        color: Colors.white,
-                        thickness: 1,
-                      );
-                    },
-                  ),
-                )
-
+            child: ListView.separated(
+              itemCount: favoritePredictedList.length,
+              physics: const ClampingScrollPhysics(),
+              itemBuilder: (context, index) {
+                return FavoritePredictionTileDesign(
+                  favoritePlaces: favoritePredictedList[index],
+                  from: widget.from,
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const Divider(
+                  height: 1,
+                  color: Colors.white,
+                  thickness: 1,
+                );
+              },
+            ),
+          )
         ],
       ),
     );

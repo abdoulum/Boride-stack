@@ -48,7 +48,6 @@ class _ReportPageState extends State<ReportPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-
               const Text(
                 "What is your issue ?",
                 style: TextStyle(
@@ -60,7 +59,6 @@ class _ReportPageState extends State<ReportPage> {
               const SizedBox(
                 height: 10,
               ),
-
               const Text(
                 "Please select the issue that best describe your problem",
                 style: TextStyle(
@@ -68,9 +66,7 @@ class _ReportPageState extends State<ReportPage> {
                     fontSize: 16,
                     color: BrandColors.colorTextI),
               ),
-
               const SizedBox(height: 20),
-
               ListView.separated(
                 separatorBuilder: (context, i) => const Divider(
                   thickness: 0.2,

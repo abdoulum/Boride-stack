@@ -11,6 +11,7 @@ class HistoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
+
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         child: Column(

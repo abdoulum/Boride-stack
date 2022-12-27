@@ -19,6 +19,7 @@ class FavoritePredictionTileDesign extends StatefulWidget {
       _FavoritePredictionTileDesignState();
 }
 
+
 class _FavoritePredictionTileDesignState
     extends State<FavoritePredictionTileDesign> {
   getPlaceDirectionDetails(String? placeId, context) async {

@@ -1,5 +1,4 @@
-class DirectionDetailsInfo
-{
+class DirectionDetailsInfo {
   int? distance_value;
   int? duration_value;
   String? e_points;

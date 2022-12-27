@@ -22,7 +22,7 @@ class TripsHistoryModel {
 
   TripsHistoryModel.fromSnapshot(DataSnapshot dataSnapshot) {
     time = (dataSnapshot.value as dynamic)["time"];
-    status = (dataSnapshot.value as dynamic)["status"];
+    status = (dataSnapshot.value as dynamic)['status'];
     pickup = (dataSnapshot.value as dynamic)["pickup_address"];
     dropoff = (dataSnapshot.value as dynamic)["dropoff_address"];
     fareAmount = (dataSnapshot.value as dynamic)["fareAmount"];

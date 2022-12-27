@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
 
@@ -75,7 +74,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text(
                               "+234",
                               style: TextStyle(
-                                  fontFamily: "Brand-Regular", fontSize: 16, color: BrandColors.colorTextP),
+                                  fontFamily: "Brand-Regular",
+                                  fontSize: 16,
+                                  color: BrandColors.colorTextP),
                             ),
                           ),
                           const Text(
@@ -165,17 +166,17 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           TextButton(
             onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      WebPage("https://boride.app/?page_id=262")));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          WebPage("https://boride.app/?page_id=262")));
             },
             child: const Text("Terms & Conditions",
-            style: TextStyle(
-                fontFamily: "Brand-Regular",
-                color: BrandColors.colorTextP,
-                fontSize: 18)),
+                style: TextStyle(
+                    fontFamily: "Brand-Regular",
+                    color: BrandColors.colorTextP,
+                    fontSize: 18)),
           )
         ],
       ),

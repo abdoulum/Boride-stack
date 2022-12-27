@@ -28,6 +28,7 @@ class MySplashScreenState extends State<MySplashScreen> {
     startTimer();
   }
 
+
   startTimer() {
     Timer(const Duration(seconds: 3), () {
       if (fAuth.currentUser != null) {

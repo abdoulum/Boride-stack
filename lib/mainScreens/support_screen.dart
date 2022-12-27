@@ -147,8 +147,7 @@ class Support extends StatelessWidget {
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontFamily: "Brand-Bold",
-                                          color: Colors.white
-                                          ),
+                                          color: Colors.white),
                                     ),
                                   ],
                                 ),
@@ -160,6 +159,7 @@ class Support extends StatelessWidget {
                                   size: 30,
                                   color: Colors.white,
                                 ),
+
                                 const SizedBox(
                                   height: 10,
                                 ),

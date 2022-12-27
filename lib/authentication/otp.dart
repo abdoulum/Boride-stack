@@ -178,7 +178,6 @@ class _MyVerifyState extends State<MyVerify> {
     ).whenComplete(
       () async {
         if (user != null) {
-
           Fluttertoast.showToast(
             msg: "You are logged in successfully",
             toastLength: Toast.LENGTH_LONG,
@@ -190,21 +189,24 @@ class _MyVerifyState extends State<MyVerify> {
           );
           AssistantMethods.getTripsKeys(context);
           await AssistantMethods.readCurrentOnlineUserInfo();
-          FirebaseDatabase.instance.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid).child("name").once().then((snap) {
-            if(snap.snapshot.value !=null) {
+          FirebaseDatabase.instance
+              .ref()
+              .child("users")
+              .child(FirebaseAuth.instance.currentUser!.uid)
+              .child("name")
+              .once()
+              .then((snap) {
+            if (snap.snapshot.value != null) {
               Phoenix.rebirth(context);
-            }else
-              {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const EditPage(),
-                  ),
-                );
-              }
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EditPage(),
+                ),
+              );
+            }
           });
-
-
         } else {
           Navigator.pop(context);
           Fluttertoast.showToast(

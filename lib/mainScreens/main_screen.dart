@@ -19,7 +19,6 @@ import 'package:boride/widgets/pay_fare_amount_dialog.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -197,7 +196,8 @@ class MainScreenState extends State<MainScreen> {
             child: GestureDetector(
               onTap: () async {
                 // locateUserPosition();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const TestUI()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const TestUI()));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -1087,21 +1087,25 @@ class MainScreenState extends State<MainScreen> {
               // ),
               height: assignedDriverInfoContainerHeight,
               child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(0)),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(0)),
                   margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: Column(
                     children: [
-
-                       Center(
+                      Center(
                         child: Text(
-                          "$driverRideStatus, 1.6Km away",
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "Brand-Bold"),
+                          "$driverRideStatus",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Brand-Bold"),
                         ),
                       ),
-                      const Divider(height: 10,
-                        thickness: 1,),
+                      const Divider(
+                        height: 10,
+                        thickness: 1,
+                      ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -1112,27 +1116,28 @@ class MainScreenState extends State<MainScreen> {
                               Container(
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade100,
-                                  borderRadius:
-                                  BorderRadius.circular(5),
+                                  borderRadius: BorderRadius.circular(5),
                                   border: Border.all(
                                     width: 1,
                                     color: Colors.grey.shade400,
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(3.0),
-                                  child: Text(
-                                      driverCarPlate,
-                                      style: TextStyle(
-                                          fontFamily: "Brand-bold", fontSize: 18)
-                                  ),
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Text(driverCarPlate,
+                                      style: const TextStyle(
+                                          fontFamily: "Brand-bold",
+                                          fontSize: 18)),
                                 ),
                               ),
                               const SizedBox(
                                 height: 7,
                               ),
-                              Text("$driverCarBrand $driverCarModel $driverCarColor",
-                                style: TextStyle(fontFamily: "Brand-regular"),)
+                              Text(
+                                "$driverCarBrand $driverCarModel $driverCarColor",
+                                style: const TextStyle(
+                                    fontFamily: "Brand-regular"),
+                              )
                             ],
                           ),
                           const Spacer(),
@@ -1150,12 +1155,12 @@ class MainScreenState extends State<MainScreen> {
                       ),
                       Row(
                         children: [
-                           ClipOval(
-                                            child: Image.network(
-                                              driverPhotoUrl,
-                                              height: 50,
-                                              width: 50,
-                                            ),
+                          ClipOval(
+                            child: Image.network(
+                              driverPhotoUrl,
+                              height: 50,
+                              width: 50,
+                            ),
                           ),
                           const SizedBox(
                             width: 10,
@@ -1164,10 +1169,10 @@ class MainScreenState extends State<MainScreen> {
                             children: [
                               GestureDetector(
                                   onTap: () {},
-                                  child: Text(
-                                      driverName,
-                                      style: TextStyle(fontFamily: "Brand-bold", fontSize: 16)
-                                  )),
+                                  child: Text(driverName,
+                                      style: const TextStyle(
+                                          fontFamily: "Brand-bold",
+                                          fontSize: 16))),
                               Row(
                                 children: const [
                                   Icon(
@@ -1175,9 +1180,11 @@ class MainScreenState extends State<MainScreen> {
                                     size: 14,
                                   ),
                                   Text("4.5, ",
-                                      style: TextStyle(fontFamily: "Brand-regular")),
+                                      style: TextStyle(
+                                          fontFamily: "Brand-regular")),
                                   Text("100+ trips",
-                                      style: TextStyle(fontFamily: "Brand-regular"))
+                                      style: TextStyle(
+                                          fontFamily: "Brand-regular"))
                                 ],
                               ),
                             ],
@@ -1193,7 +1200,6 @@ class MainScreenState extends State<MainScreen> {
                               icon: const Icon(Icons.phone),
                               onPressed: () {
                                 launch(('tel://$driverPhone'));
-
                               },
                             ),
                           ),
@@ -1208,8 +1214,7 @@ class MainScreenState extends State<MainScreen> {
                               icon: const Icon(Ionicons.car_sport),
                               color: Colors.red,
                               onPressed: () {
-                                if (userRideRequestStatus !=
-                                    "onride") {
+                                if (userRideRequestStatus != "onride") {
                                   cancelRide();
                                   cancelRideRequest();
                                   resetApp();
@@ -1566,8 +1571,8 @@ class MainScreenState extends State<MainScreen> {
           });
         }
 
-        //status = ended
-        if (userRideRequestStatus == "ended") {
+        //status = Completed
+        if (userRideRequestStatus == "Completed") {
           if ((eventSnap.snapshot.value as Map)["fareAmount"] != null) {
             String fareAmount =
                 (eventSnap.snapshot.value as Map)["fareAmount"].toString();

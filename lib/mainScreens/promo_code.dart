@@ -13,6 +13,7 @@ class PromoCode extends StatefulWidget {
 
 class _PromoCodeState extends State<PromoCode> {
   String? discountCode;
+
   var percentage;
 
   @override

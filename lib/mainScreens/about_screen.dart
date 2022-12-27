@@ -205,6 +205,7 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
           )),
           const Padding(
+
             padding: EdgeInsets.only(bottom: 10),
             child: Text(
               "Developed By UATech"

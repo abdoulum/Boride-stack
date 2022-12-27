@@ -13,8 +13,8 @@ class RateDriverScreen extends StatefulWidget {
 }
 
 class _RateDriverScreenState extends State<RateDriverScreen> {
+  Color? color;
 
-  Color? color ;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,28 +76,24 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                     setState(() {
                       titleStarsRating = "Bad";
                       color = Colors.red.shade500;
-
                     });
                   }
                   if (countRatingStars == 3) {
                     setState(() {
                       titleStarsRating = "Good";
                       color = Colors.yellow.shade400;
-
                     });
                   }
                   if (countRatingStars == 4) {
                     setState(() {
                       titleStarsRating = "Very Good";
                       color = Colors.green;
-
                     });
                   }
                   if (countRatingStars == 5) {
                     setState(() {
                       titleStarsRating = "Excellent";
                       color = Colors.green;
-
                     });
                   }
                 },
@@ -105,7 +101,6 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
               const SizedBox(
                 height: 12.0,
               ),
-
               Text(
                 titleStarsRating,
                 style: const TextStyle(

@@ -1,8 +1,8 @@
-import 'package:boride/brand_colors.dart';
 import 'package:boride/assistants/global.dart';
+import 'package:boride/brand_colors.dart';
 import 'package:boride/mainScreens/about_screen.dart';
-import 'package:boride/mainScreens/promo_screen.dart';
 import 'package:boride/mainScreens/profile_screen.dart';
+import 'package:boride/mainScreens/promo_screen.dart';
 import 'package:boride/mainScreens/support_screen.dart';
 import 'package:boride/mainScreens/trip_history_screen.dart';
 import 'package:flutter/material.dart';
@@ -10,25 +10,23 @@ import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class MyDrawer extends StatefulWidget {
-
-  MyDrawer({Key? key,}) : super(key: key);
+  MyDrawer({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _MyDrawerState createState() => _MyDrawerState();
 }
 
 class _MyDrawerState extends State<MyDrawer> {
-
   String name = "";
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
     fetchData();
   }
-
 
   fetchData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -51,7 +49,6 @@ class _MyDrawerState extends State<MyDrawer> {
             },
             child: Container(
               height: 140,
-
               child: DrawerHeader(
                 decoration: const BoxDecoration(),
                 child: Row(
@@ -67,29 +64,32 @@ class _MyDrawerState extends State<MyDrawer> {
                     ),
 
                     ///Email And Name
-                   Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontFamily: "Brand-Regular",
-                              color: BrandColors.colorTextDark,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontFamily: "Brand-Regular",
+                            color: BrandColors.colorTextDark,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(height: 5,),
-                          const Text("Visit profile",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: "Brand-Regular",
-                              color: Colors.black54,
-                            ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        const Text(
+                          "Visit profile",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: "Brand-Regular",
+                            color: Colors.black54,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -111,7 +111,7 @@ class _MyDrawerState extends State<MyDrawer> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (c) =>  const TripsHistoryScreen()));
+                      builder: (c) => const TripsHistoryScreen()));
             },
             child: const ListTile(
               leading: Icon(Ionicons.reload, color: BrandColors.colorTextDark),
@@ -132,8 +132,8 @@ class _MyDrawerState extends State<MyDrawer> {
                   MaterialPageRoute(builder: (c) => const DiscountScreen()));
             },
             child: const ListTile(
-              leading:
-                  Icon(Ionicons.pricetag_outline, size: 25,color: BrandColors.colorTextDark),
+              leading: Icon(Ionicons.pricetag_outline,
+                  size: 25, color: BrandColors.colorTextDark),
               title: Text(
                 "Offers",
                 style: TextStyle(
@@ -150,8 +150,7 @@ class _MyDrawerState extends State<MyDrawer> {
             },
             child: const ListTile(
               leading: Icon(Ionicons.person_add_outline,
-                  size: 25,
-                  color: BrandColors.colorTextDark),
+                  size: 25, color: BrandColors.colorTextDark),
               title: Text(
                 "Invite friends",
                 style: TextStyle(
@@ -164,13 +163,12 @@ class _MyDrawerState extends State<MyDrawer> {
 
           GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (c) =>   AboutScreen()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (c) => AboutScreen()));
             },
             child: const ListTile(
               leading: Icon(Ionicons.information_circle_outline,
-                  size: 25,
-                  color: BrandColors.colorTextDark),
+                  size: 25, color: BrandColors.colorTextDark),
               title: Text(
                 "About",
                 style: TextStyle(
@@ -182,13 +180,12 @@ class _MyDrawerState extends State<MyDrawer> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (c) =>   const Support()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (c) => const Support()));
             },
             child: const ListTile(
               leading: Icon(Ionicons.help_circle_outline,
-                  size: 25,
-                  color: BrandColors.colorTextDark),
+                  size: 25, color: BrandColors.colorTextDark),
               title: Text(
                 "Support",
                 style: TextStyle(

@@ -60,6 +60,7 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
                       Provider.of<AppInfo>(context, listen: false).tripsData[i],
                 ),
               ),
+
             ),
           );
         },

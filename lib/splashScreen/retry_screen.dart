@@ -18,24 +18,24 @@ class _RetryPageState extends State<RetryPage> {
     super.initState();
 
     Fluttertoast.showToast(
-        msg: "No Internet Connection",
-        backgroundColor: Colors.red,);
+      msg: "No Internet Connection",
+      backgroundColor: Colors.red,
+    );
   }
 
   bool hasInternet = false;
 
-  checkInternetConnection() async{
-
+  checkInternetConnection() async {
     hasInternet = await InternetConnectionChecker().hasConnection;
-    if(!hasInternet) {
-      Fluttertoast.showToast(msg: "No Internet Connection", backgroundColor: Colors.red);
-    }
-    else {
+    if (!hasInternet) {
+      Fluttertoast.showToast(
+          msg: "No Internet Connection", backgroundColor: Colors.red);
+    } else {
       Timer(const Duration(seconds: 2), () async {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MySplashScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const MySplashScreen()));
       });
     }
-
   }
 
   @override

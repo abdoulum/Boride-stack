@@ -15,6 +15,7 @@ class BrandColors {
   static const Color colorBlue = Color(0xFF2254A3);
   static const Color colorAccentPurple = Color(0xFF4f5cd1);
 
+
   static const Color colorText = Color(0xFF383635);
   static const Color colorTextLight = Color(0xFF918D8D);
   static const Color colorTextSemiLight = Color(0xFF737373);

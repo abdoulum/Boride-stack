@@ -102,7 +102,6 @@ class _EmailVerifyState extends State<EmailVerify> {
             TextButton(
                 onPressed: () {
                   fAuth.currentUser!.verifyBeforeUpdateEmail(widget.email);
-
                 },
                 child: const Text("Resend email",
                     style: TextStyle(

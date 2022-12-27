@@ -12,6 +12,7 @@ class PayFareAmountDialog extends StatefulWidget {
   String? fareAmount;
   String? paymentMtd;
 
+
   PayFareAmountDialog({this.fareAmount, this.paymentMtd});
 
   @override
