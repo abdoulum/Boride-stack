@@ -7,6 +7,7 @@ class AppInfo extends ChangeNotifier {
   int countTotalTrips = 0;
 
   List<String> tripsKeys = [];
+
   List<TripsHistoryModel> tripsData = [];
 
   void updatePickUpLocationAddress(Directions userPickUpAddress) {
