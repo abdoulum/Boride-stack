@@ -5,6 +5,7 @@ import 'package:boride/assistants/global.dart';
 import 'package:boride/authentication/login_screen.dart';
 import 'package:boride/mainScreens/edit_page.dart';
 import 'package:boride/mainScreens/main_screen.dart';
+import 'package:boride/splashScreen/intro_display.dart';
 import 'package:boride/splashScreen/retry_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,6 @@ class MySplashScreenState extends State<MySplashScreen> {
     startTimer();
   }
 
-
   startTimer() {
     Timer(const Duration(seconds: 3), () {
       if (fAuth.currentUser != null) {
@@ -42,6 +42,7 @@ class MySplashScreenState extends State<MySplashScreen> {
             AssistantMethods.readCurrentOnlineUserInfo();
             AssistantMethods.getTripsKeys(context);
             Once.runOnce("first_time", callback: checkInternetAccess);
+
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (c) => const MainScreen()));
           } else {
@@ -50,10 +51,16 @@ class MySplashScreenState extends State<MySplashScreen> {
           }
         });
       } else {
+        Once.runOnce("nantomo_h", callback: visitIntroPage);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (c) => LoginScreen()));
       }
     });
+  }
+
+  visitIntroPage() {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (c) => const IntroScreen()));
   }
 
   checkInternetAccess() async {

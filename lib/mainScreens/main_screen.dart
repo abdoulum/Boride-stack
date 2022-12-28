@@ -12,7 +12,7 @@ import 'package:boride/mainScreens/rate_driver_screen.dart';
 import 'package:boride/mainScreens/search_places_screen.dart';
 import 'package:boride/models/active_nearby_available_drivers.dart';
 import 'package:boride/models/directions.dart';
-import 'package:boride/testui.dart';
+import 'package:boride/splashScreen/intro_display.dart';
 import 'package:boride/widgets/my_drawer.dart';
 import 'package:boride/widgets/noDriverAvailableDialog.dart';
 import 'package:boride/widgets/pay_fare_amount_dialog.dart';
@@ -197,7 +197,7 @@ class MainScreenState extends State<MainScreen> {
               onTap: () async {
                 // locateUserPosition();
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const TestUI()));
+                    MaterialPageRoute(builder: (context) => const IntroScreen()));
               },
               child: Container(
                 decoration: BoxDecoration(

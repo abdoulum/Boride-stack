@@ -12,7 +12,6 @@ class PayFareAmountDialog extends StatefulWidget {
   String? fareAmount;
   String? paymentMtd;
 
-
   PayFareAmountDialog({this.fareAmount, this.paymentMtd});
 
   @override
@@ -142,14 +141,14 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
         isTestMode: isTestMode);
     final ChargeResponse response = await flutterWave.charge();
     if (response != null) {
-      if (response.status == "Transaction successful") {
+      if (response.status == "successful") {
         Fluttertoast.showToast(msg: response.status!);
-        Future.delayed(const Duration(milliseconds: 4000), () {
+        Future.delayed(const Duration(milliseconds: 2000), () {
           Navigator.pop(context, "CardPaymentSuccessful");
         });
       } else {
         Fluttertoast.showToast(msg: response.status!);
-        Future.delayed(const Duration(milliseconds: 4000), () {
+        Future.delayed(const Duration(milliseconds: 2000), () {
           Navigator.pop(context, "cancelled");
         });
       }
@@ -157,7 +156,7 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
   }
 
   String getPublicKey() {
-    if (isTestMode) return "FLWPUBK_TEST-1b50fcec6e04d0b2b0e471d74827197b-X";
+    if (isTestMode) return "FLWPUBK_TEST-05883fda3bc8c92020311be726ca4d7a-X";
     return "FLWPUBK-45587fdb1c84335354ab0fa388b803d5-X";
   }
 

@@ -15,7 +15,8 @@ class _WebPageState extends State<WebPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("WebView"),
+        title: const Text("Terms & Conditions", style:
+        TextStyle(fontFamily: "Brand-Regular", fontSize: 18),),
         backgroundColor: Colors.black,
       ),
       body: WebView(
